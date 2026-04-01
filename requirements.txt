@@ -1,0 +1,12 @@
+pandas
+sqlalchemy
+psycopg2
+fastapi
+uvicorn
+python-dotenv
+pydantic
+pydantic[email]
+pyjwt
+argon2-cffi
+argon2-cffi-bindings
+alembic
