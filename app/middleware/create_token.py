@@ -1,5 +1,5 @@
 from app.config.config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRES
-from app.schemas.token_data import TokenPayload, Token
+from app.schemas.token import Token
 from fastapi import HTTPException
 from datetime import datetime
 import jwt

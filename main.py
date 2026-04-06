@@ -7,13 +7,7 @@ from app.database.core import create_tables
 # Cargar variables de entorno
 load_dotenv()
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Se ejecuta al iniciar el servidor
-    create_tables()
-    yield
-
-app = FastAPI(lifespan=lifespan)
+app = FastAPI()
 
 # Configuración CORS corregida
 origins = ["*"]
@@ -27,5 +21,6 @@ app.add_middleware(
 )
 
 
-# from app.api.post.login import router as login
-# app.include_router(login, prefix="/api")
+from app.api.post.post_login import router as login
+
+app.include_router(login, prefix="/api")
