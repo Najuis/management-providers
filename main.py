@@ -34,3 +34,7 @@ app.mount("/pages", StaticFiles(directory="app/pages"), name="pages")
 @app.get("/")
 async def root():
     return FileResponse("app/pages/login/login.html")
+
+@app.get("/admin/dashboard")
+async def dashboard():
+    return FileResponse("app/pages/admin/dashboard/dashboard.html")
