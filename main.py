@@ -1,9 +1,11 @@
-from contextlib import asynccontextmanager
-from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI
 from dotenv import load_dotenv
 from app.database.core import create_tables
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import os
 
+from fastapi.middleware.cors import CORSMiddleware
 # Cargar variables de entorno
 load_dotenv()
 
@@ -20,13 +22,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-import os
 from app.api.post.post_login import router as login
+from app.api.post.post_user import router as info_user
 
 app.include_router(login, prefix="/api")
+app.include_router(info_user, prefix="/api")
 
 # Montar archivos estáticos
 app.mount("/pages", StaticFiles(directory="app/pages"), name="pages")

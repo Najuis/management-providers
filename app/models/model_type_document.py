@@ -11,4 +11,4 @@ class TypeDocument(Base):
     name: Mapped[str] = mapped_column(String(50), nullable=True)
     
     # Relations
-    info_user: Mapped[List["InfoUser"]] = relationship(back_populates="type_document")
+    user: Mapped[List["User"]] = relationship(back_populates="type_document")

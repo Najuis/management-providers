@@ -5,7 +5,6 @@ from app.models.model_financial_information import FinancialInformation
 from app.models.model_health_safety_requirements import HealthSafetyRequirements
 from app.models.model_info_share_composition import InfoShareComposition
 from app.models.model_legal_representative_information import LegalRepresentativeInformation
-from app.models.model_info_user import InfoUser
 from app.models.model_natural_person import NaturalPerson
 from app.models.model_legal_entities import LegalEntities
 from app.models.model_occupational_health_safety_requirements import OccupationalHealthSafetyRequirements

@@ -12,4 +12,4 @@ class Region(Base):
 
     #Relations
     city: Mapped[List["City"]] = relationship(back_populates="region")
-    info_user: Mapped[List["InfoUser"]] = relationship(back_populates="region")
+    user: Mapped[List["User"]] = relationship(back_populates="region")

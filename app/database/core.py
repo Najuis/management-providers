@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.config.config import DATABASE_URL
 from app.database.base import Base
-from app.models import User, City, Country, FinancialInformation, HealthSafetyRequirements, InfoShareComposition, LegalRepresentativeInformation, InfoUser, NaturalPerson, LegalEntities, OccupationalHealthSafetyRequirements, Regime, Office, RequiredDocuments, References, TypeUser, TypeDocument, Region, TaxFiscalInformation
+from app.models import User, City, Country, FinancialInformation, HealthSafetyRequirements, InfoShareComposition, LegalRepresentativeInformation, NaturalPerson, LegalEntities, OccupationalHealthSafetyRequirements, Regime, Office, RequiredDocuments, References, TypeUser, TypeDocument, Region, TaxFiscalInformation
 
 engine = create_engine(DATABASE_URL)
 
@@ -13,7 +13,6 @@ tables = [
     TypeUser.__table__,
     Office.__table__,
     City.__table__,
-    InfoUser.__table__,
     Region.__table__,
     TaxFiscalInformation.__table__,
     FinancialInformation.__table__,

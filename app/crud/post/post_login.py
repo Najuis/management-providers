@@ -1,8 +1,6 @@
-from fastapi import HTTPException
 from app.models.model_user import User
 from app.middleware.check_password import check_password
 from app.middleware.create_token import create_token
-from app.schemas.token import Token
 
 async def login(user, db):
     

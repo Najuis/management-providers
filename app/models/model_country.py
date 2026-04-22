@@ -11,4 +11,4 @@ class Country(Base):
     name: Mapped[str] = mapped_column(String(150), nullable=False)
     
     # Relations
-    info_user: Mapped[List["InfoUser"]] = relationship(back_populates="country")
+    user: Mapped[List["User"]] = relationship(back_populates="country")

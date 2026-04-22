@@ -13,6 +13,6 @@ class City(Base):
 
     #Relations
     office: Mapped[List["Office"]] = relationship(back_populates="city")
-    info_user: Mapped[List["InfoUser"]] = relationship(back_populates="city")
+    user: Mapped[List["User"]] = relationship(back_populates="city")
     region: Mapped["Region"] = relationship(back_populates="city")
     legal_representative_information: Mapped[List["LegalRepresentativeInformation"]] = relationship(back_populates="city")

@@ -14,6 +14,6 @@ class Office(Base):
 
     #Relations
     city: Mapped["City"] = relationship(back_populates="office")
-    info_user: Mapped[List["InfoUser"]] = relationship(back_populates="office")
+    user: Mapped[List["User"]] = relationship(back_populates="office")
     
  
