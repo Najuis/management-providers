@@ -16,7 +16,7 @@ async def create_token(data_user):
 
     to_encode = {
         "id_user": data_user.id_user,
-        "type_user": data_user.type_user,
+        "type_user": data_user.type_user_id,
         "exp": expire
     }
 

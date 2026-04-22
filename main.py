@@ -24,9 +24,19 @@ app.add_middleware(
 
 from app.api.post.post_login import router as login
 from app.api.post.post_user import router as info_user
+from app.api.get.get_users import routes as users
+from app.api.get.get_city import routes as city
+from app.api.get.get_country import routes as country
+from app.api.get.get_office import routes as office
+from app.api.get.get_user_id import routes as userbyid  
 
 app.include_router(login, prefix="/api")
-app.include_router(info_user, prefix="/api")
+app.include_router(info_user, prefix="/api/admin")
+app.include_router(users, prefix="/api/admin")
+app.include_router(city, prefix="/api")
+app.include_router(country, prefix="/api")
+app.include_router(office, prefix="/api")
+app.include_router(userbyid, prefix="/api/admin")
 
 # Montar archivos estáticos
 app.mount("/pages", StaticFiles(directory="app/pages"), name="pages")
