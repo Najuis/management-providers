@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Management Providers</title>
+    <link rel="stylesheet" href="confirmacion.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="confirm-header">
+        <h1>Solicitud Recibida Exitosamente</h1>
+        <p>Su información ha sido registrada y enviada a revisión.</p>
+    </header>
+
+    <main class="confirm-container">
+        <section class="card credentials-card">
+            <h2>Credenciales de Acceso</h2>
+            <p class="info-text">Guarde estos datos para consultar el estado de su vinculación.</p>
+            <div class="credentials-box">
+                <div class="credential-item">
+                    <label>Usuario</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="displayUsername" readonly>
+                        <button class="btn-copy" onclick="copyCredentials()">Copiar</button>
+                    </div>
+                </div>
+                <div class="credential-item">
+                    <label>Contraseña Temporal</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="displayPassword" readonly>
+                        <button class="btn-copy" onclick="copyCredentials()">Copiar</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card summary-card">
+            <h2>Resumen de Información</h2>
+            <div class="summary-grid" id="summaryContent">
+                <p class="loading">Cargando datos...</p>
+            </div>
+        </section>
+
+        <section class="card status-card">
+            <h2>Estado y Clasificación</h2>
+            <div class="status-grid">
+                <div class="status-item">
+                    <span class="label">Estado:</span>
+                    <span class="badge badge-pending" id="statusBadge">Pendiente de Revisión</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">Nivel de Riesgo:</span>
+                    <span class="badge" id="riskBadge">Calculando...</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">ID de Solicitud:</span>
+                    <code id="submissionId">-</code>
+                </div>
+            </div>
+        </section>
+
+        <section class="card actions-card">
+            <h2>Proximos Pasos</h2>
+            <ul class="steps-list">
+                <li>El equipo de cumplimiento validará los documentos adjuntos.</li>
+                <li>Recibirá un correo electrónico con el estado de su solicitud.</li>
+                <li>Si se requiere diligencia ampliada, será contactado vía telefónica.</li>
+            </ul>
+            <div class="final-actions">
+                <button class="btn btn-primary" onclick="window.print()">Imprimir Confirmación</button>
+                <button class="btn btn-secondary" onclick="window.location.href='/login'">Iniciar Sesion</button>
+            </div>
+        </section>
+    </main>
+
+    <script src="confirmacion.js"></script>
+</body>
+</html>

@@ -48,3 +48,11 @@ async def root():
 @app.get("/admin/dashboard")
 async def dashboard():
     return FileResponse("app/pages/admin/dashboard/dashboard.html")
+
+@app.get("/formulario")
+async def formulario_page():
+    return FileResponse("app/pages/formulario/formulario.html")
+
+@app.get("/confirmacion")
+async def confirmacion_page():
+    return FileResponse("app/pages/confirmacion/confirmacion.html")
