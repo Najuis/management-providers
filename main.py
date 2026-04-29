@@ -44,15 +44,15 @@ app.mount("/pages", StaticFiles(directory="app/pages"), name="pages")
 @app.get("/")
 async def root():
     return FileResponse("app/pages/login/login.html")
-
+    
 @app.get("/admin/dashboard")
 async def dashboard():
-    return FileResponse("app/pages/admin/dashboard/dashboard.html")
+    return FileResponse("app/pages/admin/dashboard.html")
 
-@app.get("/formulario")
+@app.get("/admin/form")
 async def formulario_page():
-    return FileResponse("app/pages/formulario/formulario.html")
+    return FileResponse("app/pages/admin/form.html")
 
-@app.get("/confirmacion")
+@app.get("/admin/confirmation")
 async def confirmacion_page():
-    return FileResponse("app/pages/confirmacion/confirmacion.html")
+    return FileResponse("app/pages/admin/confirmation.html")   
