@@ -49,10 +49,14 @@ async def root():
 async def dashboard():
     return FileResponse("app/pages/admin/dashboard/dashboard.html")
 
-@app.get("/formulario")
+@app.get("/admin/formulario")
 async def formulario_page():
     return FileResponse("app/pages/formulario/formulario.html")
 
-@app.get("/confirmacion")
+@app.get("/admin/confirmacion")
 async def confirmacion_page():
     return FileResponse("app/pages/confirmacion/confirmacion.html")
+
+@app.get("/admin/validation")
+async def admin_validation():
+    return FileResponse("app/pages/admin/validation/validation.html")
