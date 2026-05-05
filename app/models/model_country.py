@@ -8,7 +8,6 @@ class Country(Base):
     __tablename__ = "lmp_country"
 
     id_country: Mapped[int] = mapped_column(Integer, primary_key=True)
-    name: Mapped[str] = mapped_column(String(150), nullable=False)
+    country_name: Mapped[str] = mapped_column(String(150), nullable=False)
     
-    # Relations
-    user: Mapped[List["User"]] = relationship(back_populates="country")
+    natural_person: Mapped[List["NaturalPerson"]] = relationship(back_populates="country")

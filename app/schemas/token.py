@@ -10,6 +10,7 @@ class TokenPayload(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+    type_user: int
 
 class DataTokenUser(BaseModel):
     type_user: int

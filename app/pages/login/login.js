@@ -21,13 +21,22 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
         const data = await response.json();
 
+        //si el login es exitoso, redirige al dashboard
         if (response.ok) {
             console.log('Login exitoso:', data);
+            // guardar token y tipo de usuario en localStorage
+            localStorage.setItem('token', data.access_token);
+            localStorage.setItem('type_user', data.type_user);
 
-            if (data.access_token) {
-                localStorage.setItem('token', data.access_token);
+            // Redireccionar según el tipo de usuario
+            if (data.type_user === 1) {
+                window.location.href = "/admin/dashboard";
+            } else if (data.type_user === 2) {
+                window.location.href = "/admin/form";
+            } else {
+                // Redirección por defecto
+                window.location.href = "/admin/dashboard";
             }
-            window.location.href = '/pages/admin/index.html';
         } else {
             errorMessage.textContent = data.detail || 'Credenciales inválidas. Inténtalo de nuevo.';
             showErrorAnimation();

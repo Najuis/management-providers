@@ -7,12 +7,12 @@ from app.middleware.current_user import current_user
 
 router = APIRouter()
 
-@router.post("/info_user")
+@router.post("/user")
 async def info_user(
     user_info: InfoUser,
     db: Session = Depends(get_db),
     user: dict = Depends(current_user)
 ):
-    if user["type_user"] != 2:
+    if user["type_user"] != 1:
         return HTTPException(status_code=401, detail="Unauthorized")
     return await post_user(user_info, db)

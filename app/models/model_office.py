@@ -4,6 +4,7 @@ from sqlalchemy import String, Integer, ForeignKey
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from app.database.base import Base
 
+
 class Office(Base):
     __tablename__ = "lmp_office"
 
@@ -12,8 +13,6 @@ class Office(Base):
     office_name: Mapped[str] = mapped_column(String)
     city_id: Mapped[int] = mapped_column(Integer, ForeignKey("lmp_city.id_city"))
 
-    #Relations
+    # Relations
     city: Mapped["City"] = relationship(back_populates="office")
-    user: Mapped[List["User"]] = relationship(back_populates="office")
-    
- 
+    general_information: Mapped[List["GeneralInformation"]] = relationship(back_populates="office")

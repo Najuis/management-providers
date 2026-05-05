@@ -8,11 +8,15 @@ class LegalRepresentativeInformation(Base):
     __tablename__ = "lmp_legal_representative_information"
 
     id_legal_representative_information: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    name_legal_representative: Mapped[str] = mapped_column(String(150),nullable=True)
-    number_document: Mapped[str] = mapped_column(String(20),nullable=True)
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("lmp_user.id_user"))
+    name: Mapped[str] = mapped_column(String(60), nullable=True)
+    last_name: Mapped[str] = mapped_column(String(60), nullable=True)
+    document: Mapped[str] = mapped_column(String(60), nullable=True)
+    phone: Mapped[str] = mapped_column(String(60), nullable=True)
+    email: Mapped[str] = mapped_column(String(60), nullable=True)
     city_id: Mapped[int] = mapped_column(Integer, ForeignKey("lmp_city.id_city"),nullable=True)
-    phone: Mapped[str] = mapped_column(String(20),nullable=True)
-    email: Mapped[str] = mapped_column(String(150),nullable=True)
+    legal_person_id: Mapped[int] = mapped_column(Integer, ForeignKey("lmp_legal_person.id_legal_person"), nullable=True)
 
-    # Relations
+    user: Mapped["User"] = relationship(back_populates="legal_representative_information")
     city: Mapped["City"] = relationship(back_populates="legal_representative_information")
+    legal_person: Mapped["LegalPerson"] = relationship(back_populates="legal_representative_information")

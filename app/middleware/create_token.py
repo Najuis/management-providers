@@ -26,7 +26,7 @@ async def create_token(data_user):
             key=SECRET_KEY,
             algorithm=ALGORITHM
         )
-        return Token(access_token=encoded_jwt, token_type="bearer")
+        return Token(access_token=encoded_jwt, token_type="bearer", type_user=data_user.type_user_id)
     except Exception as e:
         print(f"Token generation error: {e}")
         raise HTTPException(status_code=500, detail="Error generating token")

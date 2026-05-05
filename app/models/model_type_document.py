@@ -8,7 +8,6 @@ class TypeDocument(Base):
     __tablename__ = "lmp_type_document"
 
     id_type_document: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(String(50), nullable=True)
-    
-    # Relations
-    user: Mapped[List["User"]] = relationship(back_populates="type_document")
+    document: Mapped[str] = mapped_column(String(150), nullable=True)
+
+    natural_person: Mapped[List["NaturalPerson"]] = relationship(back_populates="type_document")
