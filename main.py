@@ -60,4 +60,4 @@ async def formulario_page():
 
 @app.get("/admin/confirmation")
 async def confirmacion_page():
-    return FileResponse("app/pages/admin/confirmation/confirmation.html")   
+    return FileResponse("app/pages/admin/confirmation/confirmation.html")
