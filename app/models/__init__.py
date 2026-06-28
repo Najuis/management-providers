@@ -18,6 +18,4 @@ from app.models.model_tax_fiscal_information import TaxFiscalInformation
 from app.models.modal_general_information import GeneralInformation
 from app.models.model_municipality import Municipality
 from app.models.model_authorizations_policies import AuthorizationsPolicies
-from .user import User
-from .role import Role
 from .submission_models import Submission, SubmissionDocument, AuditLog
