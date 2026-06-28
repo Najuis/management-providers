@@ -54,10 +54,24 @@ async def root():
 async def dashboard():
     return FileResponse("app/pages/admin/dashboard/dashboard.html")
 
+<<<<<<< HEAD
 @app.get("/admin/form")
+=======
+@app.get("/admin/formulario")
+>>>>>>> origin/feature/menu-administrador
 async def formulario_page():
     return FileResponse("app/pages/admin/form/form.html")
 
+<<<<<<< HEAD
 @app.get("/admin/confirmation")
 async def confirmacion_page():
     return FileResponse("app/pages/admin/confirmation/confirmation.html")   
+=======
+@app.get("/admin/confirmacion")
+async def confirmacion_page():
+    return FileResponse("app/pages/confirmacion/confirmacion.html")
+
+@app.get("/admin/validation")
+async def admin_validation():
+    return FileResponse("app/pages/admin/validation/validation.html")
+>>>>>>> origin/feature/menu-administrador

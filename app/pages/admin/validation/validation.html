@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validación Administrativa - LAGOBO</title>
+    <link rel="stylesheet" href="/pages/admin/validation/validation.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="validation-header">
+        <h1>Panel de Validación Administrativa</h1>
+        <p>Espacio Exclusivo para Lagobo Distribuciones S.A.S.</p>
+    </header>
+
+    <main class="validation-container">
+        <section class="filters-bar">
+            <div class="filter-group">
+                <label for="filterStatus">Estado</label>
+                <select id="filterStatus">
+                    <option value="">Todos</option>
+                    <option value="pendiente">Pendiente de Revisión</option>
+                    <option value="en_revision">En Revisión</option>
+                    <option value="aprobado">Aprobado</option>
+                    <option value="rechazado">Rechazado</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="filterRisk">Nivel de Riesgo</label>
+                <select id="filterRisk">
+                    <option value="">Todos</option>
+                    <option value="BAJO">Bajo</option>
+                    <option value="MODERADO">Moderado</option>
+                    <option value="ALTO">Alto</option>
+                    <option value="EXTREMO">Extremo</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="filterDateFrom">Fecha Desde</label>
+                <input type="date" id="filterDateFrom">
+            </div>
+            <div class="filter-group">
+                <label for="filterDateTo">Fecha Hasta</label>
+                <input type="date" id="filterDateTo">
+            </div>
+            <div class="filter-group">
+                <label for="filterSearch">Buscar</label>
+                <input type="text" id="filterSearch" placeholder="Nombre, NIT, ID">
+            </div>
+            <button id="applyFilters" class="btn btn-primary">Aplicar Filtros</button>
+            <button id="resetFilters" class="btn btn-secondary">Limpiar</button>
+        </section>
+
+        <section class="table-container">
+            <table id="submissionsTable">
+                <thead>
+                    <tr>
+                        <th>ID Solicitud</th>
+                        <th>Nombre / Razón Social</th>
+                        <th>Tipo</th>
+                        <th>Riesgo</th>
+                        <th>Estado</th>
+                        <th>Fecha Envío</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr><td colspan="7" class="loading-state">Cargando solicitudes...</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Modal de Validación -->
+    <div id="validationModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Validación de Solicitud</h2>
+                <button id="closeModal" class="btn-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="validation-grid">
+                    <div class="info-section">
+                        <h3>Información del Tercero</h3>
+                        <div class="data-row"><strong>Tipo:</strong> <span id="detailType">-</span></div>
+                        <div class="data-row"><strong>Cliente:</strong> <span id="detailClient">-</span></div>
+                        <div class="data-row"><strong>Nombre/Razón:</strong> <span id="detailName">-</span></div>
+                        <div class="data-row"><strong>ID/NIT:</strong> <span id="detailDoc">-</span></div>
+                        <div class="data-row"><strong>Email:</strong> <span id="detailEmail">-</span></div>
+                    </div>
+                    <div class="info-section">
+                        <h3>Clasificación de Riesgo</h3>
+                        <div class="data-row"><strong>Nivel:</strong> <span id="detailRisk" class="badge">-</span></div>
+                        <div class="data-row"><strong>País:</strong> <span id="detailCountry">-</span></div>
+                        <div class="data-row"><strong>Ciudad:</strong> <span id="detailCity">-</span></div>
+                        <div class="data-row"><strong>CIIU:</strong> <span id="detailCIIU">-</span></div>
+                    </div>
+                </div>
+
+                <section class="documents-section">
+                    <h3>Validación Documental</h3>
+                    <div id="documentsList" class="documents-grid"></div>
+                    <div class="validation-check">
+                        <label>
+                            <input type="checkbox" id="chkDocsValid"> 
+                            Confirmo que los documentos tienen expedición no superior a 30 días
+                        </label>
+                    </div>
+                </section>
+
+                <section class="lists-section">
+                    <h3>Verificación en Listas Restrictivas</h3>
+                    <div class="form-row">
+                        <label>
+                            <input type="checkbox" id="chkListsVerified"> 
+                            Se verificó en listas restrictivas (OFAC, GAFI, ONU, UE, etc.)
+                        </label>
+                        <input type="date" id="listsDate" class="date-input">
+                    </div>
+                </section>
+
+                <section id="eddSection" class="edd-section hidden">
+                    <h3>Debida Diligencia Ampliada (Riesgo Alto/Extremo)</h3>
+                    <div class="edd-grid">
+                        <div class="form-group">
+                            <label>Estructura de Propiedad</label>
+                            <textarea id="eddStructure" rows="3" placeholder="Describa accionistas y porcentajes"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Alta Gerencia / Junta Directiva</label>
+                            <textarea id="eddManagement" rows="3" placeholder="Nombres, cargos y documentos"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Relación con Funcionarios Públicos</label>
+                            <textarea id="eddGovRelation" rows="2" placeholder="Detalle si aplica"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Programa de Cumplimiento Anticorrupción</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="eddCompliance" value="si"> Sí</label>
+                                <label><input type="radio" name="eddCompliance" value="no"> No</label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="decision-section">
+                    <h3>Decisión Administrativa</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="validationStatus">Estado Final *</label>
+                            <select id="validationStatus" required>
+                                <option value="">Seleccione...</option>
+                                <option value="aprobado">Aprobado</option>
+                                <option value="rechazado">Rechazado</option>
+                                <option value="requiere_dd">Requiere Diligencia Ampliada</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="validationVigencia">Vigencia Aprobada *</label>
+                            <select id="validationVigencia" required>
+                                <option value="">Seleccione...</option>
+                                <option value="3_anios">3 Años (Bajo)</option>
+                                <option value="2_anios">2 Años (Moderado)</option>
+                                <option value="1_anio">1 Año (Alto)</option>
+                                <option value="6_meses">6 Meses (Extremo)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="validationObservations">Observaciones Técnicas *</label>
+                        <textarea id="validationObservations" rows="4" placeholder="Justifique la decisión o solicite información adicional" required></textarea>
+                    </div>
+                </section>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelValidation" class="btn btn-secondary">Cancelar</button>
+                <button id="saveValidation" class="btn btn-primary">Guardar Validación</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/pages/admin/validacion/validacion.js"></script>
+</body>
+</html>
