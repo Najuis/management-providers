@@ -50,28 +50,23 @@ app.mount("/pages", StaticFiles(directory="app/pages"), name="pages")
 async def root():
     return FileResponse("app/pages/login/login.html")
     
-@app.get("/admin/dashboard")
+@app.get("/admin/dashboard") # si ok 
 async def dashboard():
     return FileResponse("app/pages/admin/dashboard/dashboard.html")
 
-<<<<<<< HEAD
-@app.get("/admin/form")
-=======
-@app.get("/admin/formulario")
->>>>>>> origin/feature/menu-administrador
+@app.get("/admin/formulario") #Si ok
 async def formulario_page():
     return FileResponse("app/pages/admin/form/form.html")
 
-<<<<<<< HEAD
-@app.get("/admin/confirmation")
-async def confirmacion_page():
-    return FileResponse("app/pages/admin/confirmation/confirmation.html")   
-=======
 @app.get("/admin/confirmacion")
 async def confirmacion_page():
-    return FileResponse("app/pages/confirmacion/confirmacion.html")
+    return FileResponse("app/pages/admin/confirmation/confirmation.html")
 
 @app.get("/admin/validation")
 async def admin_validation():
     return FileResponse("app/pages/admin/validation/validation.html")
->>>>>>> origin/feature/menu-administrador
+
+
+
+
+
