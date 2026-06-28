@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Management Providers</title>
+    <link rel="stylesheet" href="/pages/formulario/formulario.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+</head>
+<body>
+    <header class="form-header">
+        <h1>Formulario de Vinculación de Terceros</h1>
+        <p>Mayoreo e Institucional | Código: LGB-OFC-F-008</p>
+    </header>
+
+    <main class="form-container">
+        <form id="vinculacionForm" novalidate>
+            <section class="form-section" id="sec-general">
+                <h2>1. Información General</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="fecha">Fecha *</label>
+                        <input type="date" id="fecha" name="fecha" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipoCliente">Tipo de Cliente *</label>
+                        <select id="tipoCliente" name="tipoCliente" required>
+                            <option value="">Seleccione...</option>
+                            <option value="mayoreo">Mayoreo</option>
+                            <option value="institucional">Institucional</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipoVinculacion">Tipo de Vinculación *</label>
+                        <select id="tipoVinculacion" name="tipoVinculacion" required>
+                            <option value="">Seleccione...</option>
+                            <option value="nuevo">Nuevo</option>
+                            <option value="actualizacion">Actualización</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ciudad">Ciudad *</label>
+                        <select id="ciudad" name="ciudad" required>
+                            <option value="">Seleccione...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="oficina">Almacén / Oficina *</label>
+                        <input type="text" id="oficina" name="oficina" required placeholder="Código o nombre">
+                    </div>
+                </div>
+            </section>
+
+            <div class="toggle-container">
+                <label class="toggle-label">
+                    <input type="radio" name="tipoPersona" value="natural" checked>
+                    <span>Persona Natural</span>
+                </label>
+                <label class="toggle-label">
+                    <input type="radio" name="tipoPersona" value="juridica">
+                    <span>Persona Jurídica</span>
+                </label>
+            </div>
+
+            <section class="form-section" id="sec-identificacion">
+                <h2>2. Información de Identificación</h2>
+                <div class="form-grid">
+                    <div class="form-group full-width natural-only">
+                        <label for="nombres">Nombres *</label>
+                        <input type="text" id="nombres" name="nombres">
+                    </div>
+                    <div class="form-group full-width natural-only">
+                        <label for="apellidos">Apellidos *</label>
+                        <input type="text" id="apellidos" name="apellidos">
+                    </div>
+                    <div class="form-group full-width juridica-only">
+                        <label for="razonSocial">Razón Social *</label>
+                        <input type="text" id="razonSocial" name="razonSocial">
+                    </div>
+                    <div class="form-group">
+                        <label for="tipoId">Tipo de Identificación *</label>
+                        <select id="tipoId" name="tipoId" required>
+                            <option value="">Seleccione...</option>
+                            <option value="CC">CC</option>
+                            <option value="CE">CE</option>
+                            <option value="PP">PP</option>
+                            <option value="NIT">NIT</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="numeroId">Número de Documento *</label>
+                        <input type="text" id="numeroId" name="numeroId" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaExpedicion">Fecha de Expedición *</label>
+                        <input type="date" id="fechaExpedicion" name="fechaExpedicion" required>
+                    </div>
+                    <div class="form-group juridica-only">
+                        <label for="estructuraJuridica">Estructura Jurídica *</label>
+                        <select id="estructuraJuridica" name="estructuraJuridica">
+                            <option value="">Seleccione...</option>
+                            <option value="SAS">S.A.S</option>
+                            <option value="LTDA">Limitada</option>
+                            <option value="SA">S.A</option>
+                            <option value="UNIPERSONAL">Unipersonal</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section" id="sec-riesgo">
+                <h2>3. Actividad Económica y Riesgo</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="codigoCIIU">Código CIIU *</label>
+                        <select id="codigoCIIU" name="codigoCIIU" required>
+                            <option value="">Seleccione...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="paisOrigen">País de Origen *</label>
+                        <select id="paisOrigen" name="paisOrigen" required>
+                            <option value="">Seleccione...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="paisResidencia">País de Residencia *</label>
+                        <select id="paisResidencia" name="paisResidencia" required>
+                            <option value="">Seleccione...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="zona">Zona *</label>
+                        <select id="zona" name="zona" required>
+                            <option value="urbana">Urbana</option>
+                            <option value="rural">Rural</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="alert-box" id="riskAlert" style="display:none;"></div>
+            </section>
+
+            <section class="form-section" id="sec-financiera">
+                <h2>4. Información Financiera y Tributaria</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="regimenTributario">Régimen Tributario *</label>
+                        <select id="regimenTributario" name="regimenTributario" required>
+                            <option value="comun">Común</option>
+                            <option value="gran_contribuyente">Gran Contribuyente</option>
+                            <option value="regimen_simplificado">Régimen Simplificado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="totalIngresos">Total Ingresos</label>
+                        <input type="number" id="totalIngresos" name="totalIngresos" placeholder="Sin puntos ni comas">
+                    </div>
+                    <div class="form-group">
+                        <label for="totalEgresos">Total Egresos</label>
+                        <input type="number" id="totalEgresos" name="totalEgresos" placeholder="Sin puntos ni comas">
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section" id="sec-autorizaciones">
+                <h2>5. Autorizaciones y Declaraciones</h2>
+                <div class="checkbox-grid">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="aut_datos" required>
+                        Autorizo el manejo de mi información según Ley 1581 de 2012
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="aut_laft" required>
+                        Declaro cumplimiento con la Política LAFT/FPADM
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="aut_anticorrupcion" required>
+                        Me adhiero a la Política Anticorrupción y Antisoborno
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="aut_etica" required>
+                        Me adhiero a la Política de Transparencia y Ética Empresarial
+                    </label>
+                </div>
+            </section>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Enviar Solicitud</button>
+            </div>
+        </form>
+    </main>
+
+    <script src="formulario.js"></script>
+</body>
+</html>

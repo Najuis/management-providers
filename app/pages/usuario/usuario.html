@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vinculación de Terceros - LAGOBO DISTRIBUCIONES</title>
+    <link rel="stylesheet" href="/pages/usuario/usuario.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="user-header">
+        <div class="header-content">
+            <h1>Formulario de Vinculación de Terceros</h1>
+            <p>Código: LGB-OFC-F-008 | Mayoreo e Institucional</p>
+        </div>
+        <div class="header-actions">
+            <span id="userGreeting">Cargando perfil...</span>
+            <button id="logoutBtn" class="btn-logout">Cerrar Sesión</button>
+        </div>
+    </header>
+
+    <main class="user-container">
+        <form id="vinculacionForm" class="third-party-form" novalidate>
+            <div class="progress-bar">
+                <div class="progress-step active" data-step="1">1. Información General</div>
+                <div class="progress-step" data-step="2">2. Identificación</div>
+                <div class="progress-step" data-step="3">3. Actividad y Riesgo</div>
+                <div class="progress-step" data-step="4">4. Financiera y Referencias</div>
+                <div class="progress-step" data-step="5">5. Autorizaciones y Documentos</div>
+            </div>
+
+            <section class="form-section" id="section-general">
+                <h2>1. Información General del Almacén / Oficina</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="fecha">Fecha *</label>
+                        <input type="date" id="fecha" name="fecha" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipoCliente">Tipo de Cliente *</label>
+                        <select id="tipoCliente" name="tipoCliente" required>
+                            <option value="">Seleccione...</option>
+                            <option value="mayoreo">Mayoreo</option>
+                            <option value="institucional">Institucional</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipoVinculacion">Tipo de Vinculación *</label>
+                        <select id="tipoVinculacion" name="tipoVinculacion" required>
+                            <option value="">Seleccione...</option>
+                            <option value="nuevo">Nuevo</option>
+                            <option value="actualizacion">Actualización</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ciudad">Ciudad *</label>
+                        <select id="ciudad" name="ciudad" required>
+                            <option value="">Seleccione...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="oficina">Almacén / Oficina *</label>
+                        <select id="oficina" name="oficina" required>
+                            <option value="">Seleccione...</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section" id="section-identificacion">
+                <h2>2. Información de Identificación</h2>
+                
+                <div id="naturalFields" class="conditional-fields hidden">
+                    <h3>Persona Natural</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nombres">Nombres *</label>
+                            <input type="text" id="nombres" name="nombres">
+                        </div>
+                        <div class="form-group">
+                            <label for="apellidos">Apellidos *</label>
+                            <input type="text" id="apellidos" name="apellidos">
+                        </div>
+                        <div class="form-group">
+                            <label for="tipoIdNatural">Tipo de Identificación *</label>
+                            <select id="tipoIdNatural" name="tipoIdNatural">
+                                <option value="CC">CC - Cédula de Ciudadanía</option>
+                                <option value="CE">CE - Cédula de Extranjería</option>
+                                <option value="PP">PP - Pasaporte</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="numeroDocNatural">Número de Documento *</label>
+                            <input type="text" id="numeroDocNatural" name="numeroDocNatural">
+                        </div>
+                        <div class="form-group">
+                            <label for="fechaExpNatural">Fecha de Expedición *</label>
+                            <input type="date" id="fechaExpNatural" name="fechaExpNatural">
+                        </div>
+                        <div class="form-group">
+                            <label for="fechaNac">Fecha de Nacimiento *</label>
+                            <input type="date" id="fechaNac" name="fechaNac">
+                        </div>
+                        <div class="form-group">
+                            <label for="empresaLabora">Nombre de la empresa donde labora</label>
+                            <input type="text" id="empresaLabora" name="empresaLabora">
+                        </div>
+                        <div class="form-group">
+                            <label for="cargo">Cargo</label>
+                            <input type="text" id="cargo" name="cargo">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="juridicaFields" class="conditional-fields hidden">
+                    <h3>Persona Jurídica</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="razonSocial">Nombre o Razón Social *</label>
+                            <input type="text" id="razonSocial" name="razonSocial">
+                        </div>
+                        <div class="form-group">
+                            <label for="nit">Número de NIT *</label>
+                            <input type="text" id="nit" name="nit">
+                        </div>
+                        <div class="form-group">
+                            <label for="estructuraJuridica">Estructura Jurídica *</label>
+                            <select id="estructuraJuridica" name="estructuraJuridica">
+                                <option value="">Seleccione...</option>
+                                <option value="SAS">S.A.S</option>
+                                <option value="LTDA">Limitada</option>
+                                <option value="SA">S.A</option>
+                                <option value="UNIPERSONAL">Unipersonal</option>
+                                <option value="OTRO">Otro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="fechaConstitucion">Fecha de Constitución *</label>
+                            <input type="date" id="fechaConstitucion" name="fechaConstitucion">
+                        </div>
+                        <div class="form-group">
+                            <label for="paginaWeb">Página Web</label>
+                            <input type="url" id="paginaWeb" name="paginaWeb">
+                        </div>
+                    </div>
+                    <h4>Representante Legal</h4>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nombreRep">Nombres y Apellidos Completos *</label>
+                            <input type="text" id="nombreRep" name="nombreRep">
+                        </div>
+                        <div class="form-group">
+                            <label for="cedulaRep">Cédula *</label>
+                            <input type="text" id="cedulaRep" name="cedulaRep">
+                        </div>
+                        <div class="form-group">
+                            <label for="celularRep">Celular / Teléfono *</label>
+                            <input type="tel" id="celularRep" name="celularRep">
+                        </div>
+                        <div class="form-group">
+                            <label for="emailRep">Correo Electrónico *</label>
+                            <input type="email" id="emailRep" name="emailRep">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section" id="section-actividad">
+                <h2>3. Actividad Económica y Evaluación de Riesgo</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="codigoCIIU">Código CIIU *</label>
+                        <select id="codigoCIIU" name="codigoCIIU" required>
+                            <option value="">Seleccione...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="actividadEconomica">Actividad Económica *</label>
+                        <input type="text" id="actividadEconomica" name="actividadEconomica" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="paisOrigen">País de Origen *</label>
+                        <select id="paisOrigen" name="paisOrigen" required>
+                            <option value="">Seleccione...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="paisResidencia">País de Residencia *</label>
+                        <select id="paisResidencia" name="paisResidencia" required>
+                            <option value="">Seleccione...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="zona">Zona *</label>
+                        <select id="zona" name="zona" required>
+                            <option value="urbana">Urbana</option>
+                            <option value="rural">Rural</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="riskAlert" class="risk-indicator hidden"></div>
+                <div id="eddSection" class="edd-container hidden">
+                    <h3>Debida Diligencia Ampliada (Riesgo Alto/Extremo)</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="estructuraPropiedad">Estructura de Propiedad</label>
+                            <textarea id="estructuraPropiedad" name="estructuraPropiedad" rows="3"></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="altaGerencia">Alta Gerencia / Junta Directiva</label>
+                            <textarea id="altaGerencia" name="altaGerencia" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>¿Programa de cumplimiento anticorrupción?</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="programaCumplimiento" value="si"> Sí</label>
+                                <label><input type="radio" name="programaCumplimiento" value="no"> No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section" id="section-financiera">
+                <h2>4. Información Financiera y Tributaria</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="regimenTributario">Régimen Tributario *</label>
+                        <select id="regimenTributario" name="regimenTributario" required>
+                            <option value="comun">Común</option>
+                            <option value="gran_contribuyente">Gran Contribuyente</option>
+                            <option value="regimen_simplificado">Régimen Simplificado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="totalIngresos">Total Ingresos</label>
+                        <input type="number" id="totalIngresos" name="totalIngresos" placeholder="Sin puntos ni comas">
+                    </div>
+                    <div class="form-group">
+                        <label for="totalEgresos">Total Egresos</label>
+                        <input type="number" id="totalEgresos" name="totalEgresos" placeholder="Sin puntos ni comas">
+                    </div>
+                    <div class="form-group">
+                        <label for="totalActivos">Total Activos</label>
+                        <input type="number" id="totalActivos" name="totalActivos" placeholder="Sin puntos ni comas">
+                    </div>
+                    <div class="form-group">
+                        <label for="totalPatrimonio">Total Patrimonio</label>
+                        <input type="number" id="totalPatrimonio" name="totalPatrimonio" placeholder="Sin puntos ni comas">
+                    </div>
+                </div>
+                <h3>Referencia Bancaria</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nombreBanco">Nombre del Banco *</label>
+                        <input type="text" id="nombreBanco" name="nombreBanco" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="titularCuenta">Nombre del Titular *</label>
+                        <input type="text" id="titularCuenta" name="titularCuenta" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipoCuenta">Tipo de Cuenta *</label>
+                        <select id="tipoCuenta" name="tipoCuenta" required>
+                            <option value="ahorro">Ahorro</option>
+                            <option value="corriente">Corriente</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="numeroCuenta">Número de Cuenta *</label>
+                        <input type="text" id="numeroCuenta" name="numeroCuenta" required>
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section" id="section-autorizaciones">
+                <h2>5. Autorizaciones y Declaraciones</h2>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="aut_datos" required>
+                        Autorizo el manejo de mi información según Ley 1581 de 2012
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="aut_laft" required>
+                        Declaro cumplimiento con la Política LA/FT
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="aut_anticorrupcion" required>
+                        Me adhiero a la Política Anticorrupción y Antisoborno
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="aut_etica" required>
+                        Me adhiero a la Política de Transparencia y Ética Empresarial
+                    </label>
+                </div>
+
+                <h3>Declaraciones ABAC</h3>
+                <div class="radio-group-grid">
+                    <label><input type="radio" name="abac_subcontrata" value="si"> ¿Prestará servicios a través de subcontratistas?</label>
+                    <label><input type="radio" name="abac_subcontrata" value="no"> No</label>
+                    <label><input type="radio" name="abac_interaccion_publica" value="si"> ¿Interacción con entidades públicas?</label>
+                    <label><input type="radio" name="abac_interaccion_publica" value="no"> No</label>
+                    <label><input type="radio" name="abac_propiedad_ estatal" value="si"> ¿Propiedad estatal o PEP?</label>
+                    <label><input type="radio" name="abac_propiedad_estatal" value="no"> No</label>
+                    <label><input type="radio" name="abac_licencias" value="si"> ¿Licencias y certificados necesarios?</label>
+                    <label><input type="radio" name="abac_licencias" value="no"> No</label>
+                </div>
+
+                <h3>Carga de Documentos Requeridos</h3>
+                <p class="doc-note">Expedición no superior a 30 días. Formatos: PDF, JPG, PNG. Máximo 5MB por archivo.</p>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="docRUT">RUT Actualizado *</label>
+                        <input type="file" id="docRUT" name="docRUT" accept=".pdf,.jpg,.jpeg,.png" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="docCamara">Cámara de Comercio (≤30 días) *</label>
+                        <input type="file" id="docCamara" name="docCamara" accept=".pdf,.jpg,.jpeg,.png" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="docIdentidad">Copia de Documento de Identidad *</label>
+                        <input type="file" id="docIdentidad" name="docIdentidad" accept=".pdf,.jpg,.jpeg,.png" required>
+                    </div>
+                    <div class="form-group juridica-only">
+                        <label for="docComposicion">Certificado Composición Accionaria</label>
+                        <input type="file" id="docComposicion" name="docComposicion" accept=".pdf,.jpg,.jpeg,.png">
+                    </div>
+                    <div class="form-group">
+                        <label for="docCertificadoBanco">Certificado Bancario *</label>
+                        <input type="file" id="docCertificadoBanco" name="docCertificadoBanco" accept=".pdf,.jpg,.jpeg,.png" required>
+                    </div>
+                </div>
+            </section>
+
+            <div class="form-actions">
+                <button type="submit" id="submitBtn" class="btn-submit">Enviar Solicitud de Vinculación</button>
+            </div>
+        </form>
+
+        <div id="messageContainer" class="message-container"></div>
+    </main>
+
+    <script src="/pages/usuario/usuario.js"></script>
+</body>
+</html>
