@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Gestión</title>
+    <link rel="stylesheet" href="/pages/menu-admin/admin_menu.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <script src="/pages/menu-admin/admin_menu.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="admin-header">
+        <div class="header-content">
+            <h1>Panel de Administración</h1>
+            <p>Sistema de Gestión de Proveedores y Terceros</p>
+        </div>
+        <button id="logoutBtn" class="btn-logout">Cerrar Sesión</button>
+    </header>
+    
+    <main class="admin-container">
+        <div class="menu-grid">
+            <div class="menu-card" onclick="navigateTo('/admin/crear-usuario')">
+                <div class="card-content">
+                    <h3>Crear Usuario</h3>
+                    <p>Registrar nuevos terceros con credenciales de acceso y datos corporativos completos.</p>
+                </div>
+                <div class="card-action">Acceder</div>
+            </div>
+
+            <div class="menu-card" onclick="navigateTo('/admin/lista-usuarios')">
+                <div class="card-content">
+                    <h3>Listado de Usuarios</h3>
+                    <p>Visualizar, filtrar, editar y gestionar el registro completo de usuarios creados.</p>
+                </div>
+                <div class="card-action">Acceder</div>
+            </div>
+
+            <div class="menu-card" onclick="navigateTo('/admin/roles-permisos')">
+                <div class="card-content">
+                    <h3>Roles y Permisos</h3>
+                    <p>Asignar niveles de acceso, permisos por módulo y control de funciones administrativas.</p>
+                </div>
+                <div class="card-action">Acceder</div>
+            </div>
+
+            <div class="menu-card" onclick="navigateTo('/admin/auditoria')">
+                <div class="card-content">
+                    <h3>Registro de Auditoría</h3>
+                    <p>Consultar historial de acciones, modificaciones, accesos y trazabilidad completa.</p>
+                </div>
+                <div class="card-action">Acceder</div>
+            </div>
+
+            <div class="menu-card" onclick="navigateTo('/admin/configuracion')">
+                <div class="card-content">
+                    <h3>Configuración de Directorios</h3>
+                    <p>Administrar listas de ciudades, países, oficinas, regiones y tipos de identificación.</p>
+                </div>
+                <div class="card-action">Acceder</div>
+            </div>
+
+            <div class="menu-card" onclick="navigateTo('/admin/reportes')">
+                <div class="card-content">
+                    <h3>Informes y Exportaciones</h3>
+                    <p>Generar reportes CSV/PDF, exportar datos para análisis y cumplimiento normativo.</p>
+                </div>
+                <div class="card-action">Acceder</div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/pages/admin/admin_menu.js"></script>
+</body>
+</html>
