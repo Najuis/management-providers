@@ -1,16 +1,19 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status, BackgroundTasks
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from typing import List, Optional
 import os
 import shutil
+import json
 from datetime import datetime
 
-from app.core.database import get_db
+# ✅ IMPORTS CORREGIDOS (rutas reales del proyecto)
+from app.database.get_db import get_db
 from app.models.submission_models import Submission, SubmissionDocument, AuditLog, SubmissionStatus, RiskLevel
 from app.models.user import User
 from app.services.pdf_generator import generate_official_pdf
 from app.services.risk_calculator import calculate_risk
-from app.core.security import get_current_user # Asumiendo que tienes este middleware
+from app.middleware.current_user import get_current_user
 
 router = APIRouter()
 
@@ -31,18 +34,31 @@ async def download_pdf(
     if submission.user_id != current_user.id and current_user.role.name != "admin":
         raise HTTPException(status_code=403, detail="No autorizado")
 
-    # Generar PDF (esto podría optimizarse cacheando el archivo)
+    # Generar PDF
     file_path = f"{UPLOAD_DIR}/{submission_id}/formulario_{submission_id}.pdf"
     
     # Si no existe, lo generamos
     if not os.path.exists(file_path):
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
-        # Asumimos que form_data es un JSON string, habría que parsearlo si es necesario
-        import json
-        data = json.loads(submission.form_data) if isinstance(submission.form_data, str) else submission.form_data
+        
+        # ✅ CORREGIDO: Usar form_data del modelo (debe agregarse al modelo)
+        if hasattr(submission, 'form_data') and submission.form_data:
+            data = json.loads(submission.form_data) if isinstance(submission.form_data, str) else submission.form_data
+        else:
+            # Fallback: construir data desde los campos del modelo
+            data = {
+                "fecha": submission.fecha.isoformat() if submission.fecha else "",
+                "tipo_cliente": submission.tipo_cliente,
+                "tipo_vinculacion": submission.tipo_vinculacion,
+                "tipo_persona": submission.tipo_persona,
+                "nombres": submission.nombres,
+                "apellidos": submission.apellidos,
+                "razon_social": submission.razon_social,
+                "numero_id": submission.numero_id,
+            }
+        
         generate_official_pdf(data, file_path)
 
-    from fastapi.responses import FileResponse
     return FileResponse(file_path, media_type='application/pdf', filename=f"formulario_{submission_id}.pdf")
 
 
@@ -61,7 +77,8 @@ async def upload_documents(
     if submission.user_id != current_user.id:
         raise HTTPException(status_code=403, detail="Solo el propietario puede subir documentos")
     
-    if submission.status != SubmissionStatus.BORRADOR:
+    # ✅ CORREGIDO: Usar .value para comparar con String
+    if submission.status != SubmissionStatus.BORRADOR.value:
         raise HTTPException(status_code=400, detail="La solicitud ya fue enviada o está en revisión")
 
     # Crear carpeta para esta submission
@@ -74,22 +91,25 @@ async def upload_documents(
             with open(file_path, "wb") as buffer:
                 shutil.copyfileobj(file.file, buffer)
             
-            # Registrar en BD
+            # ✅ CORREGIDO: Usar document_type (no file_type)
             doc_record = SubmissionDocument(
                 submission_id=submission_id,
-                file_type="anexo", # Podrías inferirlo del nombre o agregar un campo extra
+                document_type="anexo",
                 file_path=file_path,
                 file_name=file.filename,
                 uploaded_by=current_user.id
             )
             db.add(doc_record)
         
-        # Cambiar estado a Pendiente Revisión
-        submission.status = SubmissionStatus.PENDIENTE_REVISION
+        # ✅ CORREGIDO: Usar .value para asignar String
+        submission.status = SubmissionStatus.PENDIENTE_REVISION.value
         submission.submitted_at = datetime.utcnow()
         db.commit()
         
-        return {"message": "Documentos subidos exitosamente. Solicitud enviada a revisión.", "status": submission.status}
+        return {
+            "message": "Documentos subidos exitosamente. Solicitud enviada a revisión.",
+            "status": submission.status
+        }
     
     except Exception as e:
         db.rollback()
@@ -100,7 +120,7 @@ async def upload_documents(
 @router.put("/{submission_id}/validate")
 async def validate_submission(
     submission_id: int,
-    action: str, # 'APROBADO' o 'RECHAZADO'
+    action: str,  # 'APROBADO' o 'RECHAZADO'
     comments: Optional[str] = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -112,14 +132,15 @@ async def validate_submission(
     if not submission:
         raise HTTPException(status_code=404, detail="Solicitud no encontrada")
     
-    if submission.status != SubmissionStatus.PENDIENTE_REVISION:
+    # ✅ CORREGIDO: Usar .value para comparar con String
+    if submission.status != SubmissionStatus.PENDIENTE_REVISION.value:
         raise HTTPException(status_code=400, detail="La solicitud no está pendiente de revisión")
 
-    # Determinar nuevo estado
+    # ✅ CORREGIDO: Usar .value para asignar String
     if action.upper() == "APROBADO":
-        new_status = SubmissionStatus.APROBADO
+        new_status = SubmissionStatus.APROBADO.value
     elif action.upper() == "RECHAZADO":
-        new_status = SubmissionStatus.RECHAZADO
+        new_status = SubmissionStatus.RECHAZADO.value
     else:
         raise HTTPException(status_code=400, detail="Acción inválida. Use APROBADO o RECHAZADO")
 
@@ -133,10 +154,13 @@ async def validate_submission(
         user_id=current_user.id,
         action=action.upper(),
         comments=comments,
-        ip_address="127.0.0.1", # En producción usar request.client.host
-        user_agent="AdminPanel" # En producción usar request.headers.get('user-agent')
+        ip_address="127.0.0.1",
+        user_agent="AdminPanel"
     )
     db.add(audit_log)
     db.commit()
 
-    return {"message": f"Solicitud {action.lower()} correctamente", "new_status": new_status}
+    return {
+        "message": f"Solicitud {action.lower()} correctamente",
+        "new_status": new_status
+    }

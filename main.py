@@ -1,16 +1,30 @@
 from fastapi import FastAPI
 from dotenv import load_dotenv
-from app.database.core import create_tables
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
+
+# ✅ IMPORTANTE: Importar TODOS los modelos ANTES de create_tables()
+# Esto asegura que las tablas de submissions se creen correctamente
+from app.models import (
+    User, City, Country, FinancialInformation, HealthSafetyRequirements,
+    InfoShareComposition, LegalRepresentativeInformation, NaturalPerson,
+    LegalPerson, OccupationalHealthSafetyRequirements, Office,
+    RequiredDocuments, References, TypeUser, TypeDocument, Region,
+    TaxFiscalInformation, GeneralInformation, Municipality, AuthorizationsPolicies,
+    Submission, SubmissionDocument, AuditLog  # ✅ NUEVOS: Modelos de Fase 4
+)
+
+from app.database.core import create_tables
 create_tables()
 
 app = FastAPI(title="Management Providers API", version="1.0.0")
 
+# ============================================
 # CORS
+# ============================================
 origins = ["*"]
 app.add_middleware(
     CORSMiddleware,
@@ -25,7 +39,8 @@ app.add_middleware(
 # ============================================
 from app.api.post.post_login import router as login
 from app.api.post.post_user import router as info_user
-from app.api.post.post_form_supplier import routes as form_supplier  # ✅ AGREGADO
+from app.api.post.post_form_supplier import routes as form_supplier
+from app.api.post.upload_validation.router import router as submissions_router  # ✅ FASE 4
 
 # ============================================
 # ROUTERS - GET
@@ -42,7 +57,8 @@ from app.api.get.get_user_id import routes as userbyid
 # POST
 app.include_router(login, prefix="/api")
 app.include_router(info_user, prefix="/api/admin")
-app.include_router(form_supplier, prefix="/api")  # ✅ AGREGADO
+app.include_router(form_supplier, prefix="/api")
+app.include_router(submissions_router, prefix="/api/submissions", tags=["Submissions"])  # ✅ FASE 4
 
 # GET
 app.include_router(users, prefix="/api/admin")
@@ -54,11 +70,6 @@ app.include_router(userbyid, prefix="/api/admin")
 # ============================================
 # ENDPOINTS ADICIONALES (compatibilidad frontend)
 # ============================================
-# Alias plural para compatibilidad con el frontend
-from app.api.get.get_city import routes as city_plural
-from app.api.get.get_country import routes as country_plural
-from app.api.get.get_office import routes as office_plural
-
 @app.get("/api/cities")
 async def get_cities():
     """Alias plural para /api/city"""
@@ -136,7 +147,7 @@ async def dashboard():
 
 @app.get("/admin/formulario")
 async def formulario_page():
-    return FileResponse("app/pages/admin/form/form.html")
+    return FileResponse("app/pages/Formulario/formulario.html")
 
 @app.get("/admin/confirmacion")
 async def confirmacion_page():
@@ -152,7 +163,7 @@ async def customer_dashboard():
 
 @app.get("/admin/menu")
 async def admin_menu_page():
-    return FileResponse("/pages/menu-admin/admin_menu.html")
+    return FileResponse("app/pages/menu-admin/admin_menu.html")  # ✅ CORREGIDO: Agregado "app/"
 
 @app.get("/usuario")
 async def usuario_page():

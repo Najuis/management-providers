@@ -19,3 +19,6 @@ from app.models.modal_general_information import GeneralInformation
 from app.models.model_municipality import Municipality
 from app.models.model_authorizations_policies import AuthorizationsPolicies
 from .submission_models import Submission, SubmissionDocument, AuditLog
+from app.models.submission_models import Submission, SubmissionDocument, AuditLog, SubmissionStatus, RiskLevel
+from app.models.user import User
+__all__ = ["Submission", "SubmissionDocument", "AuditLog", "SubmissionStatus", "RiskLevel", "User"]
