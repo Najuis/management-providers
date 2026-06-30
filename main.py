@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 load_dotenv()
 create_tables()
 
-app = FastAPI()
+app = FastAPI(title="Management Providers API", version="1.0.0")
 
 # CORS
 origins = ["*"]
@@ -20,29 +20,114 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Routers existentes
+# ============================================
+# ROUTERS - POST
+# ============================================
 from app.api.post.post_login import router as login
 from app.api.post.post_user import router as info_user
+from app.api.post.post_form_supplier import routes as form_supplier  # ✅ AGREGADO
+
+# ============================================
+# ROUTERS - GET
+# ============================================
 from app.api.get.get_users import routes as users
 from app.api.get.get_city import routes as city
 from app.api.get.get_country import routes as country
 from app.api.get.get_office import routes as office
 from app.api.get.get_user_id import routes as userbyid
 
+# ============================================
+# INCLUIR ROUTERS
+# ============================================
+# POST
 app.include_router(login, prefix="/api")
 app.include_router(info_user, prefix="/api/admin")
+app.include_router(form_supplier, prefix="/api")  # ✅ AGREGADO
+
+# GET
 app.include_router(users, prefix="/api/admin")
 app.include_router(city, prefix="/api")
 app.include_router(country, prefix="/api")
 app.include_router(office, prefix="/api")
 app.include_router(userbyid, prefix="/api/admin")
 
-# Static files
+# ============================================
+# ENDPOINTS ADICIONALES (compatibilidad frontend)
+# ============================================
+# Alias plural para compatibilidad con el frontend
+from app.api.get.get_city import routes as city_plural
+from app.api.get.get_country import routes as country_plural
+from app.api.get.get_office import routes as office_plural
+
+@app.get("/api/cities")
+async def get_cities():
+    """Alias plural para /api/city"""
+    from app.crud.get.get_city import get_city_db
+    from app.database.get_db import get_db
+    from fastapi import Depends
+    from sqlalchemy.orm import Session
+    
+    async def get_cities_wrapper(db: Session = Depends(get_db)):
+        cities = await get_city_db(db)
+        return cities if cities else []
+    
+    return await get_cities_wrapper()
+
+@app.get("/api/countries")
+async def get_countries():
+    """Alias plural para /api/country"""
+    from app.crud.get.get_country import get_country_db
+    from app.database.get_db import get_db
+    from fastapi import Depends
+    from sqlalchemy.orm import Session
+    
+    async def get_countries_wrapper(db: Session = Depends(get_db)):
+        countries = await get_country_db(db)
+        return countries if countries else []
+    
+    return await get_countries_wrapper()
+
+@app.get("/api/offices")
+async def get_offices():
+    """Alias plural para /api/office"""
+    from app.crud.get.get_office import get_office_db
+    from app.database.get_db import get_db
+    from fastapi import Depends
+    from sqlalchemy.orm import Session
+    
+    async def get_offices_wrapper(db: Session = Depends(get_db)):
+        offices = await get_office_db(db)
+        return offices if offices else []
+    
+    return await get_offices_wrapper()
+
+@app.get("/api/ciiu")
+async def get_ciiu():
+    """Códigos CIIU de ejemplo"""
+    return [
+        {"codigo": "0111", "descripcion": "Cultivo de cereales (excepto arroz), legumbres y semillas oleaginosas"},
+        {"codigo": "0112", "descripcion": "Cultivo de arroz"},
+        {"codigo": "1011", "descripcion": "Procesamiento y conservación de carne y productos cárnicos"},
+        {"codigo": "4711", "descripcion": "Comercio al por menor en establecimientos no especializados"},
+        {"codigo": "4661", "descripcion": "Comercio al por mayor de combustibles sólidos, líquidos y gaseosos"},
+        {"codigo": "5210", "descripcion": "Almacenamiento y depósito"},
+        {"codigo": "7010", "descripcion": "Actividades de consultoría de gestión"},
+    ]
+
+# ============================================
+# STATIC FILES
+# ============================================
 app.mount("/pages", StaticFiles(directory="app/pages"), name="pages")
 
-# Rutas de páginas
+# ============================================
+# RUTAS DE PÁGINAS HTML
+# ============================================
 @app.get("/")
 async def root():
+    return FileResponse("app/pages/login/login.html")
+
+@app.get("/login")
+async def login_page():
     return FileResponse("app/pages/login/login.html")
 
 @app.get("/admin/dashboard")
@@ -51,7 +136,7 @@ async def dashboard():
 
 @app.get("/admin/formulario")
 async def formulario_page():
-    return FileResponse("app/pages/Formulario/formulario.html")
+    return FileResponse("app/pages/admin/form/form.html")
 
 @app.get("/admin/confirmacion")
 async def confirmacion_page():
@@ -67,7 +152,7 @@ async def customer_dashboard():
 
 @app.get("/admin/menu")
 async def admin_menu_page():
-    return FileResponse("app/pages/menu-admin/admin_menu.html")
+    return FileResponse("/pages/menu-admin/admin_menu.html")
 
 @app.get("/usuario")
 async def usuario_page():
