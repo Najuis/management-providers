@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validación de Documentos | Admin</title>
+    <link rel="stylesheet" href="/pages/admin/validacion_documentos/styles.css">
+    <!-- Iconos -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar (Simplificado para este ejemplo) -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>Admin Panel</h2>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/admin/dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="#" class="active"><i class="fas fa-file-signature"></i> Validar Documentos</a></li>
+                    <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main class="main-content">
+            <header>
+                <h1>Gestión de Solicitudes</h1>
+                <div class="user-info">
+                    <span id="admin-name">Administrador</span>
+                </div>
+            </header>
+
+            <!-- Filtros -->
+            <section class="filters-section">
+                <div class="filter-group">
+                    <label for="status-filter">Estado:</label>
+                    <select id="status-filter">
+                        <option value="all">Todos</option>
+                        <option value="pendiente_revision">Pendientes</option>
+                        <option value="aprobado">Aprobados</option>
+                        <option value="rechazado">Rechazados</option>
+                    </select>
+                </div>
+                <button id="btn-refresh" class="btn-secondary"><i class="fas fa-sync"></i> Actualizar</button>
+            </section>
+
+            <!-- Tabla de Solicitudes -->
+            <section class="table-section">
+                <table id="submissions-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuario</th>
+                            <th>Fecha Envío</th>
+                            <th>Riesgo</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Se llena dinámicamente con JS -->
+                        <tr><td colspan="6" class="loading">Cargando solicitudes...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal de Revisión -->
+    <div id="review-modal" class="modal hidden">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2>Revisión de Solicitud #<span id="modal-submission-id"></span></h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            
+            <div class="modal-body-grid">
+                <!-- Columna Izquierda: Detalles y Docs -->
+                <div class="details-panel">
+                    <h3>Detalles del Solicitante</h3>
+                    <div id="applicant-details" class="info-card">
+                        <!-- Datos dinámicos -->
+                    </div>
+
+                    <h3>Documentos Adjuntos</h3>
+                    <div id="documents-list" class="docs-list">
+                        <!-- Lista de archivos para descargar -->
+                    </div>
+
+                    <div class="action-panel">
+                        <h3>Decisión</h3>
+                        <textarea id="audit-comments" placeholder="Escribe tus observaciones aquí..."></textarea>
+                        <div class="buttons-row">
+                            <button id="btn-reject" class="btn-danger"><i class="fas fa-times"></i> Rechazar</button>
+                            <button id="btn-approve" class="btn-success"><i class="fas fa-check"></i> Aprobar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna Derecha: Visor PDF (Simulado con iframe o enlace) -->
+                <div class="preview-panel">
+                    <h3>Vista Previa del Formulario</h3>
+                    <iframe id="pdf-viewer" src="" width="100%" height="100%"></iframe>
+                    <p class="note">Si el PDF no carga, <a id="direct-pdf-link" href="#" target="_blank">haz clic aquí para abrirlo</a>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/pages/admin/validacion_documentos/app.js"></script>
+</body>
+</html>

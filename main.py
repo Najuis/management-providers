@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 
-# ✅ IMPORTANTE: Importar TODOS los modelos ANTES de create_tables()
+# ✅ IMPORTANTE: Importar TODOS los modelos ANTES de create_tablaesto salio de las tablas que paso Mila
 # Esto asegura que las tablas de submissions se creen correctamente
 from app.models import (
     User, City, Country, FinancialInformation, HealthSafetyRequirements,
@@ -163,7 +163,12 @@ async def customer_dashboard():
 
 @app.get("/admin/menu")
 async def admin_menu_page():
-    return FileResponse("app/pages/menu-admin/admin_menu.html")  # ✅ CORREGIDO: Agregado "app/"
+    return FileResponse("app/pages/menu-admin/admin_menu.html")
+
+@app.get("/admin/validacion-documentos")
+async def validacion_documentos_page():
+    """Página de validación de documentos (Fase 4)"""
+    return FileResponse("app/pages/admin/validacion_documentos/index.html")
 
 @app.get("/usuario")
 async def usuario_page():

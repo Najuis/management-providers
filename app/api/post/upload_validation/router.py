@@ -19,6 +19,108 @@ router = APIRouter()
 
 UPLOAD_DIR = "app/uploads"
 
+# ============================================
+# ENDPOINTS ADICIONALES PARA EL FRONTEND (NUEVOS)
+# ============================================
+
+# --- 0. LISTAR SOLICITUDES (GET /api/submissions) ---
+@router.get("")
+async def list_submissions(
+    status: Optional[str] = None,
+    risk: Optional[str] = None,
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Listar todas las solicitudes con filtros"""
+    query = db.query(Submission)
+    
+    if status and status != 'all':
+        query = query.filter(Submission.status == status)
+    
+    if risk:
+        query = query.filter(Submission.risk_level == risk)
+    
+    submissions = query.order_by(Submission.created_at.desc()).offset(skip).limit(limit).all()
+    
+    return {
+        "submissions": submissions,
+        "total": len(submissions),
+        "skip": skip,
+        "limit": limit
+    }
+
+
+# --- 0.1. OBTENER DETALLES DE UNA SOLICITUD (GET /api/submissions/{id}) ---
+@router.get("/{submission_id}")
+async def get_submission(
+    submission_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Obtener detalles completos de una solicitud"""
+    submission = db.query(Submission).filter(Submission.id == submission_id).first()
+    
+    if not submission:
+        raise HTTPException(status_code=404, detail="Solicitud no encontrada")
+    
+    documents = db.query(SubmissionDocument).filter(
+        SubmissionDocument.submission_id == submission_id
+    ).all()
+    
+    return {
+        "id": submission.id,
+        "user_id": submission.user_id,
+        "fecha": submission.fecha.isoformat() if submission.fecha else None,
+        "tipo_cliente": submission.tipo_cliente,
+        "tipo_vinculacion": submission.tipo_vinculacion,
+        "ciudad_id": submission.ciudad_id,
+        "oficina": submission.oficina,
+        "tipo_persona": submission.tipo_persona,
+        "nombres": submission.nombres,
+        "apellidos": submission.apellidos,
+        "razon_social": submission.razon_social,
+        "tipo_id": submission.tipo_id,
+        "numero_id": submission.numero_id,
+        "fecha_expedicion": submission.fecha_expedicion.isoformat() if submission.fecha_expedicion else None,
+        "estructura_juridica": submission.estructura_juridica,
+        "codigo_ciiu": submission.codigo_ciiu,
+        "pais_origen_id": submission.pais_origen_id,
+        "pais_residencia_id": submission.pais_residencia_id,
+        "zona": submission.zona,
+        "regimen_tributario": submission.regimen_tributario,
+        "total_ingresos": submission.total_ingresos,
+        "total_egresos": submission.total_egresos,
+        "aut_datos": submission.aut_datos,
+        "aut_laft": submission.aut_laft,
+        "aut_anticorrupcion": submission.aut_anticorrupcion,
+        "aut_etica": submission.aut_etica,
+        "status": submission.status,
+        "risk_level": submission.risk_level,
+        "observations": submission.observations,
+        "validation_notes": submission.validation_notes,
+        "created_at": submission.created_at.isoformat() if submission.created_at else None,
+        "updated_at": submission.updated_at.isoformat() if submission.updated_at else None,
+        "submitted_at": submission.submitted_at.isoformat() if submission.submitted_at else None,
+        "validated_at": submission.validated_at.isoformat() if submission.validated_at else None,
+        "documents": [
+            {
+                "id": doc.id,
+                "document_type": doc.document_type,
+                "file_path": doc.file_path,
+                "file_name": doc.file_name,
+                "uploaded_at": doc.uploaded_at.isoformat() if doc.uploaded_at else None
+            }
+            for doc in documents
+        ]
+    }
+
+
+# ============================================
+# ENDPOINTS EXISTENTES (MANTENIDOS)
+# ============================================
+
 # --- 1. Descargar PDF Oficial ---
 @router.get("/{submission_id}/download-pdf")
 async def download_pdf(
