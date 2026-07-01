@@ -1,9 +1,27 @@
 from __future__ import annotations
-from typing import List, Optional
+from typing import List, Optional, TYPE_CHECKING
 from sqlalchemy import String, Integer, ForeignKey, Boolean, DateTime
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from app.database.base import Base
 from datetime import datetime
+
+# ✅ IMPORTS CONDICIONALES - Solo para análisis estático de tipos (Pylance)
+# Esto evita imports circulares en runtime
+if TYPE_CHECKING:
+    from app.models.model_type_user import TypeUser
+    from app.models.model_general_information import GeneralInformation
+    from app.models.model_natural_person import NaturalPerson
+    from app.models.model_legal_person import LegalPerson
+    from app.models.model_tax_fiscal_information import TaxFiscalInformation
+    from app.models.model_financial_information import FinancialInformation
+    from app.models.model_legal_representative_information import LegalRepresentativeInformation
+    from app.models.model_info_share_composition import InfoShareComposition
+    from app.models.model_references import References
+    from app.models.model_occupational_health_safety_requirements import OccupationalHealthSafetyRequirements
+    from app.models.model_health_safety_requirements import HealthSafetyRequirements
+    from app.models.model_required_documents import RequiredDocuments
+    from app.models.model_authorizations_policies import AuthorizationsPolicies
+    from app.models.submission_models import Submission
 
 
 class User(Base):
@@ -34,7 +52,7 @@ class User(Base):
     required_documents: Mapped[List["RequiredDocuments"]] = relationship(back_populates="user")
     authorizations_policies: Mapped["AuthorizationsPolicies"] = relationship(back_populates="user")
     
-    # ✅ NUEVA: Relación con Submissions
+    # Relación con Submissions (Fase 4)
     submissions: Mapped[List["Submission"]] = relationship(
         "Submission", 
         back_populates="user",
