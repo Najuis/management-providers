@@ -1,20 +1,21 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException
 from dotenv import load_dotenv
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session
+from app.database.get_db import get_db
 
 load_dotenv()
 
-# ✅ IMPORTANTE: Importar TODOS los modelos ANTES de create_tablaesto salio de las tablas que paso Mila
-# Esto asegura que las tablas de submissions se creen correctamente
+# ✅ IMPORTANTE: Importar TODOS los modelos ANTES de create_tables()
 from app.models import (
     User, City, Country, FinancialInformation, HealthSafetyRequirements,
     InfoShareComposition, LegalRepresentativeInformation, NaturalPerson,
     LegalPerson, OccupationalHealthSafetyRequirements, Office,
     RequiredDocuments, References, TypeUser, TypeDocument, Region,
     TaxFiscalInformation, GeneralInformation, Municipality, AuthorizationsPolicies,
-    Submission, SubmissionDocument, AuditLog  # ✅ NUEVOS: Modelos de Fase 4
+    Submission, SubmissionDocument, AuditLog
 )
 
 from app.database.core import create_tables
@@ -40,7 +41,7 @@ app.add_middleware(
 from app.api.post.post_login import router as login
 from app.api.post.post_user import router as info_user
 from app.api.post.post_form_supplier import routes as form_supplier
-from app.api.post.upload_validation.router import router as submissions_router  # ✅ FASE 4
+from app.api.post.upload_validation.router import router as submissions_router
 
 # ============================================
 # ROUTERS - GET
@@ -54,13 +55,11 @@ from app.api.get.get_user_id import routes as userbyid
 # ============================================
 # INCLUIR ROUTERS
 # ============================================
-# POST
 app.include_router(login, prefix="/api")
 app.include_router(info_user, prefix="/api/admin")
 app.include_router(form_supplier, prefix="/api")
-app.include_router(submissions_router, prefix="/api/submissions", tags=["Submissions"])  # ✅ FASE 4
+app.include_router(submissions_router, prefix="/api/submissions", tags=["Submissions"])
 
-# GET
 app.include_router(users, prefix="/api/admin")
 app.include_router(city, prefix="/api")
 app.include_router(country, prefix="/api")
@@ -68,49 +67,43 @@ app.include_router(office, prefix="/api")
 app.include_router(userbyid, prefix="/api/admin")
 
 # ============================================
-# ENDPOINTS ADICIONALES (compatibilidad frontend)
+# ENDPOINTS ADICIONALES (compatibilidad frontend) - ✅ CORREGIDOS
 # ============================================
 @app.get("/api/cities")
-async def get_cities():
+async def get_cities(db: Session = Depends(get_db)):
     """Alias plural para /api/city"""
     from app.crud.get.get_city import get_city_db
-    from app.database.get_db import get_db
-    from fastapi import Depends
-    from sqlalchemy.orm import Session
     
-    async def get_cities_wrapper(db: Session = Depends(get_db)):
+    try:
         cities = await get_city_db(db)
         return cities if cities else []
-    
-    return await get_cities_wrapper()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al obtener ciudades: {str(e)}")
+
 
 @app.get("/api/countries")
-async def get_countries():
+async def get_countries(db: Session = Depends(get_db)):
     """Alias plural para /api/country"""
     from app.crud.get.get_country import get_country_db
-    from app.database.get_db import get_db
-    from fastapi import Depends
-    from sqlalchemy.orm import Session
     
-    async def get_countries_wrapper(db: Session = Depends(get_db)):
+    try:
         countries = await get_country_db(db)
         return countries if countries else []
-    
-    return await get_countries_wrapper()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al obtener países: {str(e)}")
+
 
 @app.get("/api/offices")
-async def get_offices():
+async def get_offices(db: Session = Depends(get_db)):
     """Alias plural para /api/office"""
     from app.crud.get.get_office import get_office_db
-    from app.database.get_db import get_db
-    from fastapi import Depends
-    from sqlalchemy.orm import Session
     
-    async def get_offices_wrapper(db: Session = Depends(get_db)):
+    try:
         offices = await get_office_db(db)
         return offices if offices else []
-    
-    return await get_offices_wrapper()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al obtener oficinas: {str(e)}")
+
 
 @app.get("/api/ciiu")
 async def get_ciiu():

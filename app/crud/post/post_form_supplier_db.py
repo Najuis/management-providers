@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from app.models.modal_general_information import GeneralInformation
+from app.models.model_general_information import GeneralInformation
 from app.models.model_financial_information import FinancialInformation
 from app.models.model_health_safety_requirements import HealthSafetyRequirements
 from app.models.model_info_share_composition import InfoShareComposition

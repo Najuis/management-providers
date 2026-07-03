@@ -1,7 +1,7 @@
 from app.config.config import SECRET_KEY, ALGORITHM, CREDENTIALS_EXCEPTION
 from app.middleware.security import oauth2_scheme
 from app.database.get_db import get_db
-from app.models.user import User
+from app.models.model_user import User
 from fastapi import Depends, HTTPException, status
 from typing import Annotated
 from sqlalchemy.orm import Session

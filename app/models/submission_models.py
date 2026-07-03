@@ -22,7 +22,7 @@ class Submission(Base):
     __tablename__ = "submissions"
     
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    user_id = Column(Integer, ForeignKey("lmp_user.id_user"), nullable=True)  # ✅ CORREGIDO
     
     # Información general
     fecha = Column(DateTime, nullable=False)
@@ -74,8 +74,10 @@ class Submission(Base):
     validated_at = Column(DateTime, nullable=True)
     
     # Relaciones
+    user = relationship("User", back_populates="submissions")  # ✅ AGREGADO: Relación inversa
     documents = relationship("SubmissionDocument", back_populates="submission", cascade="all, delete-orphan")
     audit_logs = relationship("AuditLog", back_populates="submission", cascade="all, delete-orphan")
+
 
 class SubmissionDocument(Base):
     __tablename__ = "submission_documents"
@@ -86,16 +88,17 @@ class SubmissionDocument(Base):
     file_path = Column(String(500), nullable=False)
     file_name = Column(String(200), nullable=False)
     uploaded_at = Column(DateTime, default=datetime.utcnow)
-    uploaded_by = Column(Integer, ForeignKey("users.id"), nullable=True)
+    uploaded_by = Column(Integer, ForeignKey("lmp_user.id_user"), nullable=True)  # ✅ CORREGIDO
     
     submission = relationship("Submission", back_populates="documents")
+
 
 class AuditLog(Base):
     __tablename__ = "audit_logs"
     
     id = Column(Integer, primary_key=True, index=True)
     submission_id = Column(Integer, ForeignKey("submissions.id"), nullable=False)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    user_id = Column(Integer, ForeignKey("lmp_user.id_user"), nullable=True)  # ✅ CORREGIDO
     action = Column(String(50), nullable=False)
     comments = Column(Text, nullable=True)
     ip_address = Column(String(50), nullable=True)

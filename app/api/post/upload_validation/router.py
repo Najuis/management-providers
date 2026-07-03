@@ -10,7 +10,7 @@ from datetime import datetime
 # ✅ IMPORTS CORREGIDOS (rutas reales del proyecto)
 from app.database.get_db import get_db
 from app.models.submission_models import Submission, SubmissionDocument, AuditLog, SubmissionStatus, RiskLevel
-from app.models.user import User
+from app.models.model_user import User
 from app.services.pdf_generator import generate_official_pdf
 from app.services.risk_calculator import calculate_risk
 from app.middleware.current_user import get_current_user
