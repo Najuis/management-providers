@@ -2,9 +2,8 @@ from app.models.submission_models import RiskLevel
 from typing import Optional
 import logging
 
-# Configurar logging
+# ✅ CORREGIDO: __name__ en lugar de name
 logger = logging.getLogger(__name__)
-
 
 def calculate_risk(
     pais_origen_id: int,
@@ -16,18 +15,6 @@ def calculate_risk(
     - País de origen (peso: 40%)
     - Ciudad (peso: 30%)
     - Actividad económica CIIU (peso: 30%)
-    
-    Args:
-        pais_origen_id: ID del país de origen
-        ciudad_id: ID de la ciudad
-        codigo_ciiu: Código CIIU de la actividad económica
-    
-    Returns:
-        str: Nivel de riesgo ('bajo', 'medio', 'alto', 'extremo')
-    
-    Example:
-        >>> calculate_risk(10, 5, "0111")
-        'extremo'
     """
     # Validar parámetros
     if not all([pais_origen_id, ciudad_id, codigo_ciiu]):
@@ -36,11 +23,7 @@ def calculate_risk(
     
     risk_score = 0.0
     
-    # ============================================
     # FACTOR 1: País de origen (40% del riesgo)
-    # ============================================
-    # TODO: En producción, estos IDs deben venir de una tabla en BD
-    # Ejemplo: SELECT id FROM countries WHERE risk_level = 'high'
     high_risk_countries = [10, 20, 30, 40, 50]
     medium_risk_countries = [60, 70, 80]
     
@@ -49,10 +32,7 @@ def calculate_risk(
     elif pais_origen_id in medium_risk_countries:
         risk_score += 0.2
     
-    # ============================================
     # FACTOR 2: Ciudad (30% del riesgo)
-    # ============================================
-    # TODO: En producción, estos IDs deben venir de una tabla en BD
     high_risk_cities = [5, 15, 25, 35]
     medium_risk_cities = [45, 55]
     
@@ -61,34 +41,16 @@ def calculate_risk(
     elif ciudad_id in medium_risk_cities:
         risk_score += 0.15
     
-    # ============================================
     # FACTOR 3: Código CIIU (30% del riesgo)
-    # ============================================
-    # TODO: En producción, estos códigos deben venir de una tabla en BD
-    # Actividades de alto riesgo financiero/lavado de activos
-    high_risk_ciiu = [
-        "0111",  # Cultivo de cereales
-        "0112",  # Cultivo de arroz
-        "1011",  # Procesamiento de carne
-        "4661",  # Comercio al por mayor de combustibles
-        "6419",  # Otros intermediarios monetarios
-        "6499",  # Otros servicios financieros
-        "7010",  # Actividades de consultoría de gestión
-    ]
-    
-    medium_risk_ciiu = [
-        "4711",  # Comercio al por menor
-        "5210",  # Almacenamiento y depósito
-    ]
+    high_risk_ciiu = ["0111", "0112", "1011", "4661", "6419", "6499", "7010"]
+    medium_risk_ciiu = ["4711", "5210"]
     
     if codigo_ciiu in high_risk_ciiu:
         risk_score += 0.3
     elif codigo_ciiu in medium_risk_ciiu:
         risk_score += 0.15
     
-    # ============================================
-    # DETERMINAR NIVEL DE RIESGO
-    # ============================================
+    # Determinar nivel de riesgo
     risk_level = _determine_risk_level(risk_score)
     
     logger.info(
@@ -102,21 +64,16 @@ def calculate_risk(
 def _determine_risk_level(score: float) -> str:
     """
     Determinar nivel de riesgo basado en el score calculado.
-    
-    Umbrales:
-    - Extremo: score >= 0.75
-    - Alto: score >= 0.50
-    - Medio: score >= 0.25
-    - Bajo: score < 0.25
     """
+    # ✅ CORREGIDO: Usar los valores correctos del enum
     if score >= 0.75:
-        return RiskLevel.EXTREME.value
+        return RiskLevel.EXTREMO.value   # ✅ Era EXTREME
     elif score >= 0.50:
-        return RiskLevel.HIGH.value
+        return RiskLevel.ALTO.value      # ✅ Era HIGH
     elif score >= 0.25:
-        return RiskLevel.MEDIUM.value
+        return RiskLevel.MEDIO.value     # ✅ Era MEDIUM
     else:
-        return RiskLevel.LOW.value
+        return RiskLevel.BAJO.value      # ✅ Era LOW
 
 
 def calculate_risk_detailed(
@@ -126,9 +83,6 @@ def calculate_risk_detailed(
 ) -> dict:
     """
     Calcular riesgo con detalles (para debugging y auditoría).
-    
-    Returns:
-        dict: Diccionario con score, level y factores
     """
     risk_score = 0.0
     factors = {

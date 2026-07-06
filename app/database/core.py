@@ -9,7 +9,7 @@ from app.models import (
     RequiredDocuments, References, TypeUser, TypeDocument, Region,
     TaxFiscalInformation, GeneralInformation, Municipality,
     AuthorizationsPolicies,
-    # NUEVO: Modelos de Fase 4 (Submissions)
+    # ✅ NUEVO: Modelos de Fase 4 (Submissions)
     Submission, SubmissionDocument, AuditLog
 )
 

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard del Cliente - Lagobo Distribuciones</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e40af;
+            --primary-hover: #1e3a8a;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --radius: 8px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+        }
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 { font-size: 1.3rem; font-weight: 600; }
+        .header p { font-size: 0.85rem; opacity: 0.85; margin-top: 0.2rem; }
+        .btn-logout {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .btn-logout:hover { background: white; color: var(--primary); }
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        .welcome-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .welcome-card h2 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        .welcome-card p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .action-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow);
+        }
+        .action-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.15);
+        }
+        .action-card h3 {
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        .action-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .status-section {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+        .status-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.2s;
+        }
+        .btn-primary:hover { background: var(--primary-hover); }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div>
+            <h1>👤 Panel del Tercero</h1>
+            <p>Sistema de Vinculación - Lagobo Distribuciones S.A.S</p>
+        </div>
+        <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
+    </header>
+
+    <main class="container">
+        <section class="welcome-card">
+            <h2>Bienvenido al Panel del Cliente</h2>
+            <p>Gestiona tus solicitudes de vinculación y consulta el estado de tus trámites.</p>
+            <a href="/usuario" class="btn-primary">📝 Nueva Solicitud de Vinculación</a>
+        </section>
+
+        <section class="actions-grid">
+            <div class="action-card" onclick="window.location.href='/usuario'">
+                <h3>📝 Nueva Solicitud</h3>
+                <p>Inicia un nuevo proceso de vinculación como tercero de Lagobo.</p>
+            </div>
+            <div class="action-card" onclick="window.location.href='/admin/confirmacion'">
+                <h3>📋 Mis Solicitudes</h3>
+                <p>Consulta el estado de tus solicitudes enviadas.</p>
+            </div>
+            <div class="action-card" onclick="window.location.href='/admin/formulario'">
+                <h3>📄 Formulario Completo</h3>
+                <p>Accede al formulario completo de vinculación de terceros.</p>
+            </div>
+        </section>
+
+        <section class="status-section">
+            <h3>📊 Estado de Mis Solicitudes</h3>
+            <div id="submissionsList" class="empty-state">
+                <p>No tienes solicitudes activas en este momento.</p>
+                <p style="margin-top: 1rem;">
+                    <a href="/usuario" class="btn-primary">Iniciar Nueva Solicitud</a>
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function logout() {
+            if (confirm('¿Confirmar cierre de sesión?')) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('type_user');
+                localStorage.removeItem('user_session_id');
+                window.location.href = '/login';
+            }
+        }
+
+        // Cargar solicitudes del usuario
+        async function loadUserSubmissions() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/submissions', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.status === 401) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/login';
+                    return;
+                }
+
+                if (response.ok) {
+                    const data = await response.json();
+                    renderSubmissions(data.submissions || []);
+                }
+            } catch (error) {
+                console.error('Error cargando solicitudes:', error);
+            }
+        }
+
+        function renderSubmissions(submissions) {
+            const container = document.getElementById('submissionsList');
+            
+            if (!submissions || submissions.length === 0) {
+                container.innerHTML = `
+                    <p>No tienes solicitudes activas en este momento.</p>
+                    <p style="margin-top: 1rem;">
+                        <a href="/usuario" class="btn-primary">Iniciar Nueva Solicitud</a>
+                    </p>
+                `;
+                return;
+            }
+
+            const statusMap = {
+                'borrador': { class: 'warning', text: 'Borrador' },
+                'pendiente_revision': { class: 'warning', text: 'Pendiente' },
+                'en_revision': { class: 'warning', text: 'En Revisión' },
+                'aprobado': { class: 'success', text: 'Aprobado' },
+                'rechazado': { class: 'danger', text: 'Rechazado' }
+            };
+
+            let html = '<table style="width:100%; border-collapse: collapse;">';
+            html += '<thead><tr style="background:#f1f5f9;"><th style="padding:10px; text-align:left;">ID</th><th style="padding:10px; text-align:left;">Fecha</th><th style="padding:10px; text-align:left;">Estado</th><th style="padding:10px; text-align:left;">Riesgo</th></tr></thead><tbody>';
+            
+            submissions.forEach(sub => {
+                const status = statusMap[sub.status] || { class: 'warning', text: sub.status };
+                const fecha = sub.submitted_at ? new Date(sub.submitted_at).toLocaleDateString('es-CO') : 'N/A';
+                
+                html += `<tr style="border-bottom:1px solid #e2e8f0;">
+                    <td style="padding:10px;">#${sub.id}</td>
+                    <td style="padding:10px;">${fecha}</td>
+                    <td style="padding:10px;"><span style="padding:4px 8px; border-radius:12px; font-size:0.8rem; background:${status.class === 'success' ? '#d1fae5' : status.class === 'danger' ? '#fee2e2' : '#fef3c7'};">${status.text}</span></td>
+                    <td style="padding:10px;">${sub.risk_level || 'N/A'}</td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        // Cargar al iniciar
+        document.addEventListener('DOMContentLoaded', loadUserSubmissions);
+    </script>
+</body>
+</html>

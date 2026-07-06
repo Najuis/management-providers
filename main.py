@@ -5,6 +5,7 @@ from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from app.database.get_db import get_db
+from app.middleware.current_user import get_current_user
 
 load_dotenv()
 
@@ -117,7 +118,20 @@ async def get_ciiu():
         {"codigo": "5210", "descripcion": "Almacenamiento y depósito"},
         {"codigo": "7010", "descripcion": "Actividades de consultoría de gestión"},
     ]
-
+# ============================================
+# ENDPOINT PERFIL DE USUARIO
+# ============================================
+@app.get("/api/user/profile")
+async def get_user_profile(current_user: User = Depends(get_current_user)):
+    """Obtener perfil del usuario autenticado"""
+    return {
+        "id_user": current_user.id_user,
+        "email": current_user.email,
+        "name": current_user.email.split('@')[0],
+        "type_user_id": current_user.type_user_id,
+        "is_admin": current_user.is_admin,
+        "is_active": current_user.is_active
+    }
 # ============================================
 # STATIC FILES
 # ============================================
@@ -150,7 +164,7 @@ async def confirmacion_page():
 async def admin_validation():
     return FileResponse("app/pages/admin/validation/validation.html")
 
-@app.get("/customer/dashboard")
+@app.get("/customer/dashboard") # no arranca
 async def customer_dashboard():
     return FileResponse("app/pages/customer/dashboard.html")
 

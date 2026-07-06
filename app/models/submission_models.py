@@ -74,11 +74,10 @@ class Submission(Base):
     validated_at = Column(DateTime, nullable=True)
     
     # Relaciones
-    user = relationship("User", back_populates="submissions")  # ✅ AGREGADO: Relación inversa
+    # Relaciones
+    user = relationship("User", back_populates="submissions")  # ✅ AGREGAR ESTA LÍNEA
     documents = relationship("SubmissionDocument", back_populates="submission", cascade="all, delete-orphan")
     audit_logs = relationship("AuditLog", back_populates="submission", cascade="all, delete-orphan")
-
-
 class SubmissionDocument(Base):
     __tablename__ = "submission_documents"
     
