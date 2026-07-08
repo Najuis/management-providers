@@ -1,11 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status, BackgroundTasks, Query
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from typing import List, Optional
+from pydantic import BaseModel
+from datetime import datetime
 import os
 import shutil
 import json
-from datetime import datetime
 
 # ✅ IMPORTS CORREGIDOS (rutas reales del proyecto)
 from app.database.get_db import get_db
@@ -17,16 +18,48 @@ from app.middleware.current_user import get_current_user
 
 router = APIRouter()
 
+# ✅ CORREGIDO: Era PLOAD_DIR (faltaba la "U")
 UPLOAD_DIR = "app/uploads"
 
+
 # ============================================
-# ENDPOINTS ADICIONALES PARA EL FRONTEND (NUEVOS)
+# SCHEMA PARA CREAR SUBMISSION
+# ============================================
+class SubmissionCreate(BaseModel):
+    fecha: str
+    tipo_cliente: str
+    tipo_vinculacion: str
+    ciudad_id: int
+    oficina: str
+    tipo_persona: str
+    nombres: Optional[str] = None
+    apellidos: Optional[str] = None
+    razon_social: Optional[str] = None
+    tipo_id: str
+    numero_id: str
+    fecha_expedicion: Optional[str] = None
+    estructura_juridica: Optional[str] = None
+    codigo_ciiu: str
+    pais_origen_id: int
+    pais_residencia_id: int
+    zona: str
+    regimen_tributario: str
+    total_ingresos: Optional[float] = None
+    total_egresos: Optional[float] = None
+    aut_datos: bool = False
+    aut_laft: bool = False
+    aut_anticorrupcion: bool = False
+    aut_etica: bool = False
+
+
+# ============================================
+# ENDPOINTS GET (DEBEN IR ANTES QUE POST CON MISMA RUTA)
 # ============================================
 
 # --- 0. LISTAR SOLICITUDES (GET /api/submissions) ---
 @router.get("")
 async def list_submissions(
-    status: Optional[str] = None,
+    status_filter: Optional[str] = Query(None, alias="status"),  # ✅ Renombrado para evitar conflicto
     risk: Optional[str] = None,
     skip: int = 0,
     limit: int = 100,
@@ -36,8 +69,8 @@ async def list_submissions(
     """Listar todas las solicitudes con filtros"""
     query = db.query(Submission)
     
-    if status and status != 'all':
-        query = query.filter(Submission.status == status)
+    if status_filter and status_filter != 'all':
+        query = query.filter(Submission.status == status_filter)
     
     if risk:
         query = query.filter(Submission.risk_level == risk)
@@ -118,6 +151,116 @@ async def get_submission(
 
 
 # ============================================
+# ENDPOINT POST: CREAR NUEVA SOLICITUD
+# ============================================
+@router.post("")
+async def create_submission(
+    submission_data: SubmissionCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Crear una nueva solicitud de vinculación de terceros.
+    """
+    try:
+        # 1. Calcular nivel de riesgo
+        risk_level = calculate_risk(
+            pais_origen_id=submission_data.pais_origen_id,
+            ciudad_id=submission_data.ciudad_id,
+            codigo_ciiu=submission_data.codigo_ciiu
+        )
+        
+        # 2. Parsear fecha (si viene como string ISO)
+        fecha_obj = datetime.fromisoformat(submission_data.fecha) if submission_data.fecha else datetime.utcnow()
+        
+        # 3. Crear nueva submission
+        new_submission = Submission(
+            user_id=current_user.id_user,
+            fecha=fecha_obj,
+            tipo_cliente=submission_data.tipo_cliente,
+            tipo_vinculacion=submission_data.tipo_vinculacion,
+            ciudad_id=submission_data.ciudad_id,
+            oficina=submission_data.oficina,
+            tipo_persona=submission_data.tipo_persona,
+            nombres=submission_data.nombres,
+            apellidos=submission_data.apellidos,
+            razon_social=submission_data.razon_social,
+            tipo_id=submission_data.tipo_id,
+            numero_id=submission_data.numero_id,
+            fecha_expedicion=datetime.fromisoformat(submission_data.fecha_expedicion) if submission_data.fecha_expedicion else None,
+            estructura_juridica=submission_data.estructura_juridica,
+            codigo_ciiu=submission_data.codigo_ciiu,
+            pais_origen_id=submission_data.pais_origen_id,
+            pais_residencia_id=submission_data.pais_residencia_id,
+            zona=submission_data.zona,
+            regimen_tributario=submission_data.regimen_tributario,
+            total_ingresos=submission_data.total_ingresos,
+            total_egresos=submission_data.total_egresos,
+            aut_datos=submission_data.aut_datos,
+            aut_laft=submission_data.aut_laft,
+            aut_anticorrupcion=submission_data.aut_anticorrupcion,
+            aut_etica=submission_data.aut_etica,
+            status=SubmissionStatus.PENDIENTE_REVISION.value,
+            risk_level=risk_level,
+            submitted_at=datetime.utcnow()
+        )
+        
+        # 4. Guardar en BD
+        db.add(new_submission)
+        db.commit()
+        db.refresh(new_submission)
+        
+        # 5. Crear directorio para documentos
+        user_upload_dir = f"{UPLOAD_DIR}/{new_submission.id}"
+        os.makedirs(user_upload_dir, exist_ok=True)
+        
+        # 6. Generar PDF automáticamente
+        pdf_data = {
+            "fecha": new_submission.fecha.isoformat() if new_submission.fecha else "",
+            "tipo_cliente": new_submission.tipo_cliente,
+            "tipo_vinculacion": new_submission.tipo_vinculacion,
+            "tipo_persona": new_submission.tipo_persona,
+            "nombres": new_submission.nombres,
+            "apellidos": new_submission.apellidos,
+            "razon_social": new_submission.razon_social,
+            "tipo_id": new_submission.tipo_id,
+            "numero_id": new_submission.numero_id,
+            "codigo_ciiu": new_submission.codigo_ciiu,
+            "pais_origen_id": new_submission.pais_origen_id,
+            "pais_residencia_id": new_submission.pais_residencia_id,
+            "zona": new_submission.zona,
+            "regimen_tributario": new_submission.regimen_tributario,
+            "total_ingresos": new_submission.total_ingresos,
+            "total_egresos": new_submission.total_egresos,
+            "aut_datos": new_submission.aut_datos,
+            "aut_laft": new_submission.aut_laft,
+            "aut_anticorrupcion": new_submission.aut_anticorrupcion,
+            "aut_etica": new_submission.aut_etica,
+            "risk_level": risk_level,
+        }
+        
+        pdf_path = f"{user_upload_dir}/formulario_{new_submission.id}.pdf"
+        try:
+            generate_official_pdf(pdf_data, pdf_path)
+        except Exception as pdf_error:
+            print(f"⚠️  Error generando PDF: {pdf_error}")
+        
+        return {
+            "message": "Solicitud creada exitosamente",
+            "submission_id": new_submission.id,
+            "risk_level": risk_level,
+            "status": new_submission.status
+        }
+        
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Error al crear solicitud: {str(e)}"
+        )
+
+
+# ============================================
 # ENDPOINTS EXISTENTES (MANTENIDOS)
 # ============================================
 
@@ -133,7 +276,8 @@ async def download_pdf(
         raise HTTPException(status_code=404, detail="Solicitud no encontrada")
     
     # Verificar permisos (solo dueño o admin)
-    if submission.user_id != current_user.id and current_user.role.name != "admin":
+    # ✅ CORREGIDO: Usar id_user consistentemente
+    if submission.user_id != current_user.id_user and not current_user.is_admin:
         raise HTTPException(status_code=403, detail="No autorizado")
 
     # Generar PDF
@@ -143,7 +287,7 @@ async def download_pdf(
     if not os.path.exists(file_path):
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         
-        # ✅ CORREGIDO: Usar form_data del modelo (debe agregarse al modelo)
+        # Usar form_data del modelo si existe
         if hasattr(submission, 'form_data') and submission.form_data:
             data = json.loads(submission.form_data) if isinstance(submission.form_data, str) else submission.form_data
         else:
@@ -176,10 +320,11 @@ async def upload_documents(
     if not submission:
         raise HTTPException(status_code=404, detail="Solicitud no encontrada")
     
-    if submission.user_id != current_user.id:
+    # ✅ CORREGIDO: Usar id_user consistentemente
+    if submission.user_id != current_user.id_user:
         raise HTTPException(status_code=403, detail="Solo el propietario puede subir documentos")
     
-    # ✅ CORREGIDO: Usar .value para comparar con String
+    # Usar .value para comparar con String
     if submission.status != SubmissionStatus.BORRADOR.value:
         raise HTTPException(status_code=400, detail="La solicitud ya fue enviada o está en revisión")
 
@@ -193,17 +338,17 @@ async def upload_documents(
             with open(file_path, "wb") as buffer:
                 shutil.copyfileobj(file.file, buffer)
             
-            # ✅ CORREGIDO: Usar document_type (no file_type)
+            # ✅ CORREGIDO: Usar document_type (no file_type) y id_user
             doc_record = SubmissionDocument(
                 submission_id=submission_id,
                 document_type="anexo",
                 file_path=file_path,
                 file_name=file.filename,
-                uploaded_by=current_user.id
+                uploaded_by=current_user.id_user
             )
             db.add(doc_record)
         
-        # ✅ CORREGIDO: Usar .value para asignar String
+        # Usar .value para asignar String
         submission.status = SubmissionStatus.PENDIENTE_REVISION.value
         submission.submitted_at = datetime.utcnow()
         db.commit()
@@ -227,18 +372,19 @@ async def validate_submission(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    if current_user.role.name != "admin":
+    # ✅ CORREGIDO: Usar is_admin directamente
+    if not current_user.is_admin:
         raise HTTPException(status_code=403, detail="Se requieren permisos de administrador")
 
     submission = db.query(Submission).filter(Submission.id == submission_id).first()
     if not submission:
         raise HTTPException(status_code=404, detail="Solicitud no encontrada")
     
-    # ✅ CORREGIDO: Usar .value para comparar con String
+    # Usar .value para comparar con String
     if submission.status != SubmissionStatus.PENDIENTE_REVISION.value:
         raise HTTPException(status_code=400, detail="La solicitud no está pendiente de revisión")
 
-    # ✅ CORREGIDO: Usar .value para asignar String
+    # Usar .value para asignar String
     if action.upper() == "APROBADO":
         new_status = SubmissionStatus.APROBADO.value
     elif action.upper() == "RECHAZADO":
@@ -251,9 +397,10 @@ async def validate_submission(
     submission.updated_at = datetime.utcnow()
     
     # Registrar Auditoría
+    # ✅ CORREGIDO: Usar id_user
     audit_log = AuditLog(
         submission_id=submission_id,
-        user_id=current_user.id,
+        user_id=current_user.id_user,
         action=action.upper(),
         comments=comments,
         ip_address="127.0.0.1",

@@ -9,7 +9,7 @@ from app.models import (
     RequiredDocuments, References, TypeUser, TypeDocument, Region,
     TaxFiscalInformation, GeneralInformation, Municipality,
     AuthorizationsPolicies,
-    # ✅ NUEVO: Modelos de Fase 4 (Submissions)
+    # NUEVO: Modelos de Submissions
     Submission, SubmissionDocument, AuditLog
 )
 
@@ -24,7 +24,7 @@ if DATABASE_URL and DATABASE_URL.startswith("sqlite"):
 engine = create_engine(
     DATABASE_URL,
     connect_args=connect_args,
-    echo=False  # Cambiar a True para ver queries SQL en consola
+    echo=False
 )
 
 SessionLocal = sessionmaker(autoflush=False, autocommit=False, bind=engine)
@@ -53,7 +53,7 @@ tables = [
     GeneralInformation.__table__,
     Municipality.__table__,
     AuthorizationsPolicies.__table__,
-    # ✅ NUEVO: Tablas de Fase 4 (Submissions)
+    # NUEVO: Tablas de Submissions
     Submission.__table__,
     SubmissionDocument.__table__,
     AuditLog.__table__,

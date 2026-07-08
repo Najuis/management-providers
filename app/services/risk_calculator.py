@@ -110,7 +110,7 @@ def calculate_risk_detailed(
         risk_score += 0.3
     
     return {
-        'score': risk_score,
+        'score': risk_score, 
         'level': _determine_risk_level(risk_score),
         'factors': factors
     }

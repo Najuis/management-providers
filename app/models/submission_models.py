@@ -1,8 +1,9 @@
 from sqlalchemy import Column, Integer, String, DateTime, Float, ForeignKey, Text, Boolean
 from sqlalchemy.orm import relationship
-from app.database.base import Base  # ✅ Importar directamente desde base
+from app.database.base import Base
 from datetime import datetime
 import enum
+
 
 class SubmissionStatus(str, enum.Enum):
     BORRADOR = "borrador"
@@ -12,17 +13,19 @@ class SubmissionStatus(str, enum.Enum):
     RECHAZADO = "rechazado"
     COMPLETADO = "completado"
 
+
 class RiskLevel(str, enum.Enum):
     BAJO = "bajo"
     MEDIO = "medio"
     ALTO = "alto"
     EXTREMO = "extremo"
 
+
 class Submission(Base):
     __tablename__ = "submissions"
     
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("lmp_user.id_user"), nullable=True)  # ✅ CORREGIDO
+    user_id = Column(Integer, ForeignKey("lmp_user.id_user"), nullable=True)
     
     # Información general
     fecha = Column(DateTime, nullable=False)
@@ -52,16 +55,16 @@ class Submission(Base):
     total_ingresos = Column(Float, nullable=True)
     total_egresos = Column(Float, nullable=True)
     
-    # ✅ NUEVO: Datos completos del formulario en JSON (para generar PDF)
+    # Datos completos del formulario en JSON
     form_data = Column(Text, nullable=True)
     
-    # ✅ Autorizaciones con Boolean (CORREGIDO)
+    # Autorizaciones
     aut_datos = Column(Boolean, nullable=False, default=False)
     aut_laft = Column(Boolean, nullable=False, default=False)
     aut_anticorrupcion = Column(Boolean, nullable=False, default=False)
     aut_etica = Column(Boolean, nullable=False, default=False)
     
-    # ✅ Estado y riesgo con String (CORREGIDO)
+    # Estado y riesgo
     status = Column(String(50), default=SubmissionStatus.BORRADOR.value)
     risk_level = Column(String(50), nullable=True)
     observations = Column(Text, nullable=True)
@@ -74,10 +77,11 @@ class Submission(Base):
     validated_at = Column(DateTime, nullable=True)
     
     # Relaciones
-    # Relaciones
-    user = relationship("User", back_populates="submissions")  # ✅ AGREGAR ESTA LÍNEA
+    user = relationship("User", back_populates="submissions")  # ← LÍNEA AGREGADA
     documents = relationship("SubmissionDocument", back_populates="submission", cascade="all, delete-orphan")
     audit_logs = relationship("AuditLog", back_populates="submission", cascade="all, delete-orphan")
+
+
 class SubmissionDocument(Base):
     __tablename__ = "submission_documents"
     
@@ -87,7 +91,7 @@ class SubmissionDocument(Base):
     file_path = Column(String(500), nullable=False)
     file_name = Column(String(200), nullable=False)
     uploaded_at = Column(DateTime, default=datetime.utcnow)
-    uploaded_by = Column(Integer, ForeignKey("lmp_user.id_user"), nullable=True)  # ✅ CORREGIDO
+    uploaded_by = Column(Integer, ForeignKey("lmp_user.id_user"), nullable=True)
     
     submission = relationship("Submission", back_populates="documents")
 
@@ -97,7 +101,7 @@ class AuditLog(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     submission_id = Column(Integer, ForeignKey("submissions.id"), nullable=False)
-    user_id = Column(Integer, ForeignKey("lmp_user.id_user"), nullable=True)  # ✅ CORREGIDO
+    user_id = Column(Integer, ForeignKey("lmp_user.id_user"), nullable=True)
     action = Column(String(50), nullable=False)
     comments = Column(Text, nullable=True)
     ip_address = Column(String(50), nullable=True)
