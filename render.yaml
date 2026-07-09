@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: management-providers-api
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "40"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: management-db
+          property: connectionString
+
+databases:
+  - name: management-db
+    databaseName: management_providers
+    user: management_user
+    plan: free
+    region: oregon
