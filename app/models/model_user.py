@@ -27,3 +27,20 @@ class User(Base):
     health_safety_requirements: Mapped[List["HealthSafetyRequirements"]] = relationship(back_populates="user")
     required_documents: Mapped[List["RequiredDocuments"]] = relationship(back_populates="user")
     authorizations_policies: Mapped["AuthorizationsPolicies"] = relationship(back_populates="user")
+
+    @property
+    def id(self) -> int:
+        """Alias para compatibilidad con el router"""
+        return self.id_user
+
+    @property
+    def role(self):
+        """Retorna objeto con propiedad 'name' basado en type_user_id o is_admin"""
+        class Role:
+            name: str
+        role = Role()
+        if self.is_admin or self.type_user_id == 1:
+            role.name = "admin"
+        else:
+            role.name = "user"
+        return role
