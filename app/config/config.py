@@ -6,7 +6,8 @@ import os
 
 load_dotenv() 
 
-DATABASE_URL = f"postgresql://{os.getenv('PG_USER')}:{os.getenv('PG_DB_PASSWORD')}@{os.getenv('PG_HOST')}:{os.getenv('PG_PORT')}/{os.getenv('PG_DATABASE')}"
+# DATABASE_URL = f"postgresql://{os.getenv('PG_USER')}:{os.getenv('PG_DB_PASSWORD')}@{os.getenv('PG_HOST')}:{os.getenv('PG_PORT')}/{os.getenv('PG_DATABASE')}"
+DATABASE_URL = "sqlite:///./management_providers.db"
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 ALGORITHM = os.environ.get("ALGORITHM")

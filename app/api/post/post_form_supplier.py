@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 from app.database.get_db import get_db
 from app.crud.post.post_form_supplier_db import post_form_supplier_db
 from app.schemas.form_data import FormData
-from app.middleware.current_user import current_user
+from app.middleware.current_user import get_current_user
+from app.models.model_user import User
 
 routes = APIRouter()
 
@@ -11,11 +12,12 @@ routes = APIRouter()
 async def post_form_supplier(
     form_data: FormData,
     db: Session = Depends(get_db),
-    user: dict = Depends(current_user)
+    current_user: User = Depends(get_current_user)
 ):
-    user_id = user["id_user"]
+    # ✅ CORREGIDO
+    user_id = current_user.id_user
     response = await post_form_supplier_db(db, form_data, user_id)
     if response:
-        return {"message": response}    
+        return {"message": response}
     else:
         return {"error": "Error al guardar el formulario de proveedor"}
