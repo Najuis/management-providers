@@ -1,11 +1,11 @@
-from app.config.config import SECRET_KEY, ALGORITHM, CREDENTIALS_EXCEPTION
-from app.middleware.security import oauth2_scheme
+from app.config.config import CREDENTIALS_EXCEPTION
+from app.middleware.security import oauth2_scheme, SECRET_KEY, ALGORITHM
 from app.database.get_db import get_db
 from app.models.model_user import User
 from fastapi import Depends, HTTPException, status
 from typing import Annotated
 from sqlalchemy.orm import Session
-import jwt
+from jose import JWTError, jwt  # ✅ Usar python-jose (NO PyJWT)
 
 async def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
@@ -15,28 +15,17 @@ async def get_current_user(
     Obtener el usuario actual desde el token JWT.
     """
     try:
-        # Decodificar token
+        # ✅ Decodificar token usando python-jose (misma librería que security.py)
         payload = jwt.decode(
             token,
             key=SECRET_KEY,
             algorithms=[ALGORITHM]
         )
-    except jwt.ExpiredSignatureError:
+    except JWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token expirado",
+            detail="Token inválido o expirado",
             headers={"WWW-Authenticate": "Bearer"}
-        )
-    except jwt.InvalidTokenError as e:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Token inválido: {str(e)}",
-            headers={"WWW-Authenticate": "Bearer"}
-        )
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error al procesar token: {str(e)}"
         )
     
     # Extraer datos del payload

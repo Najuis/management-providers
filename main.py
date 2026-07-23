@@ -30,6 +30,8 @@ app = FastAPI(title="Management Providers API", version="1.0.0")
 # ============================================
 # ✅ STATIC FILES - MOVIDO AQUÍ ARRIBA (DESPUÉS DE CREAR APP)
 # ============================================
+from fastapi.staticfiles import StaticFiles
+
 app.mount("/pages", StaticFiles(directory="app/pages"), name="pages")
 
 # ============================================
@@ -146,8 +148,13 @@ async def root():
 async def login_page():
     return FileResponse("app/pages/login/login.html")
 
+@app.get("/usuario")
+async def usuario_page():
+    return FileResponse("app/pages/usuario/usuario.html")
+
 @app.get("/admin/dashboard")
 async def dashboard():
+    
     return FileResponse("app/pages/admin/dashboard/dashboard.html")
 
 @app.get("/admin/formulario")
@@ -175,6 +182,3 @@ async def validacion_documentos_page():
     """Página de validación de documentos (Fase 4)"""
     return FileResponse("app/pages/admin/validacion_documentos/index.html")
 
-@app.get("/usuario")
-async def usuario_page():
-    return FileResponse("app/pages/usuario/usuario.html")

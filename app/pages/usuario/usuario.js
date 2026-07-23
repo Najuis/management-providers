@@ -1,11 +1,31 @@
+// Datos de oficinas y CIIU (se cargarán desde el backend)
+let oficinasData = [];
+let ciiuData = [];
+let ciudadesData = [];
+
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Inicializando formulario de usuario...');
+    console.log('📝 Formulario de usuario cargado');
     initializeUserForm();
 });
 
 function initializeUserForm() {
-    loadUserProfile();
+    // 1. Cargar fecha actual automáticamente
+    const fechaInput = document.getElementById('fecha');
+    if (fechaInput) {
+        fechaInput.valueAsDate = new Date();
+    }
+    
+    // 2. Intentar cargar el perfil, pero NO redirigir si falla
+    loadUserProfile().catch(err => {
+        console.warn('⚠️ No se pudo cargar el perfil, pero continuamos:', err);
+    });
+    
+    // 3. Cargar datos de referencia
     loadReferenceData();
+    loadOficinas();
+    loadCIIU();
+    
+    // 4. Bind de eventos
     bindFormEvents();
     
     const logoutBtn = document.getElementById('logoutBtn');
@@ -16,18 +36,16 @@ function initializeUserForm() {
 
 async function loadUserProfile() {
     try {
-        // 1. Verificar si el token existe
         const token = localStorage.getItem('token');
-        console.log('🔑 Token encontrado:', token ? 'SÍ' : 'NO');
+        const greetingEl = document.getElementById('userGreeting');
         
         if (!token) {
-            console.warn('⚠️ No hay token. Redirigiendo al login...');
-            window.location.href = '/login';
-            return;
+            console.warn('⚠️ No hay token almacenado');
+            if (greetingEl) greetingEl.textContent = 'Usuario no autenticado';
+            return; // NO redirigir
         }
-
-        // 2. Hacer la petición con el token
-        console.log('📡 Solicitando perfil al backend...');
+        
+        console.log('📡 Cargando perfil de usuario...');
         const res = await fetch('/api/user/profile', {
             method: 'GET',
             headers: {
@@ -35,16 +53,13 @@ async function loadUserProfile() {
                 'Content-Type': 'application/json'
             }
         });
-
-        console.log('📥 Respuesta del perfil:', res.status, res.statusText);
-
+        
         if (res.status === 401) {
-            console.error('❌ Token inválido o expirado (401).');
-            localStorage.removeItem('token');
-            window.location.href = '/login';
-            return;
+            console.error('❌ Token inválido o expirado');
+            if (greetingEl) greetingEl.textContent = 'Sesión expirada (Inicie sesión nuevamente)';
+            return; // NO redirigir automáticamente
         }
-
+        
         if (!res.ok) {
             throw new Error(`Error ${res.status}: ${res.statusText}`);
         }
@@ -52,10 +67,8 @@ async function loadUserProfile() {
         const profile = await res.json();
         console.log('✅ Perfil cargado:', profile);
         
-        // 3. Actualizar la interfaz
-        const nombre = profile.name || profile.email.split('@')[0];
-        const greetingEl = document.getElementById('userGreeting');
         if (greetingEl) {
+            const nombre = profile.name || profile.email?.split('@')[0] || 'Usuario';
             greetingEl.textContent = `Tercero: ${nombre}`;
         }
         
@@ -65,93 +78,191 @@ async function loadUserProfile() {
         applyUserTypeLayout(profile.type_user_id);
         
     } catch (error) {
-        console.error('💥 Error crítico en loadUserProfile:', error);
-        showMessage('Error al cargar perfil. Inicie sesión nuevamente.', 'error');
-        setTimeout(() => {
-            localStorage.removeItem('token');
-            window.location.href = '/login';
-        }, 3000);
+        console.error('💥 Error en loadUserProfile:', error);
+        const greetingEl = document.getElementById('userGreeting');
+        if (greetingEl) {
+            greetingEl.textContent = 'Perfil no disponible';
+        }
     }
 }
 
 function applyUserTypeLayout(typeId) {
-    console.log('🎨 Aplicando layout para tipo de usuario:', typeId);
-    const naturalDiv = document.getElementById('naturalFields');
-    const juridicaDiv = document.getElementById('juridicaFields');
-    
-    if (typeId === 1) {
-        if (naturalDiv) {
-            naturalDiv.classList.remove('hidden');
-            setRequiredFields(naturalDiv, true);
-        }
-    } else if (typeId === 2) {
-        if (juridicaDiv) {
-            juridicaDiv.classList.remove('hidden');
-            setRequiredFields(juridicaDiv, true);
-        }
-        document.querySelectorAll('.juridica-only').forEach(el => {
-            if (el) el.classList.remove('hidden');
-        });
-    }
+    console.log('🎨 Aplicando layout para typeId:', typeId);
+    // Aquí puedes agregar lógica si necesitas mostrar/ocultar campos según el tipo de usuario
 }
 
-function setRequiredFields(container, required) {
-    if (!container) return;
-    container.querySelectorAll('input, select, textarea').forEach(el => {
-        if (required) el.setAttribute('required', '');
-        else el.removeAttribute('required');
-    });
+// Función para manejar el cambio de Tipo de Cliente (Mayoreo/Institucional)
+function onTipoClienteChange() {
+    const tipoCliente = document.getElementById('tipoCliente').value;
+    const naturalFields = document.getElementById('personaNaturalFields');
+    const juridicaFields = document.getElementById('personaJuridicaFields');
+    
+    if (tipoCliente === 'Mayoreo') {
+        // Mayoreo puede ser natural o jurídica, mostramos ambas o la que elija el usuario
+        if (naturalFields) naturalFields.style.display = 'block';
+        if (juridicaFields) juridicaFields.style.display = 'block';
+    } else if (tipoCliente === 'Institucional') {
+        // Institucional es siempre Persona Jurídica
+        if (naturalFields) naturalFields.style.display = 'none';
+        if (juridicaFields) juridicaFields.style.display = 'block';
+    }
 }
 
 async function loadReferenceData() {
     try {
-        console.log('📚 Cargando datos de referencia...');
         const token = localStorage.getItem('token');
         const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
         
-        const [citiesRes, officesRes, ciiuRes, countriesRes] = await Promise.all([
+        const [citiesRes, countriesRes] = await Promise.all([
             fetch('/api/cities', { headers }),
-            fetch('/api/offices', { headers }),
-            fetch('/api/ciiu', { headers }),
             fetch('/api/countries', { headers })
         ]);
 
-        const citiesData = (await citiesRes.json()).message || [];
-        const officesData = (await officesRes.json()).message || [];
-        const ciiuData = (await ciiuRes.json()).message || (await ciiuRes.json()) || [];
+        ciudadesData = (await citiesRes.json()).message || [];
         const countriesData = (await countriesRes.json()).message || [];
-
-        console.log('📊 Datos cargados:', { 
-            ciudades: citiesData.length, 
-            oficinas: officesData.length, 
-            ciiu: ciiuData.length, 
-            paises: countriesData.length 
-        });
-
-        populateSelect('ciudad', citiesData.map(c => ({ value: c.id_city || c.codigo, text: c.name || c.nombre_municipio })));
-        populateSelect('oficina', officesData.map(o => ({ value: o.id_office || o.id, text: o.office_name || o.nombre_oficina || o.name })));
-        populateSelect('codigoCIIU', ciiuData.map(c => ({ value: c.codigo, text: `${c.codigo} - ${c.descripcion}` })));
-        populateSelect('paisOrigen', countriesData.map(c => ({ value: c.id_country || c.codigo_iso, text: c.country_name || c.nombre_pais })));
-        populateSelect('paisResidencia', countriesData.map(c => ({ value: c.id_country || c.codigo_iso, text: c.country_name || c.nombre_pais })));
+        
+        // Llenar select de ciudades
+        const ciudadSelect = document.getElementById('ciudad');
+        if (ciudadSelect) {
+            ciudadSelect.innerHTML = '<option value="">Seleccione...</option>';
+            ciudadesData.forEach(c => {
+                const option = document.createElement('option');
+                option.value = c.id_city || c.codigo;
+                option.textContent = c.name || c.nombre_municipio || c.ciudad;
+                ciudadSelect.appendChild(option);
+            });
+        }
+        
+        // Llenar select de países
+        const paisOrigenSelect = document.getElementById('paisOrigen');
+        const paisResidenciaSelect = document.getElementById('paisResidencia');
+        
+        if (paisOrigenSelect) {
+            paisOrigenSelect.innerHTML = '<option value="">Seleccione...</option>';
+            countriesData.forEach(c => {
+                const option = document.createElement('option');
+                option.value = c.id_country || c.codigo_iso;
+                option.textContent = c.country_name || c.nombre_pais;
+                paisOrigenSelect.appendChild(option);
+            });
+        }
+        
+        if (paisResidenciaSelect) {
+            paisResidenciaSelect.innerHTML = '<option value="">Seleccione...</option>';
+            countriesData.forEach(c => {
+                const option = document.createElement('option');
+                option.value = c.id_country || c.codigo_iso;
+                option.textContent = c.country_name || c.nombre_pais;
+                paisResidenciaSelect.appendChild(option);
+            });
+        }
+        
     } catch (error) {
         console.error('💥 Error cargando directorios:', error);
     }
 }
 
-function populateSelect(elementId, options) {
-    const select = document.getElementById(elementId);
+async function loadOficinas() {
+    try {
+        const response = await fetch('/api/oficinas');
+        if (response.ok) {
+            const data = await response.json();
+            oficinasData = data || [];
+            
+            const ciudadSelect = document.getElementById('ciudad');
+            if (ciudadSelect) {
+                ciudadSelect.addEventListener('change', onCiudadChange);
+            }
+        }
+    } catch (error) {
+        console.error('Error cargando oficinas:', error);
+    }
+}
+
+async function loadCIIU() {
+    try {
+        const response = await fetch('/api/ciiu');
+        if (response.ok) {
+            const data = await response.json();
+            ciiuData = data || [];
+            
+            const ciiuSelect = document.getElementById('codigoCIIU');
+            if (ciiuSelect) {
+                ciiuSelect.innerHTML = '<option value="">Seleccione...</option>';
+                ciiuData.forEach(c => {
+                    const option = document.createElement('option');
+                    option.value = c.codigo || c.Codigo_CIIU;
+                    option.textContent = `${c.codigo || c.Codigo_CIIU} - ${c.descripcion || c.Descripcion_CIIU}`;
+                    option.dataset.descripcion = c.descripcion || c.Descripcion_CIIU;
+                    ciiuSelect.appendChild(option);
+                });
+                ciiuSelect.addEventListener('change', onCIIUChange);
+            }
+        }
+    } catch (error) {
+        console.error('Error cargando CIIU:', error);
+    }
+}
+
+function onCiudadChange() {
+    const ciudadId = document.getElementById('ciudad').value;
+    const sucursalSelect = document.getElementById('sucursal');
+    
+    if (!sucursalSelect) return;
+    
+    sucursalSelect.innerHTML = '<option value="">Seleccione...</option>';
+    
+    const oficinasFiltradas = oficinasData.filter(o => 
+        (o.ciudad_id === parseInt(ciudadId)) || 
+        (o.ciudad && o.ciudad.toLowerCase().includes(ciudadesData.find(c => c.id_city == ciudadId)?.name?.toLowerCase() || ''))
+    );
+    
+    oficinasFiltradas.forEach(o => {
+        const option = document.createElement('option');
+        option.value = o.id_office || o.id;
+        option.textContent = o.nombre || o.office_name || o.NOMBRE;
+        sucursalSelect.appendChild(option);
+    });
+}
+
+function onCIIUChange() {
+    const select = document.getElementById('codigoCIIU');
     if (!select) return;
     
-    while (select.options.length > 1) {
-        select.remove(1);
+    const selectedOption = select.options[select.selectedIndex];
+    const descripcion = selectedOption.dataset.descripcion || selectedOption.text.split(' - ')[1] || '';
+    
+    const actividadInput = document.getElementById('actividadEconomica');
+    if (actividadInput) {
+        actividadInput.value = descripcion;
     }
+    calculateRisk();
+}
 
-    options.forEach(opt => {
-        const el = document.createElement('option');
-        el.value = opt.value;
-        el.textContent = opt.text;
-        select.appendChild(el);
-    });
+function calculateRisk() {
+    const pais = document.getElementById('paisOrigen')?.value;
+    const riskAlert = document.getElementById('riskAlert');
+    if (!pais || !riskAlert) return;
+
+    let riskScore = 0.25;
+    const highRisk = ['VE', 'SY', 'SDN', 'KP', 'IR', 'CU', 'YE', 'HT', 'AF', 'GW'];
+    const mediumRisk = ['KY', 'SO', 'SS', 'LY', 'CD', 'BI', 'IQ'];
+    
+    if (highRisk.includes(pais)) riskScore = 1;
+    else if (mediumRisk.includes(pais)) riskScore = 0.75;
+    else if (pais === 'CO') riskScore = 0.25;
+    else riskScore = 0.5;
+    
+    let level = 'BAJO';
+    let className = 'risk-low';
+    
+    if (riskScore >= 0.75) { level = 'EXTREMO'; className = 'risk-extreme'; }
+    else if (riskScore >= 0.5) { level = 'ALTO'; className = 'risk-high'; }
+    else if (riskScore >= 0.25) { level = 'MODERADO'; className = 'risk-moderate'; }
+    
+    riskAlert.className = `risk-alert ${className}`;
+    riskAlert.textContent = `Nivel de Riesgo Estimado: ${level}`;
+    riskAlert.style.display = 'block';
 }
 
 function bindFormEvents() {
@@ -159,58 +270,12 @@ function bindFormEvents() {
     if (form) {
         form.addEventListener('submit', handleFormSubmit);
     }
-    
-    const ciiuSelect = document.getElementById('codigoCIIU');
-    if (ciiuSelect) {
-        ciiuSelect.addEventListener('change', (e) => {
-            const text = e.target.options[e.target.selectedIndex].text;
-            const actividadInput = document.getElementById('actividadEconomica');
-            if (actividadInput) actividadInput.value = text;
-            calculateRisk();
-        });
-    }
-
-    ['paisOrigen', 'paisResidencia', 'ciudad'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener('change', calculateRisk);
-    });
-}
-
-function calculateRisk() {
-    const pais = document.getElementById('paisOrigen')?.value;
-    const ciudad = document.getElementById('ciudad')?.value;
-    const ciiu = document.getElementById('codigoCIIU')?.value;
-    
-    if (!pais || !ciudad || !ciiu) return;
-
-    const riskAlert = document.getElementById('riskAlert');
-    const eddSection = document.getElementById('eddSection');
-    
-    let riskScore = 0;
-    if (['SY','SDN','KP','IR','CU','YE','HT','AF','GW'].includes(pais)) riskScore = 1;
-    else if (['KY','SO','SS','VE','LY','CD','BI','IQ'].includes(pais)) riskScore = 0.75;
-    else if (['CO','MX','PE','AR','CL'].includes(pais)) riskScore = 0.375;
-    else riskScore = 0.125;
-
-    let level = 'BAJO';
-    let className = 'risk-low';
-    
-    if (riskScore >= 0.75) { level = 'EXTREMO'; className = 'risk-extreme'; if(eddSection) eddSection.classList.remove('hidden'); }
-    else if (riskScore >= 0.5) { level = 'ALTO'; className = 'risk-high'; if(eddSection) eddSection.classList.remove('hidden'); }
-    else if (riskScore >= 0.25) { level = 'MODERADO'; className = 'risk-moderate'; if(eddSection) eddSection.classList.add('hidden'); }
-    else { if(eddSection) eddSection.classList.add('hidden'); }
-
-    if (riskAlert) {
-        riskAlert.className = `risk-indicator ${className}`;
-        riskAlert.textContent = `Nivel de Riesgo Estimado: ${level}. ${level === 'ALTO' || level === 'EXTREMO' ? 'Se requiere Debida Diligencia Ampliada.' : ''}`;
-        riskAlert.classList.remove('hidden');
-    }
 }
 
 async function handleFormSubmit(e) {
     e.preventDefault();
     const form = e.target;
-    const submitBtn = document.getElementById('submitBtn');
+    const submitBtn = form.querySelector('.btn-submit');
     
     if (!form.checkValidity()) {
         form.reportValidity();
@@ -218,38 +283,53 @@ async function handleFormSubmit(e) {
     }
 
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Procesando solicitud...';
+    submitBtn.textContent = 'Procesando...';
 
     try {
         const token = localStorage.getItem('token');
         const formData = new FormData(form);
-        const jsonData = Object.fromEntries(formData.entries());
-
+        
         const payload = {
-            fecha: jsonData.fecha || new Date().toISOString().split('T')[0],
-            tipo_cliente: jsonData.tipoCliente || 'Nuevo',
-            tipo_vinculacion: jsonData.tipoVinculacion || 'Proveedor',
-            ciudad_id: parseInt(jsonData.ciudad) || 0,
-            oficina: jsonData.oficina || 'Principal',
-            tipo_persona: form.querySelector('input[name="tipoPersona"]:checked')?.value || 'natural',
-            nombres: jsonData.nombres || '',
-            apellidos: jsonData.apellidos || '',
-            razon_social: jsonData.razonSocial || '',
-            tipo_id: jsonData.tipoIdNatural || jsonData.tipoId || 'CC',
-            numero_id: jsonData.numeroDocNatural || jsonData.numeroId || jsonData.nit || '',
-            fecha_expedicion: jsonData.fechaExpNatural || jsonData.fechaExpedicion || null,
-            estructura_juridica: jsonData.estructuraJuridica || '',
-            codigo_ciiu: jsonData.codigoCIIU || '',
-            pais_origen_id: parseInt(jsonData.paisOrigen) || 0,
-            pais_residencia_id: parseInt(jsonData.paisResidencia) || 0,
-            zona: jsonData.zona || 'Nacional',
-            regimen_tributario: jsonData.regimenTributario || 'Común',
-            total_ingresos: parseFloat(jsonData.totalIngresos) || 0,
-            total_egresos: parseFloat(jsonData.totalEgresos) || 0,
-            aut_datos: jsonData.aut_datos === 'on',
-            aut_laft: jsonData.aut_laft === 'on',
-            aut_anticorrupcion: jsonData.aut_anticorrupcion === 'on',
-            aut_etica: jsonData.aut_etica === 'on'
+            fecha: document.getElementById('fecha').value,
+            tipo_cliente: document.getElementById('tipoCliente').value,
+            tipo_vinculacion: document.getElementById('tipoVinculacion').value,
+            ciudad_id: parseInt(document.getElementById('ciudad').value) || 0,
+            sucursal_id: parseInt(document.getElementById('sucursal').value) || 0,
+            
+            tipo_persona: document.getElementById('tipoCliente').value === 'Institucional' ? 'juridica' : 'natural',
+            nombres: document.getElementById('nombres')?.value || '',
+            apellidos: document.getElementById('apellidos')?.value || '',
+            razon_social: document.getElementById('razonSocial')?.value || document.getElementById('razonSocialNatural')?.value || '',
+            nit: document.getElementById('nit')?.value || '',
+            tipo_id: document.getElementById('tipoDocNatural')?.value || document.getElementById('tipoDocRep')?.value || '',
+            numero_id: document.getElementById('numeroDocNatural')?.value || document.getElementById('nit')?.value || '',
+            
+            codigo_ciiu: document.getElementById('codigoCIIU').value,
+            actividad_economica: document.getElementById('actividadEconomica').value,
+            pais_origen_id: document.getElementById('paisOrigen').value,
+            pais_residencia_id: document.getElementById('paisResidencia').value,
+            zona: document.getElementById('zona').value,
+            
+            regimen_tributario: document.getElementById('regimenTributario').value,
+            total_ingresos: parseFloat(document.getElementById('totalIngresos').value) || 0,
+            total_egresos: parseFloat(document.getElementById('totalEgresos').value) || 0,
+            total_activos: parseFloat(document.getElementById('totalActivos').value) || 0,
+            total_patrimonio: parseFloat(document.getElementById('totalPatrimonio').value) || 0,
+            
+            banco: document.getElementById('nombreBanco').value,
+            titular_cuenta: document.getElementById('nombreTitular').value,
+            tipo_cuenta: document.getElementById('tipoCuenta').value,
+            numero_cuenta: document.getElementById('numeroCuenta').value,
+            
+            aut_datos: document.getElementById('authDatos').checked,
+            aut_laft: document.getElementById('authLAFT').checked,
+            aut_anticorrupcion: document.getElementById('authAnticorrupcion').checked,
+            aut_transparencia: document.getElementById('authTransparencia').checked,
+            
+            subcontratistas: document.querySelector('input[name="subcontratistas"]:checked')?.value || 'No',
+            entidades_publicas: document.querySelector('input[name="entidadesPublicas"]:checked')?.value || 'No',
+            propiedad_estatal: document.querySelector('input[name="propiedadEstatal"]:checked')?.value || 'No',
+            licencias: document.querySelector('input[name="licencias"]:checked')?.value || 'No'
         };
 
         console.log('📤 Enviando payload:', payload);
@@ -264,19 +344,18 @@ async function handleFormSubmit(e) {
         });
 
         const result = await res.json();
-        console.log('📥 Respuesta del envío:', res.status, result);
         
         if (!res.ok) {
             throw new Error(result.detail || 'Error al enviar la solicitud');
         }
 
-        showMessage('Solicitud enviada exitosamente. Redirigiendo a confirmación...', 'success');
+        showMessage('✅ Solicitud enviada exitosamente. Redirigiendo...', 'success');
         setTimeout(() => {
-            window.location.href = `/admin/confirmacion?id=${result.submission_id}`;
+            window.location.href = `/admin/confirmacion?id=${result.id_submission || 1}`;
         }, 2000);
     } catch (error) {
-        console.error('💥 Error en handleFormSubmit:', error);
-        showMessage(error.message || 'Ocurrió un error al enviar el formulario', 'error');
+        console.error('💥 Error:', error);
+        showMessage(error.message || 'Error al enviar el formulario', 'error');
     } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Enviar Solicitud de Vinculación';
@@ -285,11 +364,7 @@ async function handleFormSubmit(e) {
 
 function handleLogout() {
     console.log('🚪 Cerrando sesión...');
-    localStorage.removeItem('token');
-    localStorage.removeItem('type_user');
-    localStorage.removeItem('user_session_id');
-    localStorage.removeItem('current_user_id');
-    localStorage.removeItem('current_user_type');
+    localStorage.clear();
     window.location.href = '/login';
 }
 
@@ -298,6 +373,7 @@ function showMessage(text, type) {
     if (container) {
         container.textContent = text;
         container.className = `message-container ${type}`;
+        container.style.display = 'block';
     } else {
         alert(text);
     }
