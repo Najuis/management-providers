@@ -1,36 +1,41 @@
+# app/database/core.py
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.config.config import DATABASE_URL
+import os
+from dotenv import load_dotenv
+
+# Importar Base desde el archivo separado (EVITA CICLOS)
 from app.database.base import Base
-from app.models import User, City, Country, FinancialInformation, HealthSafetyRequirements, InfoShareComposition, LegalRepresentativeInformation, NaturalPerson, LegalPerson, OccupationalHealthSafetyRequirements, Office, RequiredDocuments, References, TypeUser, TypeDocument, Region, TaxFiscalInformation, GeneralInformation, Municipality, AuthorizationsPolicies
 
-engine = create_engine(DATABASE_URL)
+load_dotenv()
 
-SessionLocal = sessionmaker(autoflush=False, autocommit=False, bind=engine)
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./management_providers.db")
 
-tables = [
-    User.__table__,
-    TypeUser.__table__,
-    Office.__table__,
-    City.__table__,
-    Region.__table__,
-    TaxFiscalInformation.__table__,
-    FinancialInformation.__table__,
-    HealthSafetyRequirements.__table__,
-    InfoShareComposition.__table__,
-    LegalRepresentativeInformation.__table__,
-    NaturalPerson.__table__,
-    LegalPerson.__table__,
-    OccupationalHealthSafetyRequirements.__table__,
-    RequiredDocuments.__table__,
-    References.__table__,
-    TypeDocument.__table__,
-    Country.__table__,
-    GeneralInformation.__table__,
-    Municipality.__table__,
-    AuthorizationsPolicies.__table__,
-]
+engine = create_engine(
+    DATABASE_URL,
+    connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {},
+    echo=False
+)
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def create_tables():
-    Base.metadata.create_all(bind=engine, tables=tables)
-    print("Database create or update")
+    """Crear todas las tablas en la base de datos"""
+    # Importar modelos aquí para evitar ciclos
+    from app.models import User, City, Country, Office, TypeUser, TypeDocument, Region, Municipality
+    from app.models import NaturalPerson, LegalPerson, LegalRepresentativeInformation, InfoShareComposition
+    from app.models import TaxFiscalInformation, FinancialInformation, References
+    from app.models import OccupationalHealthSafetyRequirements, HealthSafetyRequirements
+    from app.models import AuthorizationsPolicies, RequiredDocuments
+    from app.models.submission_models import Submission, SubmissionDocument
+    
+    Base.metadata.create_all(bind=engine)
+    print("✅ Database create or update - SQLITE")
+
+def get_db():
+    """Obtener sesión de base de datos"""
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
