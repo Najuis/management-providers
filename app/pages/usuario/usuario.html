@@ -12,7 +12,7 @@
             <div class="header-content">
                 <div>
                     <h1>Formulario de Vinculación de Terceros</h1>
-                    <p class="codigo">Código: LGB-OFC-F-008 | Mayoreo e Institucional</p>
+                    <p class="codigo">Código: LGB-OFC-F-008 | Mayoreo</p>
                 </div>
                 <div class="user-info">
                     <span id="userGreeting">Cargando perfil...</span>
@@ -44,8 +44,8 @@
                         <label>Tipo de Cliente *</label>
                         <select id="tipoCliente" onchange="onTipoClienteChange()">
                             <option value="">Seleccione...</option>
-                            <option value="Mayoreo">Mayoreo</option>
-                            <option value="Institucional">Institucional</option>
+                            <option value="Natural">Persona Natural con Establecimiento de Comercio</option>
+                            <option value="Juridica">Persona Jurídica</option>
                         </select>
                     </div>
                     
@@ -72,6 +72,10 @@
                         </select>
                     </div>
                 </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-next" onclick="showTab(2)">Siguiente →</button>
+                </div>
             </div>
 
             <!-- SECCIÓN 2: INFORMACIÓN DE IDENTIFICACIÓN -->
@@ -87,12 +91,10 @@
                             <label>Nombres *</label>
                             <input type="text" id="nombres">
                         </div>
-                        
                         <div class="form-group">
                             <label>Apellidos *</label>
                             <input type="text" id="apellidos">
                         </div>
-                        
                         <div class="form-group">
                             <label>Tipo de Documento *</label>
                             <select id="tipoDocNatural">
@@ -104,37 +106,30 @@
                                 <option value="PPT">Permiso por Permiso Temporal</option>
                             </select>
                         </div>
-                        
                         <div class="form-group">
                             <label>Número de Documento *</label>
                             <input type="text" id="numeroDocNatural">
                         </div>
-                        
                         <div class="form-group">
                             <label>Fecha de Nacimiento *</label>
                             <input type="date" id="fechaNacimiento">
                         </div>
-                        
                         <div class="form-group">
                             <label>Fecha de Expedición *</label>
                             <input type="date" id="fechaExpNatural">
                         </div>
-                        
                         <div class="form-group">
                             <label>Dirección *</label>
                             <input type="text" id="direccionNatural">
                         </div>
-                        
                         <div class="form-group">
                             <label>Departamento *</label>
                             <input type="text" id="departamentoNatural">
                         </div>
-                        
                         <div class="form-group">
                             <label>Municipio *</label>
                             <input type="text" id="municipioNatural">
                         </div>
-                        
                         <div class="form-group">
                             <label>País de Residencia *</label>
                             <select id="paisResidenciaNatural">
@@ -143,7 +138,6 @@
                                 <option value="OTRO">Otro</option>
                             </select>
                         </div>
-                        
                         <div class="form-group">
                             <label>Zona *</label>
                             <select id="zonaNatural">
@@ -151,45 +145,21 @@
                                 <option value="Rural">Rural</option>
                             </select>
                         </div>
-                        
                         <div class="form-group">
                             <label>Correo Electrónico *</label>
                             <input type="email" id="correoNatural">
                         </div>
-                        
                         <div class="form-group">
                             <label>Teléfono / Celular *</label>
                             <input type="text" id="telefonoNatural">
                         </div>
-                        
                         <div class="form-group">
                             <label>Razón Social (si aplica)</label>
                             <input type="text" id="razonSocialNatural">
                         </div>
-                        
                         <div class="form-group">
                             <label>NIT (si aplica)</label>
                             <input type="text" id="nitNatural">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Ocupación *</label>
-                            <input type="text" id="ocupacionNatural">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Ingresos Mensuales</label>
-                            <input type="text" id="ingresosMensuales" placeholder="Sin puntos ni comas">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Otros Ingresos</label>
-                            <input type="text" id="otrosIngresos" placeholder="Sin puntos ni comas">
-                        </div>
-                        
-                        <div class="form-group full-width">
-                            <label>Especifique otros ingresos</label>
-                            <input type="text" id="especifiqueIngresos">
                         </div>
                     </div>
                 </div>
@@ -197,40 +167,49 @@
                 <!-- Persona Jurídica -->
                 <div id="personaJuridicaFields" class="client-type-fields" style="display: none;">
                     <h3>Persona Jurídica</h3>
-                    
                     <div class="form-grid">
                         <div class="form-group full-width">
                             <label>Razón Social *</label>
                             <input type="text" id="razonSocial">
                         </div>
-                        
                         <div class="form-group">
                             <label>NIT *</label>
                             <input type="text" id="nit">
                         </div>
-                        
                         <div class="form-group">
                             <label>Dígito de Verificación</label>
                             <input type="text" id="digitoVerificacion">
                         </div>
-                        
+                        <div class="form-group">
+                            <label>Fecha de Constitución *</label>
+                            <input type="date" id="fechaConstitucion">
+                        </div>
                         <div class="form-group">
                             <label>Tipo de Sociedad *</label>
-                            <select id="tipoSociedad">
+                            <select id="tipoSociedad" onchange="checkOtroSociedad()">
                                 <option value="">Seleccione...</option>
-                                <option value="SAS">Sociedad por Acciones Simplificada</option>
-                                <option value="SA">Sociedad Anónima</option>
-                                <option value="LTDA">Limitada</option>
-                                <option value="EIRL">Empresa Individual de Responsabilidad Limitada</option>
-                                <option value="Compañía">Compañía</option>
+                                <option value="Administración Central">Administración Central</option>
+                                <option value="Administración Local">Administración Local</option>
+                                <option value="Empresa Unipersonal">Empresa Unipersonal</option>
+                                <option value="SAS">Sociedad por Acciones Simplificada (SAS)</option>
+                                <option value="Sociedad Comandita Simple">Sociedad Comandita Simple</option>
+                                <option value="Sociedad Extranjera">Sociedad Extranjera</option>
+                                <option value="Sociedad Limitada">Sociedad Limitada</option>
+                                <option value="Entidad sin Ánimo de Lucro">Entidad sin Ánimo de Lucro</option>
+                                <option value="Organización de Economía Solidaria">Organización de Economía Solidaria</option>
+                                <option value="Sociedad Anónima">Sociedad Anónima</option>
+                                <option value="Empresa Asociativa de Trabajo">Empresa Asociativa de Trabajo</option>
+                                <option value="Otro">Otro</option>
                             </select>
                         </div>
-                        
+                        <div class="form-group full-width" id="otroSociedadGroup" style="display: none;">
+                            <label>Especifique Tipo de Sociedad *</label>
+                            <input type="text" id="otroSociedad" placeholder="Especifique el tipo de sociedad">
+                        </div>
                         <div class="form-group">
                             <label>Dirección *</label>
                             <input type="text" id="direccionJuridica">
                         </div>
-                        
                         <div class="form-group">
                             <label>Región *</label>
                             <select id="regionJuridica">
@@ -242,7 +221,6 @@
                                 <option value="Antioquia">Antioquia</option>
                             </select>
                         </div>
-                        
                         <div class="form-group">
                             <label>Tipo de Vinculación *</label>
                             <select id="tipoVinculacionJuridica">
@@ -252,111 +230,185 @@
                                 <option value="Aliado">Aliado</option>
                             </select>
                         </div>
-                        
                         <div class="form-group">
                             <label>Municipio *</label>
                             <input type="text" id="municipioJuridica">
                         </div>
-                        
-                        <!-- NUEVO: Página Web -->
                         <div class="form-group full-width">
                             <label>Página Web</label>
                             <input type="url" id="paginaWeb" placeholder="https://www.ejemplo.com">
                         </div>
                         
+                        <!-- REPRESENTANTE LEGAL -->
+                        <div class="form-group full-width" style="margin-top: 20px; border-top: 2px solid var(--azul-claro); padding-top: 15px;">
+                            <h4 style="color: var(--azul-oscuro); margin: 0 0 10px 0;">Representante Legal *</h4>
+                        </div>
                         <div class="form-group full-width">
-                            <label>Representante Legal *</label>
+                            <label>Nombre Completo *</label>
                             <input type="text" id="representanteLegal">
                         </div>
-                        
                         <div class="form-group">
-                            <label>Tipo de Documento Representante *</label>
+                            <label>Tipo de Documento *</label>
                             <select id="tipoDocRep">
                                 <option value="">Seleccione...</option>
                                 <option value="CC">Cédula de Ciudadanía</option>
                                 <option value="CE">Cédula de Extranjería</option>
                             </select>
                         </div>
-                        
                         <div class="form-group">
-                            <label>Número Documento Representante *</label>
+                            <label>Número de Documento *</label>
                             <input type="text" id="numeroDocRep">
                         </div>
-                        
-                        <div class="form-group">
-                            <label>Ciudad Representante *</label>
-                            <input type="text" id="ciudadRep">
+
+                        <!-- REPRESENTANTE SUPLENTE -->
+                        <div class="form-group full-width" style="margin-top: 20px; border-top: 2px solid var(--azul-claro); padding-top: 15px;">
+                            <h4 style="color: var(--azul-oscuro); margin: 0 0 10px 0;">Representante Suplente</h4>
                         </div>
-                        
-                        <div class="form-group">
-                            <label>Teléfono Representante *</label>
-                            <input type="text" id="telefonoRep">
+                        <div class="form-group full-width">
+                            <label>Nombre Completo</label>
+                            <input type="text" id="representanteSuplente">
                         </div>
-                        
                         <div class="form-group">
-                            <label>Email Representante *</label>
-                            <input type="email" id="emailRep">
+                            <label>Tipo de Documento</label>
+                            <select id="tipoDocSuplente">
+                                <option value="">Seleccione...</option>
+                                <option value="CC">Cédula de Ciudadanía</option>
+                                <option value="CE">Cédula de Extranjería</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Número de Documento</label>
+                            <input type="text" id="numeroDocSuplente">
+                        </div>
+
+                        <!-- BENEFICIARIO FINAL -->
+                        <div class="form-group full-width" style="margin-top: 20px; border-top: 2px solid var(--azul-claro); padding-top: 15px;">
+                            <h4 style="color: var(--azul-oscuro); margin: 0 0 10px 0;">Beneficiario Final</h4>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Nombre Completo</label>
+                            <input type="text" id="beneficiarioFinalNombre">
+                        </div>
+                        <div class="form-group">
+                            <label>Cédula</label>
+                            <input type="text" id="beneficiarioFinalCedula">
                         </div>
                     </div>
 
-                    <!-- NUEVO: Beneficiarios Finales -->
-                    <h3 style="margin-top: 30px;">Beneficiarios Finales</h3>
-                    <p class="section-note">Personas naturales que son titulares finales de la persona jurídica (máximo 3).</p>
+                    <!-- COMPOSICIÓN ACCIONARIA -->
+                    <h3 style="margin-top: 30px;">Información de la Composición Accionaria</h3>
+                    <p class="section-note" style="background: #fff3cd; padding: 12px; border-left: 4px solid var(--advertencia); border-radius: 5px; color: #856404;">
+                        <strong>Accionistas o socios con participación superior al 5%:</strong> Hasta llegar al beneficiario final. Tenga en cuenta que de conformidad con lo dispuesto en el Art. 12, parágrafo 4 de la Ley 2195 de 2022, las personas jurídicas están en la obligación de suministrar la información de sus beneficiarios finales a los obligados al cumplimiento de sistemas de prevención de riesgos LAFT/CO/SF.
+                    </p>
                     
-                    <div class="beneficiarios-container">
-                        <!-- Beneficiario 1 -->
-                        <div class="beneficiario-card">
-                            <h4>Beneficiario Final 1</h4>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label>Nombre Completo *</label>
-                                    <input type="text" id="bf1Nombre">
-                                </div>
-                                <div class="form-group">
-                                    <label>Cédula *</label>
-                                    <input type="text" id="bf1Cedula">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Beneficiario 2 -->
-                        <div class="beneficiario-card">
-                            <h4>Beneficiario Final 2</h4>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label>Nombre Completo</label>
-                                    <input type="text" id="bf2Nombre">
-                                </div>
-                                <div class="form-group">
-                                    <label>Cédula</label>
-                                    <input type="text" id="bf2Cedula">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Beneficiario 3 -->
-                        <div class="beneficiario-card">
-                            <h4>Beneficiario Final 3</h4>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label>Nombre Completo</label>
-                                    <input type="text" id="bf3Nombre">
-                                </div>
-                                <div class="form-group">
-                                    <label>Cédula</label>
-                                    <input type="text" id="bf3Cedula">
-                                </div>
-                            </div>
-                        </div>
+                    <div class="composicion-accionaria-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nombre o Razón Social</th>
+                                    <th>Participación (%)</th>
+                                    <th>Tipo de documento</th>
+                                    <th>No. de documento</th>
+                                    <th>Dirección - Ciudad</th>
+                                    <th>Teléfono</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="text" id="ca1Nombre" placeholder="Nombre o Razón Social"></td>
+                                    <td><input type="number" id="ca1Participacion" placeholder="%" min="0" max="100" step="0.01"></td>
+                                    <td>
+                                        <select id="ca1TipoDoc">
+                                            <option value="">Seleccione...</option>
+                                            <option value="CC">Cédula de Ciudadanía</option>
+                                            <option value="CE">Cédula de Extranjería</option>
+                                            <option value="NIT">NIT</option>
+                                            <option value="Pasaporte">Pasaporte</option>
+                                        </select>
+                                    </td>
+                                    <td><input type="text" id="ca1NumeroDoc" placeholder="Número"></td>
+                                    <td><input type="text" id="ca1Direccion" placeholder="Dirección - Ciudad"></td>
+                                    <td><input type="text" id="ca1Telefono" placeholder="Teléfono"></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" id="ca2Nombre" placeholder="Nombre o Razón Social"></td>
+                                    <td><input type="number" id="ca2Participacion" placeholder="%" min="0" max="100" step="0.01"></td>
+                                    <td>
+                                        <select id="ca2TipoDoc">
+                                            <option value="">Seleccione...</option>
+                                            <option value="CC">Cédula de Ciudadanía</option>
+                                            <option value="CE">Cédula de Extranjería</option>
+                                            <option value="NIT">NIT</option>
+                                            <option value="Pasaporte">Pasaporte</option>
+                                        </select>
+                                    </td>
+                                    <td><input type="text" id="ca2NumeroDoc" placeholder="Número"></td>
+                                    <td><input type="text" id="ca2Direccion" placeholder="Dirección - Ciudad"></td>
+                                    <td><input type="text" id="ca2Telefono" placeholder="Teléfono"></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" id="ca3Nombre" placeholder="Nombre o Razón Social"></td>
+                                    <td><input type="number" id="ca3Participacion" placeholder="%" min="0" max="100" step="0.01"></td>
+                                    <td>
+                                        <select id="ca3TipoDoc">
+                                            <option value="">Seleccione...</option>
+                                            <option value="CC">Cédula de Ciudadanía</option>
+                                            <option value="CE">Cédula de Extranjería</option>
+                                            <option value="NIT">NIT</option>
+                                            <option value="Pasaporte">Pasaporte</option>
+                                        </select>
+                                    </td>
+                                    <td><input type="text" id="ca3NumeroDoc" placeholder="Número"></td>
+                                    <td><input type="text" id="ca3Direccion" placeholder="Dirección - Ciudad"></td>
+                                    <td><input type="text" id="ca3Telefono" placeholder="Teléfono"></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" id="ca4Nombre" placeholder="Nombre o Razón Social"></td>
+                                    <td><input type="number" id="ca4Participacion" placeholder="%" min="0" max="100" step="0.01"></td>
+                                    <td>
+                                        <select id="ca4TipoDoc">
+                                            <option value="">Seleccione...</option>
+                                            <option value="CC">Cédula de Ciudadanía</option>
+                                            <option value="CE">Cédula de Extranjería</option>
+                                            <option value="NIT">NIT</option>
+                                            <option value="Pasaporte">Pasaporte</option>
+                                        </select>
+                                    </td>
+                                    <td><input type="text" id="ca4NumeroDoc" placeholder="Número"></td>
+                                    <td><input type="text" id="ca4Direccion" placeholder="Dirección - Ciudad"></td>
+                                    <td><input type="text" id="ca4Telefono" placeholder="Teléfono"></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" id="ca5Nombre" placeholder="Nombre o Razón Social"></td>
+                                    <td><input type="number" id="ca5Participacion" placeholder="%" min="0" max="100" step="0.01"></td>
+                                    <td>
+                                        <select id="ca5TipoDoc">
+                                            <option value="">Seleccione...</option>
+                                            <option value="CC">Cédula de Ciudadanía</option>
+                                            <option value="CE">Cédula de Extranjería</option>
+                                            <option value="NIT">NIT</option>
+                                            <option value="Pasaporte">Pasaporte</option>
+                                        </select>
+                                    </td>
+                                    <td><input type="text" id="ca5NumeroDoc" placeholder="Número"></td>
+                                    <td><input type="text" id="ca5Direccion" placeholder="Dirección - Ciudad"></td>
+                                    <td><input type="text" id="ca5Telefono" placeholder="Teléfono"></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-prev" onclick="showTab(1)">← Anterior</button>
+                    <button type="button" class="btn-next" onclick="showTab(3)">Siguiente →</button>
                 </div>
             </div>
 
-            <!-- SECCIÓN 3: REFERENCIAS (CIIU + Referencias Bancarias y Comerciales) -->
+            <!-- SECCIÓN 3: REFERENCIAS -->
             <div id="section3" class="section">
                 <h2>3. Referencias y Actividad Económica</h2>
                 
-                <!-- Código CIIU y Actividad Económica -->
                 <div class="info-card">
                     <h3>Actividad Económica</h3>
                     <div class="form-grid">
@@ -366,7 +418,6 @@
                                 <option value="">Seleccione...</option>
                             </select>
                         </div>
-                        
                         <div class="form-group">
                             <label>Actividad Económica *</label>
                             <input type="text" id="actividadEconomica" readonly>
@@ -374,37 +425,58 @@
                     </div>
                 </div>
 
-                <!-- Referencia Bancaria -->
                 <div class="info-card">
-                    <h3>Referencia Bancaria</h3>
+                    <h3>Referencia Bancaria 1</h3>
                     <div class="form-grid">
                         <div class="form-group">
                             <label>Nombre del Banco *</label>
-                            <input type="text" id="nombreBanco" placeholder="Ej: Bancolombia">
+                            <input type="text" id="nombreBanco1" placeholder="Ej: Bancolombia">
                         </div>
-                        
                         <div class="form-group">
                             <label>Nombre del Titular *</label>
-                            <input type="text" id="nombreTitular">
+                            <input type="text" id="nombreTitular1">
                         </div>
-                        
                         <div class="form-group">
                             <label>Tipo de Cuenta *</label>
-                            <select id="tipoCuenta">
+                            <select id="tipoCuenta1">
                                 <option value="">Seleccione...</option>
                                 <option value="Ahorro">Ahorro</option>
                                 <option value="Corriente">Corriente</option>
                             </select>
                         </div>
-                        
                         <div class="form-group">
                             <label>Número de Cuenta *</label>
-                            <input type="text" id="numeroCuenta" placeholder="Sin puntos ni comas">
+                            <input type="text" id="numeroCuenta1" placeholder="Sin puntos ni comas">
                         </div>
                     </div>
                 </div>
 
-                <!-- Referencia Comercial 1 -->
+                <div class="info-card">
+                    <h3>Referencia Bancaria 2</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Nombre del Banco</label>
+                            <input type="text" id="nombreBanco2" placeholder="Ej: Davivienda">
+                        </div>
+                        <div class="form-group">
+                            <label>Nombre del Titular</label>
+                            <input type="text" id="nombreTitular2">
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo de Cuenta</label>
+                            <select id="tipoCuenta2">
+                                <option value="">Seleccione...</option>
+                                <option value="Ahorro">Ahorro</option>
+                                <option value="Corriente">Corriente</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Número de Cuenta</label>
+                            <input type="text" id="numeroCuenta2" placeholder="Sin puntos ni comas">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="info-card">
                     <h3>Referencia Comercial 1</h3>
                     <div class="form-grid">
@@ -412,17 +484,14 @@
                             <label>Nombre de la Empresa *</label>
                             <input type="text" id="refCom1Empresa">
                         </div>
-                        
                         <div class="form-group">
                             <label>Nombre del Contacto *</label>
                             <input type="text" id="refCom1Contacto">
                         </div>
-                        
                         <div class="form-group">
                             <label>Teléfono *</label>
                             <input type="text" id="refCom1Telefono">
                         </div>
-                        
                         <div class="form-group">
                             <label>Correo Electrónico *</label>
                             <input type="email" id="refCom1Correo">
@@ -430,7 +499,6 @@
                     </div>
                 </div>
 
-                <!-- Referencia Comercial 2 -->
                 <div class="info-card">
                     <h3>Referencia Comercial 2</h3>
                     <div class="form-grid">
@@ -438,17 +506,14 @@
                             <label>Nombre de la Empresa</label>
                             <input type="text" id="refCom2Empresa">
                         </div>
-                        
                         <div class="form-group">
                             <label>Nombre del Contacto</label>
                             <input type="text" id="refCom2Contacto">
                         </div>
-                        
                         <div class="form-group">
                             <label>Teléfono</label>
                             <input type="text" id="refCom2Telefono">
                         </div>
-                        
                         <div class="form-group">
                             <label>Correo Electrónico</label>
                             <input type="email" id="refCom2Correo">
@@ -456,39 +521,18 @@
                     </div>
                 </div>
 
-                <!-- Referencia Comercial 3 -->
-                <div class="info-card">
-                    <h3>Referencia Comercial 3</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Nombre de la Empresa</label>
-                            <input type="text" id="refCom3Empresa">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Nombre del Contacto</label>
-                            <input type="text" id="refCom3Contacto">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Teléfono</label>
-                            <input type="text" id="refCom3Telefono">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Correo Electrónico</label>
-                            <input type="email" id="refCom3Correo">
-                        </div>
-                    </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-prev" onclick="showTab(2)">← Anterior</button>
+                    <button type="button" class="btn-next" onclick="showTab(4)">Siguiente →</button>
                 </div>
             </div>
 
             <!-- SECCIÓN 4: INFORMACIÓN FINANCIERA Y TRIBUTARIA -->
             <div id="section4" class="section">
                 <h2>4. Información Financiera y Tributaria</h2>
-                
+
                 <div class="info-card">
-                    <h3>Datos Tributarios</h3>
+                    <h3>Información Tributaria y Financiera</h3>
                     <div class="form-grid">
                         <div class="form-group">
                             <label>Régimen Tributario *</label>
@@ -500,95 +544,77 @@
                                 <option value="Régimen Simple">Régimen Simple de Tributación</option>
                             </select>
                         </div>
-                        
                         <div class="form-group">
                             <label>Total Ingresos</label>
                             <input type="text" id="totalIngresos" placeholder="Sin puntos ni comas">
                         </div>
-                        
                         <div class="form-group">
                             <label>Total Egresos</label>
                             <input type="text" id="totalEgresos" placeholder="Sin puntos ni comas">
                         </div>
-                        
                         <div class="form-group">
                             <label>Total Activos</label>
                             <input type="text" id="totalActivos" placeholder="Sin puntos ni comas">
                         </div>
-                        
                         <div class="form-group">
                             <label>Total Patrimonio</label>
                             <input type="text" id="totalPatrimonio" placeholder="Sin puntos ni comas">
                         </div>
                     </div>
                 </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-prev" onclick="showTab(3)">← Anterior</button>
+                    <button type="button" class="btn-next" onclick="showTab(5)">Siguiente →</button>
+                </div>
             </div>
 
             <!-- SECCIÓN 5: AUTORIZACIONES Y DOCUMENTOS -->
             <div id="section5" class="section">
                 <h2>5. Autorizaciones y Declaraciones</h2>
-                
                 <div class="authorizations">
-                    <!-- AUTORIZACIÓN 1 -->
                     <div class="auth-card">
-                        <div class="auth-checkbox">
-                            <input type="checkbox" id="authDatos">
-                        </div>
+                        <div class="auth-checkbox"><input type="checkbox" id="authDatos"></div>
                         <div class="auth-content">
                             <strong class="auth-title">AUTORIZACIÓN PARA MANEJO DE LA INFORMACIÓN:</strong>
                             <p class="auth-text">LAGOBO DISTRIBUCIONES S.A.S y sus terceros prestadores de servicios tienen plena facultad para realizar tratamiento a la información de mis datos y pueden realizar las actividades tales como: recolectar, almacenar, depurar, usar, actualizar, cruzar mi información con sus bases de datos, realizarme envío de información financiera, comercial, estadística, en materia de salud, legal, publicidad, marketing, prospección comercial, realizar actividades de mercadeo de sus productos y servicios, envío de toda otra información que surja como consecuencia de este vínculo comercial y las demás finalidades estrictamente asociadas y necesarias para cumplir los fines de gestión comercial, de cobranza y de mercadeo, contactándome, haciendo uso de los datos de contacto que he suministrado y por medio de los canales de comunicación que autorizo por medio de esta autorización, pudiéndolo realizar por medio de llamada, mensajes, correos electrónicos, aplicativos web u otros medios de comunicación en el horario de 08:00 am a 06:00 pm de lunes a viernes y de 08:00 am a 03:00 pm los sábados, les autorizo realizar la consulta y el reporte a centrales de riesgo. A su vez los tratamientos de mis datos estarán sujetos a la protección establecida en la ley 1581 de 2012, sus decretos reglamentarios y las normas que los modifiquen. En cualquier momento podré ejercer los derechos establecidos en la norma y particularmente revocar la autorización dada o solicitar la supresión de mis datos, siempre y cuando ya no exista una relación contractual con LAGOBO DISTRIBUCIONES S.A.S., para tal efecto utilizaré los canales y medios descritos en la política de tratamiento de la información y protección de datos de LAGOBO DISTRIBUCIONES S.A.S., publicada en la página. También autorizo a LAGOBO DISTRIBUCIONES S.A.S., o a quien represente sus derechos, para que consulte mis datos a las Centrales de Información de Riesgo o cualquier entidad autorizada por la Superintendencia Financiera de Colombia, cualquier información relacionada con mi nombre, comportamiento comercial, hábitos de pago, manejo de crédito y de cuentas, saldo de mis obligaciones crediticias, tiempo de mora en el pago de dichas obligaciones, así mismo autorizo reportar ante cualquier Central de Información de Riesgo mi endeudamiento, la información comercial disponible sobre el cumplimiento y manejo de los compromisos adquiridos.</p>
                         </div>
                     </div>
 
-                    <!-- AUTORIZACIÓN 2 -->
                     <div class="auth-card">
-                        <div class="auth-checkbox">
-                            <input type="checkbox" id="authLAFT">
-                        </div>
+                        <div class="auth-checkbox"><input type="checkbox" id="authLAFT"></div>
                         <div class="auth-content">
                             <strong class="auth-title">POLÍTICA DE RIESGOS DE LAVADO DE ACTIVOS Y FINANCIACIÓN AL TERRORISMO:</strong>
                             <p class="auth-text">Declaro que yo y/o la empresa que represento y que le prestará servicios o le suministrará bienes a LAGOBO: (i) Desempeña actividades enmarcadas como legales dentro del Ordenamiento Jurídico Colombiano; (ii) Atenderá oportunamente a las solicitudes de información y documentación, dentro de los procesos de vinculación y administración de la relación contractual o comercial; (iii) Posee recursos de las cuentas y/o bienes que no provienen de ninguna actividad ilícita de las contempladas en el Código Penal Colombiano o en cualquier otra norma que lo modifique o adicione; (iv) Implementará las medidas necesarias para evitar que sus operaciones puedan ser utilizadas sin su conocimiento y consentimiento como instrumento para el ocultamiento, manejo, inversión o aprovechamiento en cualquier forma de dinero u otros bienes provenientes de actividades delictivas o para dar apariencia de legalidad a estas actividades; (v) Dará cumplimiento a las normas sobre prevención y control al lavado de activos y financiación del terrorismo (LA/FT) que le resulten aplicables, teniendo implementadas las políticas, procedimientos y mecanismos de prevención y control al LA/FT que se derivan de dichas disposiciones legales. LAGOBO está comprometido en suspender y culminar cualquier clase de conexión con personas que estén vinculadas con el lavado de activos, toda vez que estas actividades delictivas traen consecuencias negativas a la economía del país, a la libre competitividad, productividad y la perdurabilidad de las empresas formadas reglamentariamente; por eso LAGOBO suspenderá la vinculación comercial y laboral con todas las personas y/o empresas que estén en las listas restrictivas y/o organizaciones terroristas y también podrá terminar el vínculo comercial si se llegase a comprobar que el tercero en vinculación utiliza mano de obra infantil en forma violatoria del Convenio No. 138 de la OIT, sobre Children and Forced Labor, sus modificaciones y adiciones.</p>
                         </div>
                     </div>
 
-                    <!-- AUTORIZACIÓN 3 -->
                     <div class="auth-card">
-                        <div class="auth-checkbox">
-                            <input type="checkbox" id="authAnticorrupcion">
-                        </div>
+                        <div class="auth-checkbox"><input type="checkbox" id="authAnticorrupcion"></div>
                         <div class="auth-content">
                             <strong class="auth-title">POLÍTICA DE LUCHA CONTRA EL SOBORNO Y LA CORRUPCIÓN:</strong>
                             <p class="auth-text">Declaro que yo y/o la empresa que represento y que le prestará servicios o le suministrará bienes a LAGOBO: (i) Respetará, cumplirá y hará cumplir las leyes, convenciones y tratados internacionales que Colombia haya suscrito en materia de anticorrupción, así como de aquellas disposiciones internacionales de anticorrupción que sean de obligatorio cumplimiento. (ii) No ofrecerá ni pagará ningún tipo de soborno a favor de algún colaborador o funcionario.</p>
                         </div>
                     </div>
 
-                    <!-- AUTORIZACIÓN 4 -->
                     <div class="auth-card">
-                        <div class="auth-checkbox">
-                            <input type="checkbox" id="authConflictoInteres">
-                        </div>
+                        <div class="auth-checkbox"><input type="checkbox" id="authConflictoInteres"></div>
                         <div class="auth-content">
                             <strong class="auth-title">POLÍTICA DE CONFLICTO DE INTERÉS:</strong>
                             <p class="auth-text">Se entiende por conflicto de interés, la situación en virtud de la cual, una persona (Natural o Jurídica), se enfrenta a distintas alternativas de conducta, debido a que sus intereses particulares pueden prevalecer frente a sus obligaciones legales o contractuales (Actividad laboral o económica). Hay también un conflicto de interés cuando una persona pretende obtener una ventaja material, moral o de cualquier índole, teniendo la opción de decidir entre el deber y el interés creado, o cuando una persona busca renunciar a sus deberes como contraprestación de alguna prebenda. Todos los proveedores, deberán evitar cualquier situación que pueda involucrar un conflicto entre sus intereses personales y los de la Entidad, para lo cual deberán abstenerse de: Otorgar rebajas, descuentos, disminuciones o exenciones de cualquier tipo, fundados en razones de amistad o parentesco. Gestionar u ofrecer un servicio/producto, cuando exista parentesco con algún colaborador de la entidad, hasta tanto no se obtenga la aprobación previa de la instancia competente. Ofrecer o entregar a los empleados de la entidad, directa o indirectamente algún tipo de ventaja, recompensa, retribución u obsequio, en dinero o en especie. Pueden brindarse únicamente obsequios menores de cortesía institucional. Hacer mal uso de los recursos, propiedad intelectual o de las instalaciones de LAGOBO DISTRIBUCIONES SAS.</p>
                         </div>
                     </div>
 
-                    <!-- AUTORIZACIÓN 5 -->
                     <div class="auth-card">
-                        <div class="auth-checkbox">
-                            <input type="checkbox" id="authTransparencia">
-                        </div>
+                        <div class="auth-checkbox"><input type="checkbox" id="authTransparencia"></div>
                         <div class="auth-content">
                             <strong class="auth-title">POLÍTICA DE TRANSPARENCIA Y ÉTICA EMPRESARIAL:</strong>
                             <p class="auth-text">La política de Ética de LAGOBO está fundada en valores como la honestidad y la integridad, que buscan generar una cultura organizacional alineada con el respeto por la ley, la sociedad, el medio ambiente y las buenas prácticas económicas y financieras, garantizando así la transparencia en sus negociaciones con todas las partes interesadas, incluyéndome como aliado, proveedor, cliente y demás según corresponda; por lo tanto, me adhiero a su política, entendiendo que su cumplimiento es obligatorio para todas las personas que tengan o puedan tener relaciones comerciales con la compañía.</p>
                         </div>
                     </div>
 
-                    <!-- AUTORIZACIÓN 6 -->
                     <div class="auth-card">
-                        <div class="auth-checkbox">
-                            <input type="checkbox" id="authOrigenRecursos">
-                        </div>
+                        <div class="auth-checkbox"><input type="checkbox" id="authOrigenRecursos"></div>
                         <div class="auth-content">
                             <strong class="auth-title">DECLARACIÓN DE ORIGEN DE LOS RECURSOS:</strong>
                             <p class="auth-text">Los recursos y la actividad económica registrados en este formulario provienen de fuentes lícitas, identificadas en la casilla de código CIIU seleccionada, de conformidad con la normatividad colombiana vigente. Tengo pleno conocimiento de la normatividad que regula la prevención del lavado de activos, financiación del terrorismo y proliferación de armas de destrucción masiva. NO admitiré que terceros efectúen depósitos a mi nombre con fondos provenientes de actividades ilícitas contempladas en el Código Penal Colombiano, ni efectuaré transacciones destinadas a tales actividades o a favor de personas relacionadas con las mismas. Certifico que la información suministrada en esta plataforma corresponde a la realidad. Eximo a LAGOBO DISTRIBUCIONES S.A.S. de toda responsabilidad que se derive de información errónea, falsa o inexacta ingresada en este sistema. Acepto que los pagos, el formulario y los documentos adjuntos están sujetos a verificación. En caso de inconsistencias o incumplimiento de los procedimientos del sistema SAGRILAFT, entiendo que los fondos podrán ser devueltos y se procederá con el Reporte de Operaciones Sospechosas (ROS) ante la UIAF.</p>
@@ -596,10 +622,8 @@
                     </div>
                 </div>
 
-                <!-- DECLARACIÓN PEP -->
                 <h3>DECLARACIÓN DE PERSONAS EXPUESTAS POLÍTICAMENTE (PEP)</h3>
                 <p class="pep-instruction">Por favor, responda a las siguientes preguntas seleccionando la opción correspondiente:</p>
-                
                 <div class="declarations">
                     <div class="radio-group">
                         <label class="pep-question">1. ¿Por su cargo o actividad maneja recursos públicos?</label>
@@ -608,7 +632,6 @@
                             <label><input type="radio" name="manejaRecursosPublicos" value="No"> NO</label>
                         </div>
                     </div>
-                    
                     <div class="radio-group">
                         <label class="pep-question">2. ¿Por su actividad ejerce algún grado de poder público?</label>
                         <div class="radio-options">
@@ -616,7 +639,6 @@
                             <label><input type="radio" name="ejercePoderPublico" value="No"> NO</label>
                         </div>
                     </div>
-                    
                     <div class="radio-group">
                         <label class="pep-question">3. ¿Por su actividad goza de reconocimiento público general?</label>
                         <div class="radio-options">
@@ -624,7 +646,6 @@
                             <label><input type="radio" name="reconocimientoPublico" value="No"> NO</label>
                         </div>
                     </div>
-                    
                     <div class="radio-group">
                         <label class="pep-question">4. ¿Existe un vínculo (hasta segundo grado de consanguinidad/afinidad) entre usted y una Persona Expuesta Políticamente (PEP)?</label>
                         <div class="radio-options">
@@ -632,114 +653,55 @@
                             <label><input type="radio" name="vinculoPEP" value="No"> NO</label>
                         </div>
                     </div>
-                    
-                    <!-- Campos dinámicos para PEP -->
                     <div id="pepFields" class="client-type-fields" style="display: none;">
                         <p class="pep-note"><strong>Si marcó SÍ en alguna opción anterior, complete la siguiente información:</strong></p>
                         <div class="form-grid">
-                            <div class="form-group">
-                                <label>Cargo desempeñado</label>
-                                <input type="text" id="cargoPEP">
-                            </div>
-                            <div class="form-group">
-                                <label>Entidad</label>
-                                <input type="text" id="entidadPEP">
-                            </div>
-                            <div class="form-group">
-                                <label>Fecha de vinculación/desvinculación</label>
-                                <input type="date" id="fechaPEP">
-                            </div>
+                            <div class="form-group"><label>Cargo desempeñado</label><input type="text" id="cargoPEP"></div>
+                            <div class="form-group"><label>Entidad</label><input type="text" id="entidadPEP"></div>
+                            <div class="form-group"><label>Fecha de vinculación/desvinculación</label><input type="date" id="fechaPEP"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- AUTORIZACIÓN LISTAS RESTRICTIVAS -->
                 <div class="auth-card" style="margin-top: 25px;">
-                    <div class="auth-checkbox">
-                        <input type="checkbox" id="authListasRestrictivas">
-                    </div>
+                    <div class="auth-checkbox"><input type="checkbox" id="authListasRestrictivas"></div>
                     <div class="auth-content">
                         <strong class="auth-title">AUTORIZACIÓN DE CONSULTA EN LISTAS RESTRICTIVAS:</strong>
                         <p class="auth-text">Autorizo a LAGOBO DISTRIBUCIONES S.A.S. a consultar, verificar y monitorear la información de la persona natural/jurídica registrada en listas restrictivas, vinculantes y de control de riesgo de LA/FT/FPADM (OFAC, ONU, listas de control locales e internacionales).</p>
                     </div>
                 </div>
 
-                <!-- ACEPTACIÓN FINAL -->
                 <div class="auth-card final-acceptance" style="margin-top: 25px;">
-                    <div class="auth-checkbox">
-                        <input type="checkbox" id="authAceptacionFinal" required>
-                    </div>
+                    <div class="auth-checkbox"><input type="checkbox" id="authAceptacionFinal" required></div>
                     <div class="auth-content">
                         <strong class="auth-title">ACEPTACIÓN FINAL:</strong>
                         <p class="auth-text">He leído, entiendo y acepto en su totalidad las Declaraciones y Autorizaciones expresadas en este documento. <em>(Casilla obligatoria para enviar el formulario)</em></p>
                     </div>
                 </div>
 
-                <!-- CARGA DE DOCUMENTOS -->
                 <h3 style="margin-top: 40px;">B. DOCUMENTOS REQUERIDOS (ANEXOS AL FORMULARIO)</h3>
                 <p class="doc-instructions">Expedición no superior a 30 días. Formatos: PDF, JPG, PNG. Máximo 5MB por archivo. Nota: De acuerdo con el resultado del proceso de debida diligencia, la compañía podrá solicitar cualquier documentación adicional que estime necesaria para la aplicación de medidas de debida diligencia intensificada.</p>
-                
                 <div class="form-grid">
-                    <div class="form-group">
-                        <label>1. RUT actualizado del presente año *</label>
-                        <input type="file" id="rutFile" accept=".pdf,.jpg,.png">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>2. Cámara de Comercio (emisión no máxima a 30 días) *</label>
-                        <input type="file" id="camaraFile" accept=".pdf,.jpg,.png">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>3. Copia de documento de identidad del representante legal *</label>
-                        <input type="file" id="docIdentidadFile" accept=".pdf,.jpg,.png">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>4. Referencia bancaria (emisión no máxima a 3 meses)</label>
-                        <input type="file" id="refBancariaFile" accept=".pdf,.jpg,.png">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>5. Referencia comercial (emisión no máxima a 3 meses)</label>
-                        <input type="file" id="refComercialFile" accept=".pdf,.jpg,.png">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>6. Declaración de renta del último período</label>
-                        <input type="file" id="declaracionRentaFile" accept=".pdf,.jpg,.png">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>7. Estados financieros de los dos últimos años fiscales</label>
-                        <input type="file" id="estadosFinancierosFile" accept=".pdf,.jpg,.png">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>8. Certificado de composición accionaria</label>
-                        <input type="file" id="composicionFile" accept=".pdf,.jpg,.png">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>9. Reporte de Registro Único de Beneficiarios (RUB)</label>
-                        <input type="file" id="rubFile" accept=".pdf,.jpg,.png">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>10. Requisitos de Seguridad y Salud en el Trabajo (SST)</label>
-                        <input type="file" id="sstFile" accept=".pdf,.jpg,.png">
-                    </div>
+                    <div class="form-group"><label>1. RUT actualizado del presente año *</label><input type="file" id="rutFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
+                    <div class="form-group"><label>2. Cámara de Comercio (emisión no máxima a 30 días) *</label><input type="file" id="camaraFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
+                    <div class="form-group"><label>3. Copia de documento de identidad del representante legal *</label><input type="file" id="docIdentidadFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
+                    <div class="form-group"><label>4. Referencia bancaria (emisión no máxima a 3 meses)</label><input type="file" id="refBancariaFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
+                    <div class="form-group"><label>5. Referencia comercial (emisión no máxima a 3 meses)</label><input type="file" id="refComercialFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
+                    <div class="form-group"><label>6. Declaración de renta del último período</label><input type="file" id="declaracionRentaFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
+                    <div class="form-group"><label>7. Estados financieros de los dos últimos años fiscales</label><input type="file" id="estadosFinancierosFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
+                    <div class="form-group"><label>8. Certificado de composición accionaria</label><input type="file" id="composicionFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
+                    <div class="form-group"><label>9. Reporte de Registro Único de Beneficiarios (RUB)</label><input type="file" id="rubFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
+                    <div class="form-group"><label>10. Requisitos de Seguridad y Salud en el Trabajo (SST)</label><input type="file" id="sstFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
                 </div>
 
                 <div class="form-actions">
-                    <button type="submit" class="btn-submit">Enviar Solicitud de Vinculación</button>
+                    <button type="button" class="btn-previous" onclick="showTab(4)">← Anterior</button>
+                    <button type="submit" class="btn-submit">ENVIAR SOLICITUD DE VINCULACIÓN</button>
                 </div>
-                
                 <div id="messageContainer" class="message-container"></div>
             </div>
         </form>
     </div>
-
     <script src="/pages/usuario/usuario.js"></script>
 </body>
 </html>

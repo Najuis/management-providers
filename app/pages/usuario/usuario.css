@@ -508,38 +508,65 @@ body {
 .form-actions {
     margin-top: 40px;
     text-align: center;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
 }
 
 .btn-submit {
-    background: var(--gradiente-fondo);
+    background: #00a8e8;  /* Color azul sólido LAGOBO */
     color: var(--blanco);
-    padding: 16px 50px;
+    padding: 18px 60px;
     border: none;
-    border-radius: 50px;
-    font-size: 16px;
+    border-radius: 10px;
+    font-size: 18px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: var(--sombra-media);
+    box-shadow: 0 4px 15px rgba(0, 168, 232, 0.4);
     text-transform: uppercase;
     letter-spacing: 1px;
+    flex: 1;
+    max-width: 400px;
 }
 
 .btn-submit:hover {
+    background: #0095cc;  /* Azul más oscuro al pasar el mouse */
     transform: translateY(-3px);
-    box-shadow: var(--sombra-fuerte);
+    box-shadow: 0 6px 20px rgba(0, 168, 232, 0.6);
 }
 
 .btn-submit:active {
     transform: translateY(-1px);
+    background: #0088b8;
 }
 
 .btn-submit:disabled {
-    background: var(--gris-medio);
+    background: #99d1e8;
     cursor: not-allowed;
     transform: none;
+    box-shadow: none;
 }
 
+/* Botón Anterior */
+.btn-previous {
+    background: #2c3e50;  /* Gris oscuro */
+    color: var(--blanco);
+    padding: 18px 40px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
+}
+
+.btn-previous:hover {
+    background: #1a252f;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(44, 62, 80, 0.4);
+}
 /* ============================================
    MENSAJES
    ============================================ */
@@ -666,4 +693,211 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--azul-medio);
+}
+/* ============================================
+   TABLA COMPOSICIÓN ACCIONARIA
+   ============================================ */
+.composicion-accionaria-table {
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
+.composicion-accionaria-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--blanco);
+    box-shadow: var(--sombra-suave);
+}
+
+.composicion-accionaria-table thead {
+    background: var(--azul-oscuro);
+    color: var(--blanco);
+}
+
+.composicion-accionaria-table th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    border: 1px solid var(--azul-medio);
+}
+
+.composicion-accionaria-table td {
+    padding: 10px;
+    border: 1px solid var(--gris-medio);
+}
+
+.composicion-accionaria-table input,
+.composicion-accionaria-table select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--gris-medio);
+    border-radius: 5px;
+    font-size: 13px;
+    background: var(--gris-claro);
+}
+
+.composicion-accionaria-table input:focus,
+.composicion-accionaria-table select:focus {
+    outline: none;
+    border-color: var(--azul-claro);
+    background: var(--blanco);
+    box-shadow: 0 0 0 3px rgba(0, 168, 232, 0.1);
+}
+
+/* Responsive para la tabla */
+@media (max-width: 1024px) {
+    .composicion-accionaria-table {
+        overflow-x: auto;
+    }
+    
+    .composicion-accionaria-table table {
+        min-width: 800px;
+    }
+}
+
+/* ============================================
+   MEJORAS DE BORDES Y CONTRASTE
+   ============================================ */
+
+/* Bordes más definidos en todos los elementos */
+.form-group input,
+.form-group select,
+.form-group textarea {
+    border: 2px solid var(--azul-medio) !important;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border: 2px solid var(--azul-oscuro) !important;
+    box-shadow: 0 0 0 4px rgba(0, 168, 232, 0.2);
+}
+
+/* Textos en blanco más legibles - SIN DIFUMINAR */
+.header h1,
+.header .codigo,
+#userGreeting,
+.tab.active,
+.auth-title,
+.btn-submit,
+.btn-next,
+.btn-prev {
+    text-shadow: none !important;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+/* Header con mejor contraste */
+.header {
+    background: linear-gradient(135deg, var(--azul-oscuro) 0%, var(--azul-medio) 100%);
+    border-bottom: 3px solid var(--azul-claro);
+}
+
+/* Tabs con bordes definidos */
+.tab {
+    border: 2px solid var(--gris-medio);
+    border-bottom: none;
+}
+
+.tab.active {
+    border: 2px solid var(--azul-oscuro);
+    border-bottom: none;
+    background: var(--azul-oscuro);
+}
+
+/* Info cards con bordes más visibles */
+.info-card {
+    border: 2px solid var(--azul-claro);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Auth cards con bordes definidos */
+.auth-card {
+    border: 2px solid var(--azul-claro);
+    border-left: 5px solid var(--azul-oscuro);
+}
+
+/* Botones con mejor contraste */
+.btn-next,
+.btn-prev {
+    background: var(--azul-oscuro);
+    color: white;
+    border: 2px solid var(--azul-medio);
+    padding: 12px 30px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: none;
+}
+
+.btn-next:hover,
+.btn-prev:hover {
+    background: var(--azul-medio);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 168, 232, 0.3);
+}
+
+.btn-prev {
+    background: var(--gris-oscuro);
+    border-color: var(--gris-medio);
+}
+
+.btn-prev:hover {
+    background: #34495e;
+}
+
+/* Inputs de archivo con indicador visual */
+.form-group input[type="file"] {
+    border: 2px solid var(--gris-medio);
+    padding: 10px;
+    border-radius: 8px;
+    background: var(--gris-claro);
+    transition: all 0.3s ease;
+}
+
+.form-group input[type="file"].uploaded {
+    border-color: var(--exito);
+    background: var(--exito-claro);
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+}
+
+/* Tablas con bordes definidos */
+.composicion-accionaria-table table {
+    border: 2px solid var(--azul-medio);
+}
+
+.composicion-accionaria-table th {
+    border: 2px solid var(--azul-medio);
+    background: var(--azul-oscuro);
+}
+
+.composicion-accionaria-table td {
+    border: 2px solid var(--gris-medio);
+}
+
+/* Labels más visibles */
+.form-group label {
+    font-weight: 700;
+    color: var(--gris-oscuro);
+    text-shadow: none;
+}
+
+/* Secciones con bordes definidos */
+.client-type-fields {
+    border: 3px dashed var(--azul-medio);
+    background: var(--blanco);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .btn-next,
+    .btn-prev {
+        width: 100%;
+        margin: 5px 0;
+    }
 }
