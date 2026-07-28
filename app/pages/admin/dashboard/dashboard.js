@@ -25,17 +25,18 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============================================
 function setupFormHandler() {
     const form = document.getElementById('createUserForm');
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        await createUser();
-    });
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await createUser();
+        });
+    }
 }
 
 // ============================================
-// CREAR USUARIO (CORREGIDO)
+// CREAR USUARIO
 // ============================================
 async function createUser() {
-    // ✅ Solo enviar los campos que el backend (InfoUser) acepta
     const userData = {
         email: document.getElementById('newEmail').value,
         password: document.getElementById('newPassword').value,
@@ -55,32 +56,24 @@ async function createUser() {
         const data = await response.json();
         
         if (response.ok) {
-            // ✅ MENSAJE DE ÉXITO CON CREDENCIALES
             const mensaje = `✅ Usuario creado exitosamente\n\n` +
                            `📧 Email: ${userData.email}\n` +
                            `🔑 Contraseña: ${userData.password}\n\n` +
                            `El usuario debe iniciar sesión para completar el formulario de vinculación.`;
             
             alert(mensaje);
-            
-            // ✅ LIMPIAR FORMULARIO
             document.getElementById('createUserForm').reset();
-            
-            // ✅ RECARGAR LISTA DE USUARIOS
             loadAdminDashboard();
             
-            // ✅ OPCIÓN: Preguntar si desea redirigir al formulario de vinculación
             const redirigir = confirm(
                 `¿Desea redirigir al usuario ${userData.email} al formulario de vinculación ahora?\n\n` +
                 `Nota: El usuario deberá iniciar sesión con sus credenciales.`
             );
             
             if (redirigir) {
-                // ✅ REDIRECCIÓN AL FORMULARIO DE VINCULACIÓN
                 window.location.href = '/usuario';
             }
         } else {
-            // ✅ MANEJO DE ERRORES
             if (data.detail && data.detail.includes('email')) {
                 alert('❌ El email ya está registrado. Usa otro email.');
             } else {
@@ -106,6 +99,7 @@ async function loadAdminDashboard() {
 // ============================================
 async function loadUsers() {
     const container = document.getElementById('userList');
+    if (!container) return;
     
     try {
         const response = await fetch(`${API_URL}/admin/users`, {
@@ -117,20 +111,20 @@ async function loadUsers() {
             const users = data.message || [];
             
             if (users.length === 0) {
-                container.innerHTML = '<h3 style="color: #1e3c72; margin: 20px 0;">📋 Usuarios Creados</h3><p style="color: #999; text-align: center; padding: 20px;">No hay usuarios creados aún</p>';
+                container.innerHTML = '<h3 style="color: var(--azul-medio); margin: 20px 0;">📋 Usuarios Creados</h3><p style="color: #999; text-align: center; padding: 20px;">No hay usuarios creados aún</p>';
             } else {
-                let html = '<h3 style="color: #1e3c72; margin: 20px 0;"> Usuarios Creados</h3>';
+                let html = '<h3 style="color: var(--azul-medio); margin: 20px 0;">📋 Usuarios Creados</h3>';
                 users.forEach(user => {
                     const tipoUsuario = user.type_user_id === 1 ? 'Admin' : 
                                       user.type_user_id === 2 ? 'Normal' : 
                                       user.type_user_id === 3 ? 'Proveedor' : 'Cliente';
                     
                     html += `
-                        <div class="user-item" style="padding: 10px; margin: 10px 0; background: #f1f5f9; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <div class="user-item" style="display: flex; justify-content: space-between; align-items: center;">
                             <div class="user-info">
                                 <strong>${user.email}</strong>
-                                <span style="margin-left: 10px; padding: 3px 8px; background: #2563eb; color: white; border-radius: 12px; font-size: 0.8rem;">${tipoUsuario}</span>
-                                ${user.is_active ? '<span style="margin-left: 5px; padding: 3px 8px; background: #22c55e; color: white; border-radius: 12px; font-size: 0.8rem;">Activo</span>' : ''}
+                                <span class="badge ${user.type_user_id === 1 ? 'badge-admin' : 'badge-normal'}">${tipoUsuario}</span>
+                                ${user.is_active ? '<span class="badge badge-activo">Activo</span>' : '<span class="badge badge-inactivo">Inactivo</span>'}
                             </div>
                         </div>
                     `;
@@ -138,11 +132,11 @@ async function loadUsers() {
                 container.innerHTML = html;
             }
         } else {
-            container.innerHTML = '<h3 style="color: #1e3c72; margin: 20px 0;">📋 Usuarios Creados</h3><p style="color: #ef4444; text-align: center; padding: 20px;">Error al cargar usuarios</p>';
+            container.innerHTML = '<h3 style="color: var(--azul-medio); margin: 20px 0;">📋 Usuarios Creados</h3><p style="color: #ef4444; text-align: center; padding: 20px;">Error al cargar usuarios</p>';
         }
     } catch (error) {
         console.error('Error cargando usuarios:', error);
-        container.innerHTML = '<h3 style="color: #1e3c72; margin: 20px 0;">📋 Usuarios Creados</h3><p style="color: #ef4444; text-align: center; padding: 20px;">Error de conexión</p>';
+        container.innerHTML = '<h3 style="color: var(--azul-medio); margin: 20px 0;">📋 Usuarios Creados</h3><p style="color: #ef4444; text-align: center; padding: 20px;">Error de conexión</p>';
     }
 }
 
@@ -151,6 +145,7 @@ async function loadUsers() {
 // ============================================
 async function loadForms() {
     const container = document.getElementById('formsList');
+    if (!container) return;
     
     try {
         const response = await fetch(`${API_URL}/submissions`, {
@@ -159,32 +154,33 @@ async function loadForms() {
 
         if (response.ok) {
             const data = await response.json();
-            const forms = data.submissions || [];
+            const forms = data.submissions || data.message || [];
             
             if (forms.length === 0) {
-                container.innerHTML = '<h3>📄 Formularios Recibidos</h3><p style="color: #999; text-align: center; padding: 20px;">No hay formularios recibidos aún</p>';
+                container.innerHTML = '<h3 style="color: var(--azul-medio); margin: 20px 0;">📄 Formularios Recibidos</h3><p style="color: #999; text-align: center; padding: 20px;">No hay formularios recibidos aún</p>';
             } else {
-                let html = '<h3>📄 Formularios Recibidos</h3>';
+                let html = '<h3 style="color: var(--azul-medio); margin: 20px 0;">📄 Formularios Recibidos</h3>';
                 forms.forEach(form => {
                     const fecha = form.created_at ? new Date(form.created_at).toLocaleDateString('es-CO') : 'N/A';
                     html += `
-                        <div class="user-item" style="padding: 10px; margin: 10px 0; background: #f1f5f9; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <div class="user-item" style="display: flex; justify-content: space-between; align-items: center;">
                             <div class="user-info">
-                                <strong>ID: ${form.id}</strong>
-                                <span style="margin-left: 10px; padding: 3px 8px; background: #22c55e; color: white; border-radius: 12px; font-size: 0.8rem;">Estado: ${form.status || 'Pendiente'}</span>
+                                <strong>ID: ${form.id || 'N/A'}</strong>
+                                <span class="badge badge-activo">Estado: ${form.status || 'Pendiente'}</span>
                                 <span style="margin-left: 10px; color: #64748b; font-size: 0.9rem;">${fecha}</span>
                             </div>
+                            <a href="/admin/validation" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem; text-decoration: none;">Validar</a>
                         </div>
                     `;
                 });
                 container.innerHTML = html;
             }
         } else {
-            container.innerHTML = '<h3>📄 Formularios Recibidos</h3><p style="color: #999; text-align: center; padding: 20px;">No hay formularios disponibles</p>';
+            container.innerHTML = '<h3 style="color: var(--azul-medio); margin: 20px 0;">📄 Formularios Recibidos</h3><p style="color: #999; text-align: center; padding: 20px;">No hay formularios disponibles</p>';
         }
     } catch (error) {
         console.error('Error cargando formularios:', error);
-        container.innerHTML = '<h3>📄 Formularios Recibidos</h3><p style="color: #999; text-align: center; padding: 20px;">Error al cargar</p>';
+        container.innerHTML = '<h3 style="color: var(--azul-medio); margin: 20px 0;">📄 Formularios Recibidos</h3><p style="color: #999; text-align: center; padding: 20px;">Error al cargar</p>';
     }
 }
 

@@ -95,6 +95,35 @@ h3 {
     box-shadow: var(--sombra-suave);
 }
 
+/* ✅ ESTILOS PARA ACCIONES RÁPIDAS */
+.quick-actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-validation {
+    background: linear-gradient(135deg, var(--azul-oscuro) 0%, var(--azul-medio) 100%);
+    color: white;
+    text-decoration: none;
+    padding: 0.85rem 2rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--sombra-media);
+    transition: all 0.3s ease;
+}
+
+.btn-validation:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--sombra-fuerte);
+    filter: brightness(1.1);
+}
+
 .form-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -119,8 +148,7 @@ h3 {
     font-weight: 700;
 }
 
-input,
-select {
+input, select {
     padding: 0.75rem;
     border: 2px solid var(--border-color);
     border-radius: 8px;
@@ -129,8 +157,7 @@ select {
     background: #fff;
 }
 
-input:focus,
-select:focus {
+input:focus, select:focus {
     outline: none;
     border-color: var(--azul-claro);
     box-shadow: 0 0 0 4px rgba(0, 168, 232, 0.15);
@@ -169,6 +196,7 @@ select:focus {
     background: var(--azul-medio);
     color: white;
     box-shadow: var(--sombra-suave);
+    text-decoration: none;
 }
 
 .btn-secondary:hover {
@@ -177,15 +205,7 @@ select:focus {
     box-shadow: var(--sombra-media);
 }
 
-.btn-group {
-    margin-top: 2.5rem;
-    padding-top: 1.5rem;
-    border-top: 2px solid var(--border-color);
-    text-align: right;
-}
-
-.user-list,
-#formsList {
+.user-list, #formsList {
     margin-top: 2.5rem;
     padding: 1.5rem;
     border: 2px dashed var(--azul-claro);
@@ -208,7 +228,6 @@ select:focus {
     box-shadow: var(--sombra-media);
 }
 
-/* Badges/Etiquetas */
 .badge {
     padding: 0.35rem 0.75rem;
     border-radius: 20px;
@@ -218,58 +237,20 @@ select:focus {
     margin-left: 10px;
 }
 
-.badge-admin {
-    background: var(--azul-oscuro);
-    color: white;
-}
+.badge-admin { background: var(--azul-oscuro); color: white; }
+.badge-normal { background: var(--azul-medio); color: white; }
+.badge-activo { background: var(--success-color); color: white; }
+.badge-inactivo { background: var(--error-color); color: white; }
 
-.badge-normal {
-    background: var(--azul-medio);
-    color: white;
-}
-
-.badge-activo {
-    background: var(--success-color);
-    color: white;
-}
-
-.badge-inactivo {
-    background: var(--error-color);
-    color: white;
-}
-
-/* Responsive */
 @media (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
-    
-    #adminDashboard {
-        padding: 1.5rem;
-        margin-top: 10px;
-    }
-    
-    .section-title {
-        font-size: 1.6rem;
-        gap: 10px;
-    }
-    
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .btn {
-        width: 100%;
-    }
+    body { padding: 10px; }
+    #adminDashboard { padding: 1.5rem; margin-top: 10px; }
+    .section-title { font-size: 1.6rem; gap: 10px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .btn, .btn-validation, .btn-secondary { width: 100%; }
 }
 
-/* Print */
 @media print {
-    .no-print {
-        display: none;
-    }
-    
-    #adminDashboard {
-        box-shadow: none;
-    }
-}/* Importación de fuente moderna */
+    .no-print, .quick-actions { display: none; }
+    #adminDashboard { box-shadow: none; }
+}

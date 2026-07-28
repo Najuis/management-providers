@@ -149,7 +149,8 @@ async def formulario_page(): return FileResponse("app/pages/Formulario/formulari
 async def confirmacion_page(): return FileResponse("app/pages/admin/confirmation/confirmation.html")
 
 @app.get("/admin/validation")
-async def admin_validation(): return FileResponse("app/pages/admin/validation/validation.html")
+async def admin_validation(): 
+      return FileResponse("app/pages/admin/validation/validation.html")
 
 @app.get("/customer/dashboard")
 async def customer_dashboard(): return FileResponse("app/pages/customer/dashboard.html")

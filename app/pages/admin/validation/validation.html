@@ -4,18 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Validación Administrativa - LAGOBO</title>
-    <link rel="stylesheet" href="/pages/admin/validation/validation.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <script src="/pages/admin/validation/validation.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/pages/admin/validation/validation.css">
 </head>
 <body>
     <header class="validation-header">
-        <h1>Panel de Validación Administrativa</h1>
-        <p>Espacio Exclusivo para Lagobo Distribuciones S.A.S.</p>
+        <div class="header-content">
+            <div>
+                <h1>Panel de Validación Administrativa</h1>
+                <p>Espacio Exclusivo para Lagobo Distribuciones S.A.S.</p>
+            </div>
+            <div class="user-info">
+                <span id="userGreeting">Administrador</span>
+                <button id="logoutBtn" class="btn-logout">Cerrar Sesión</button>
+            </div>
+        </div>
     </header>
 
     <main class="validation-container">
+        <!-- BARRA DE FILTROS -->
         <section class="filters-bar">
             <div class="filter-group">
                 <label for="filterStatus">Estado</label>
@@ -53,6 +61,7 @@
             <button id="resetFilters" class="btn btn-secondary">Limpiar</button>
         </section>
 
+        <!-- TABLA DE SOLICITUDES -->
         <section class="table-container">
             <table id="submissionsTable">
                 <thead>
@@ -73,7 +82,7 @@
         </section>
     </main>
 
-    <!-- Modal de Validación -->
+    <!-- MODAL DE VALIDACIÓN -->
     <div id="validationModal" class="modal hidden">
         <div class="modal-content">
             <div class="modal-header">
@@ -182,6 +191,7 @@
         </div>
     </div>
 
-    <script src="/pages/admin/validacion/validacion.js"></script>
+    <!-- Script unificado y corregido -->
+    <script src="/pages/admin/validation/validation.js"></script>
 </body>
 </html>
