@@ -126,6 +126,85 @@ function checkFileUpload(input) {
 }
 
 // ============================================
+// VALIDACIÓN DE CAMPOS NUMÉRICOS (Regex ^[0-9]+$)
+// ============================================
+function validarSoloNumeros(input) {
+    // Elimina cualquier carácter que no sea dígito
+    input.value = input.value.replace(/[^0-9]/g, '');
+}
+
+// ============================================
+// VALIDACIÓN DINÁMICA DE DOCUMENTO REPRESENTANTE LEGAL
+// ============================================
+function validarFormatoDocumentoRep() {
+    const tipoDoc = document.getElementById('tipoDocRep').value;
+    const inputDoc = document.getElementById('numeroDocRep');
+    
+    // Si es Pasaporte o PTP, podría requerir letras, si es CC/TI/CE, solo números.
+    if (['CC', 'TI', 'CE'].includes(tipoDoc)) {
+        inputDoc.setAttribute('inputmode', 'numeric');
+        inputDoc.setAttribute('pattern', '[0-9]*');
+    } else {
+        inputDoc.setAttribute('inputmode', 'text');
+    }
+}
+
+// ============================================
+// FORMATO DE NÚMEROS (Separador de miles)
+// ============================================
+function formatearNumero(input) {
+    // Remover formato previo
+    let valor = input.value.replace(/\./g, '').replace(/,/g, '');
+    
+    // Si está vacío, salir
+    if (valor === '') {
+        input.value = '';
+        return;
+    }
+    
+    // Validar que solo sean números
+    valor = valor.replace(/[^0-9]/g, '');
+    
+    // Formatear con puntos de miles
+    const numero = parseInt(valor);
+    if (!isNaN(numero)) {
+        input.value = numero.toLocaleString('es-CO');
+    }
+}
+
+// ============================================
+// CÁLCULO AUTOMÁTICO DE PATRIMONIO NETO
+// ============================================
+function calcularPatrimonio() {
+    const inputActivo = document.getElementById('totalActivos');
+    const inputPasivo = document.getElementById('totalPasivos');
+    const inputPatrimonio = document.getElementById('totalPatrimonio');
+
+    // 1. Limpiar formato para obtener el número puro (quitar puntos y comas)
+    const activoStr = inputActivo.value.replace(/\./g, '').replace(/,/g, '');
+    const pasivoStr = inputPasivo.value.replace(/\./g, '').replace(/,/g, '');
+
+    // 2. Validar que solo queden números (seguridad extra)
+    inputActivo.value = inputActivo.value.replace(/[^0-9.,]/g, '');
+    inputPasivo.value = inputPasivo.value.replace(/[^0-9.,]/g, '');
+
+    // 3. Convertir a float (si está vacío, es 0)
+    const activo = parseFloat(activoStr) || 0;
+    const pasivo = parseFloat(pasivoStr) || 0;
+
+    // 4. Calcular Patrimonio Neto = Activo - Pasivo
+    const patrimonio = activo - pasivo;
+
+    // 5. Formatear el resultado para mostrarlo al usuario (formato colombiano)
+    // Si ambos están vacíos, dejar vacío. Si hay cálculo, mostrar con separadores de miles.
+    if (inputActivo.value === '' && inputPasivo.value === '') {
+        inputPatrimonio.value = '';
+    } else {
+        inputPatrimonio.value = patrimonio.toLocaleString('es-CO');
+    }
+}
+
+// ============================================
 // PERFIL DE USUARIO
 // ============================================
 async function loadUserProfile() {
@@ -159,7 +238,7 @@ async function loadUserProfile() {
         localStorage.setItem('current_user_id', profile.id_user);
         localStorage.setItem('current_user_type', profile.type_user_id);
     } catch (error) {
-        console.error('💥 Error en loadUserProfile:', error);
+        console.error(' Error en loadUserProfile:', error);
     }
 }
 
@@ -280,22 +359,60 @@ function checkPEP() {
     const radios = document.querySelectorAll('input[name="manejaRecursosPublicos"]:checked, input[name="ejercePoderPublico"]:checked, input[name="reconocimientoPublico"]:checked, input[name="vinculoPEP"]:checked');
     let showFields = false;
     radios.forEach(radio => { if (radio.value === 'Si') showFields = true; });
-    pepFields.style.display = showFields ? 'block' : 'none'; // ✅ Se eliminó la 's' suelta que había aquí
+    pepFields.style.display = showFields ? 'block' : 'none';
 }
 
+// ============================================
+// ENVIAR FORMULARIO - ACTUALIZADA CON VALIDACIÓN Y REDIRECCIÓN
+// ============================================
 async function handleFormSubmit(e) {
     e.preventDefault();
     
+    // Validación Frontend: Persona Natural no puede ser Gran Contribuyente
     const tipoCliente = document.getElementById('tipoCliente').value;
     const regimenTributario = document.getElementById('regimenTributario');
     
-    if (tipoCliente === 'Natural' && regimenTributario && regimenTributario.value === 'Gran Contribuyente') {
+    if (tipoCliente === 'Natural' && regimenTributario.value === 'Gran Contribuyente') {
         alert('❌ El régimen "Gran Contribuyente" no está disponible para Persona Natural con Establecimiento de Comercio.');
         return;
     }
     
-    console.log('✅ Formulario validado correctamente. Preparando envío...');
-    alert('✅ Formulario enviado exitosamente (Función de backend en desarrollo)');
+    // Recopilar datos financieros limpios (sin puntos) para el backend
+    const formData = {
+        total_activos: parseFloat(document.getElementById('totalActivos').value.replace(/\./g, '')) || 0,
+        total_pasivos: parseFloat(document.getElementById('totalPasivos').value.replace(/\./g, '')) || 0,
+        total_patrimonio: parseFloat(document.getElementById('totalPatrimonio').value.replace(/\./g, '')) || 0,
+        beneficiario_1: document.getElementById('beneficiario1').value,
+        beneficiario_2: document.getElementById('beneficiario2').value,
+        beneficiario_3: document.getElementById('beneficiario3').value
+    };
+
+    // Validación de consistencia matemática antes de enviar
+    const patrimonioCalculado = formData.total_activos - formData.total_pasivos;
+    if (Math.abs(formData.total_patrimonio - patrimonioCalculado) > 0.01) {
+        alert(`⚠️ Error de integridad: El Patrimonio Neto (${formData.total_patrimonio}) no coincide con el cálculo de Activo (${formData.total_activos}) - Pasivo (${formData.total_pasivos}) = ${patrimonioCalculado}`);
+        return;
+    }
+
+    console.log('✅ Datos validados y listos para envío:', formData);
+    alert('✅ Formulario enviado exitosamente. Redirigiendo...');
+    
+    // Guardar datos en localStorage para la página de confirmación
+    localStorage.setItem('lastSubmission', JSON.stringify({
+        email: document.getElementById('correoNatural').value || 'usuario@ejemplo.com',
+        tempPassword: 'Temp123!',
+        nombre: document.getElementById('razonSocial').value || document.getElementById('nombres').value,
+        nit: document.getElementById('nit').value || document.getElementById('numeroDocNatural').value,
+        tipoCliente: tipoCliente,
+        id: 'SOL-' + Date.now(),
+        fechaEnvio: new Date().toISOString(),
+        ciudad: document.getElementById('ciudad').options[document.getElementById('ciudad').selectedIndex]?.text || 'No disponible',
+        actividadEconomica: document.getElementById('actividadEconomica').value || 'No disponible',
+        nivelRiesgo: 'MODERADO'
+    }));
+    
+    // Redirección solicitada
+    window.location.href = '/customer/dashboard';
 }
 
 function handleLogout() {

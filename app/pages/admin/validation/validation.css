@@ -1,12 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
 :root {
-    /* Colores Institucionales LAGOBO */
-    --azul-oscuro: #00a8e8;
-    --azul-medio: #1a78d4;
-    --azul-claro: #5bc0de;
-    --azul-fondo: linear-gradient(135deg, #00a8e8 0%, #1a78d4 100%);
+    /* =========================================
+       COLORES INSTITUCIONALES LAGOBO
+       ========================================= */
+    --azul-cyan: #00b4d8;           /* Azul cyan intenso */
+    --azul-primario: #0096c7;       /* Azul medio */
+    --azul-secundario: #48cae4;     /* Azul claro */
+    --azul-claro: #90e0ef;          /* Azul muy claro */
+    --azul-fondo: linear-gradient(135deg, #00b4d8 0%, #90e0ef 50%, #caf0f8 100%);
     
+    /* ✅ VARIABLES AGREGADAS (Faltaban y se usaban en el código) */
+    --azul-oscuro: #1a78d4;         /* Azul oscuro para textos y acentos fuertes */
+    --azul-medio: #0096c7;          /* Azul medio para hovers */
+
     /* Colores funcionales */
     --primary: #00a8e8;
     --primary-hover: #0095cc;
@@ -64,6 +71,13 @@ body {
     font-weight: 300;
 }
 
+/* ✅ ALINEACIÓN DE BOTONES EN EL HEADER */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
 /* BOTÓN CERRAR SESIÓN */
 .btn-logout {
     background: var(--danger);
@@ -79,6 +93,29 @@ body {
 
 .btn-logout:hover { 
     background: #c82333;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-media);
+}
+
+/* BOTÓN VOLVER AL MENÚ */
+.btn-menu {
+background: var(--azul-oscuro);  /* Cambiado de var(--success) a azul institucional */
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-menu:hover { 
+    background: var(--azul-medio);  /* Azul más claro en hover */
     transform: translateY(-2px);
     box-shadow: var(--shadow-media);
 }
@@ -136,7 +173,7 @@ body {
     box-shadow: 0 0 0 4px rgba(0, 168, 232, 0.1);
 }
 
-/* BOTONES */
+/* BOTONES GENERALES */
 .btn {
     padding: 0.75rem 1.5rem;
     border: none;
@@ -547,6 +584,13 @@ tr:hover {
     
     .validation-header h1 {
         font-size: 1.4rem;
+    }
+    
+    .user-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        margin-top: 1rem;
     }
     
     .filters-bar { 

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Management Providers</title>
+    <title>Confirmación de Solicitud - LAGOBO</title>
     <link rel="stylesheet" href="/pages/admin/confirmation/confirmation.css">
     <script src="/pages/admin/confirmation/confirmation.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -65,19 +65,33 @@
         </section>
 
         <section class="card actions-card">
-            <h2>Proximos Pasos</h2>
+            <h2>Próximos Pasos</h2>
             <ul class="steps-list">
                 <li>El equipo de cumplimiento validará los documentos adjuntos.</li>
                 <li>Recibirá un correo electrónico con el estado de su solicitud.</li>
                 <li>Si se requiere diligencia ampliada, será contactado vía telefónica.</li>
             </ul>
             <div class="final-actions">
-                <button class="btn btn-primary" onclick="window.print()">Imprimir Confirmación</button>
-                <button class="btn btn-secondary" onclick="window.location.href='/login'">Iniciar Sesion</button>
+                <button class="btn btn-primary" onclick="window.print()">️ Imprimir Confirmación</button>
+                <a href="/admin/menu" class="btn btn-primary">📋 Panel de Administración</a>
+                <button class="btn btn-secondary" onclick="window.location.href='/login'">Iniciar Sesión</button>
             </div>
         </section>
     </main>
 
+    <script>
+        function copyCredentials() {
+            const username = document.getElementById('displayUsername').value;
+            const password = document.getElementById('displayPassword').value;
+            const text = `Usuario: ${username}\nContraseña: ${password}`;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Credenciales copiadas al portapapeles');
+            }).catch(err => {
+                console.error('Error al copiar:', err);
+            });
+        }
+    </script>
     <script src="/app/pages/admin/confirmation/confirmation.js"></script>
 </body>
 

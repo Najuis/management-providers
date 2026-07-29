@@ -3,72 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración - Gestión</title>
+    <title>Panel de Administración - LAGOBO</title>
     <link rel="stylesheet" href="/pages/menu-admin/admin_menu.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="admin-header">
-        <div class="header-content">
-            <h1>Panel de Administración</h1>
-            <p>Sistema de Gestión de Proveedores y Terceros</p>
+        <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto;">
+            <div>
+                <h1>Panel de Administración</h1>
+                <p>Sistema de Gestión de Proveedores y Terceros</p>
+            </div>
+            <button class="btn-logout">Cerrar Sesión</button>
         </div>
-        <button id="logoutBtn" class="btn-logout">Cerrar Sesión</button>
     </header>
-    
-    <main class="admin-container">
+
+    <main class="menu-container">
         <div class="menu-grid">
-            <div class="menu-card" onclick="navigateTo('/admin/crear-usuario')">
-                <div class="card-content">
-                    <h3>Crear Usuario</h3>
-                    <p>Registrar nuevos terceros con credenciales de acceso y datos corporativos completos.</p>
-                </div>
-                <div class="card-action">Acceder</div>
-            </div>
+            <!-- 1. Crear Usuario -->
+            <a href="/admin/dashboard" class="menu-card">
+                <span class="menu-icon"></span>
+                <h3>Crear Usuario</h3>
+                <p>Registrar nuevos terceros con credenciales de acceso.</p>
+                <span class="acceder-link">Acceder >></span>
+            </a>
 
-            <div class="menu-card" onclick="navigateTo('/admin/lista-usuarios')">
-                <div class="card-content">
-                    <h3>Listado de Usuarios</h3>
-                    <p>Visualizar, filtrar, editar y gestionar el registro completo de usuarios creados.</p>
-                </div>
-                <div class="card-action">Acceder</div>
-            </div>
+            <!-- Listado de Usuarios -->
+            <a href="/admin/confirmacion" class="menu-card">
+                <span class="menu-icon">📋</span>
+                <h3>Listado de Usuarios</h3>
+                <p>Visualizar y gestionar usuarios creados.</p>
+                <span class="acceder-link">Acceder >></span>
+            </a>
 
-            <div class="menu-card" onclick="navigateTo('/admin/roles-permisos')">
-                <div class="card-content">
-                    <h3>Roles y Permisos</h3>
-                    <p>Asignar niveles de acceso, permisos por módulo y control de funciones administrativas.</p>
-                </div>
-                <div class="card-action">Acceder</div>
-            </div>
+            <!-- 3. Validación de Formularios -->
+            <a href="/admin/validation" class="menu-card" style="border: 3px solid var(--azul-claro);">
+                <span class="menu-icon">✅</span>
+                <h3>Validación de Formularios</h3>
+                <p>Revisar y aprobar formularios de vinculación.</p>
+                <span class="acceder-link">Acceder >></span>
+            </a>
 
-            <div class="menu-card" onclick="navigateTo('/admin/auditoria')">
-                <div class="card-content">
-                    <h3>Registro de Auditoría</h3>
-                    <p>Consultar historial de acciones, modificaciones, accesos y trazabilidad completa.</p>
-                </div>
-                <div class="card-action">Acceder</div>
-            </div>
+            <!-- 4. Roles y Permisos -->
+            <a href="/admin/roles" class="menu-card">
+                <span class="menu-icon">🔐</span>
+                <h3>Roles y Permisos</h3>
+                <p>Asignar niveles de acceso y permisos.</p>
+                <span class="acceder-link">Acceder >></span>
+            </a>
 
-            <div class="menu-card" onclick="navigateTo('/admin/configuracion')">
-                <div class="card-content">
-                    <h3>Configuración de Directorios</h3>
-                    <p>Administrar listas de ciudades, países, oficinas, regiones y tipos de identificación.</p>
-                </div>
-                <div class="card-action">Acceder</div>
-            </div>
+            <!-- 5. Configuración de Directorios -->
+            <a href="/admin/directories" class="menu-card">
+                <span class="menu-icon">🗂️</span>
+                <h3>Configuración de Directorios</h3>
+                <p>Administrar ciudades, países y oficinas.</p>
+                <span class="acceder-link">Acceder >></span>
+            </a>
 
-            <div class="menu-card" onclick="navigateTo('/admin/reportes')">
-                <div class="card-content">
-                    <h3>Informes y Exportaciones</h3>
-                    <p>Generar reportes CSV/PDF, exportar datos para análisis y cumplimiento normativo.</p>
-                </div>
-                <div class="card-action">Acceder</div>
-            </div>
+           <!-- 6. Registro de Auditoría -->
+            <a href="/customer/dashboard" class="menu-card">
+                <span class="menu-icon">📊</span>
+                <h3>Registro de Auditoría</h3>
+                <p>Consultar historial de acciones y accesos.</p>
+                <span class="acceder-link">Acceder >></span>
+            </a>
         </div>
     </main>
 
-    <script src="/pages/menu-admin/admin_menu.js"></script>
+    <script>
+        document.querySelector('.btn-logout').addEventListener('click', () => {
+            if (confirm('¿Confirmar cierre de sesión?')) {
+                localStorage.clear();
+                window.location.href = '/login';
+            }
+        });
+    </script>
 </body>
 </html>

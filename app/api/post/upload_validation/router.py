@@ -1,32 +1,36 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Request, status
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from typing import List, Optional
+from datetime import datetime
 import os
 import shutil
 import json
-from datetime import datetime
 
-# ✅ IMPORTS DEL PROYECTO
 from app.database.get_db import get_db
-from app.models.submission_models import Submission, SubmissionDocument, AuditLog, SubmissionStatus, RiskLevel
+from app.models.submission_models import Submission, SubmissionDocument, AuditLog, SubmissionStatus
 from app.models.model_user import User
 from app.services.pdf_generator import generate_official_pdf
-from app.services.risk_calculator import calculate_risk
 from app.middleware.current_user import get_current_user
 
-# ✅ DEFINICIÓN OBLIGATORIA DEL ROUTER
 router = APIRouter()
-
 UPLOAD_DIR = "app/uploads"
 
 # ============================================
-# ENDPOINTS ADICIONALES PARA EL FRONTEND
+# HELPERS
+# ============================================
+def get_client_ip(request: Request) -> str:
+    """Obtiene la IP real del cliente, manejando proxies o ngrok."""
+    return request.client.host if request.client else "unknown"
+
+
+# ============================================
+# ENDPOINTS
 # ============================================
 
-@router.get("")
+@router.get("", response_model=dict)
 async def list_submissions(
-    status: Optional[str] = None,
+    status_filter: Optional[str] = None,
     risk: Optional[str] = None,
     skip: int = 0,
     limit: int = 100,
@@ -34,18 +38,16 @@ async def list_submissions(
     current_user: User = Depends(get_current_user)
 ):
     query = db.query(Submission)
-    if status and status != 'all':
-        query = query.filter(Submission.status == status)
+    if status_filter and status_filter != 'all':
+        query = query.filter(Submission.status == status_filter)
     if risk:
         query = query.filter(Submission.risk_level == risk)
     
     submissions = query.order_by(Submission.created_at.desc()).offset(skip).limit(limit).all()
-    return {
-        "submissions": submissions,
-        "total": len(submissions),
-        "skip": skip,
-        "limit": limit
-    }
+    total = query.count()
+    
+    return {"submissions": submissions, "total": total, "skip": skip, "limit": limit}
+
 
 @router.get("/{submission_id}")
 async def get_submission(
@@ -61,6 +63,7 @@ async def get_submission(
         SubmissionDocument.submission_id == submission_id
     ).all()
     
+    # ✅ Mapeo manual (vuelve al enfoque original que funcionaba)
     return {
         "id": submission.id,
         "user_id": submission.user_id,
@@ -108,9 +111,6 @@ async def get_submission(
         ]
     }
 
-# ============================================
-# ENDPOINTS EXISTENTES (MANTENIDOS)
-# ============================================
 
 @router.get("/{submission_id}/download-pdf")
 async def download_pdf(
@@ -146,7 +146,8 @@ async def download_pdf(
     
     return FileResponse(file_path, media_type='application/pdf', filename=f"formulario_{submission_id}.pdf")
 
-@router.post("/{submission_id}/upload-docs")
+
+@router.post("/{submission_id}/upload-docs", status_code=status.HTTP_201_CREATED)
 async def upload_documents(
     submission_id: int,
     files: List[UploadFile] = File(...),
@@ -166,8 +167,22 @@ async def upload_documents(
     user_upload_dir = f"{UPLOAD_DIR}/{submission_id}"
     os.makedirs(user_upload_dir, exist_ok=True)
     
+    ALLOWED_EXTENSIONS = {".pdf", ".jpg", ".jpeg", ".png"}
+    MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
+
     try:
         for file in files:
+            # 1. Validación de Seguridad: Extensión
+            _, ext = os.path.splitext(file.filename)
+            if ext.lower() not in ALLOWED_EXTENSIONS:
+                raise HTTPException(status_code=400, detail=f"Tipo de archivo no permitido: {ext}")
+            
+            # 2. Validación de Seguridad: Tamaño
+            file.file.seek(0, os.SEEK_END)
+            if file.file.tell() > MAX_FILE_SIZE:
+                raise HTTPException(status_code=413, detail="El archivo excede el límite de 5MB")
+            file.file.seek(0)
+
             file_path = f"{user_upload_dir}/{file.filename}"
             with open(file_path, "wb") as buffer:
                 shutil.copyfileobj(file.file, buffer)
@@ -186,17 +201,21 @@ async def upload_documents(
         db.commit()
         
         return {
-            "message": "Documentos subidos exitosamente. Solicitud enviada a revisión.",
+            "message": "Documentos subidos exitosamente. Solicitud enviada a revisión.", 
             "status": submission.status
         }
+    except HTTPException:
+        raise
     except Exception as e:
         db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error al subir archivos: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error interno al procesar archivos: {str(e)}")
+
 
 @router.put("/{submission_id}/validate")
 async def validate_submission(
     submission_id: int,
     action: str,
+    request: Request,               # ✅ CORREGIDO: Movido ANTES de los parámetros con default
     comments: Optional[str] = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -211,9 +230,10 @@ async def validate_submission(
     if submission.status != SubmissionStatus.PENDIENTE_REVISION.value:
         raise HTTPException(status_code=400, detail="La solicitud no está pendiente de revisión")
     
-    if action.upper() == "APROBADO":
+    action_upper = action.upper()
+    if action_upper == "APROBADO":
         new_status = SubmissionStatus.APROBADO.value
-    elif action.upper() == "RECHAZADO":
+    elif action_upper == "RECHAZADO":
         new_status = SubmissionStatus.RECHAZADO.value
     else:
         raise HTTPException(status_code=400, detail="Acción inválida. Use APROBADO o RECHAZADO")
@@ -224,15 +244,15 @@ async def validate_submission(
     audit_log = AuditLog(
         submission_id=submission_id,
         user_id=current_user.id_user,
-        action=action.upper(),
+        action=action_upper,
         comments=comments,
-        ip_address="127.0.0.1",
-        user_agent="AdminPanel"
+        ip_address=get_client_ip(request),
+        user_agent=request.headers.get("user-agent", "Unknown")
     )
     db.add(audit_log)
     db.commit()
     
     return {
-        "message": f"Solicitud {action.lower()} correctamente",
+        "message": f"Solicitud {action.lower()} correctamente", 
         "new_status": new_status
     }

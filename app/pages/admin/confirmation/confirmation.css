@@ -1,8 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
 :root {
-    --primary: #1e40af;
-    --primary-hover: #1e3a8a;
+    /* ✅ COLORES INSTITUCIONALES LAGOBO */
+    --primary: #00a8e8;
+    --primary-hover: #0095cc;
     --bg: #f8fafc;
     --card-bg: #ffffff;
     --text: #0f172a;
@@ -158,6 +159,7 @@ code {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+    margin-top: 1rem;
 }
 
 .btn {
@@ -167,11 +169,32 @@ code {
     font-weight: 600;
     cursor: pointer;
     transition: background 0.2s, transform 0.1s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
-.btn-primary { background: var(--primary); color: white; }
-.btn-secondary { background: var(--text-muted); color: white; }
-.btn:hover { transform: translateY(-1px); }
+.btn-primary { 
+    background: var(--primary); 
+    color: white;
+}
+
+.btn-primary:hover { 
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+.btn-secondary { 
+    background: var(--text-muted); 
+    color: white;
+}
+
+.btn-secondary:hover { 
+    background: #475569;
+    transform: translateY(-2px);
+}
 
 .loading, .error { color: var(--text-muted); font-style: italic; text-align: center; }
 .error { color: var(--danger); }
@@ -179,4 +202,5 @@ code {
 @media (max-width: 640px) {
     .credentials-box { grid-template-columns: 1fr; }
     .final-actions { flex-direction: column; }
+    .btn { width: 100%; }
 }

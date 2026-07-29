@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitud Enviada - LAGOBO</title>
+    <link rel="stylesheet" href="/pages/customer/dashboard/dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="confirm-header">
+        <div class="header-content">
+            <div>
+                <h1>✅ Solicitud de Vinculación Enviada</h1>
+                <p>Su información ha sido registrada y enviada a revisión</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="confirm-container">
+        <!-- SECCIÓN 1: CREDENCIALES -->
+        <section class="card credentials-card">
+            <h2>🔐 Credenciales de Acceso</h2>
+            <p class="info-text">Guarde estos datos para consultar el estado de su vinculación.</p>
+            <div class="credentials-box">
+                <div class="credential-item">
+                    <label>Usuario/Email:</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="displayUsername" readonly value="usuario@ejemplo.com">
+                        <button class="btn-copy" onclick="copyToClipboard('displayUsername')">Copiar</button>
+                    </div>
+                </div>
+                <div class="credential-item">
+                    <label>Contraseña Temporal:</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="displayPassword" readonly value="Temp123!">
+                        <button class="btn-copy" onclick="copyToClipboard('displayPassword')">Copiar</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: RESUMEN -->
+        <section class="card summary-card">
+            <h2>📋 Resumen de Información Enviada</h2>
+            <div class="summary-grid" id="summaryContent">
+                <div class="summary-section">
+                    <h3>Información del Tercero</h3>
+                    <div class="data-row"><strong>Nombre/Razón Social:</strong> <span id="summaryName">Cargando...</span></div>
+                    <div class="data-row"><strong>NIT/Documento:</strong> <span id="summaryDoc">Cargando...</span></div>
+                    <div class="data-row"><strong>Tipo:</strong> <span id="summaryType">Cargando...</span></div>
+                    <div class="data-row"><strong>Email:</strong> <span id="summaryEmail">Cargando...</span></div>
+                </div>
+                <div class="summary-section">
+                    <h3>Detalles de la Solicitud</h3>
+                    <div class="data-row"><strong>ID Solicitud:</strong> <code id="submissionId">-</code></div>
+                    <div class="data-row"><strong>Fecha Envío:</strong> <span id="submissionDate">-</span></div>
+                    <div class="data-row"><strong>Ciudad:</strong> <span id="summaryCity">-</span></div>
+                    <div class="data-row"><strong>Actividad:</strong> <span id="summaryActivity">-</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: ESTADO (SIN NIVEL DE RIESGO) -->
+        <section class="card status-card">
+            <h2>📊 Estado y Clasificación</h2>
+            <div class="status-grid">
+                <div class="status-item">
+                    <span class="label">Estado:</span>
+                    <span class="badge badge-pending">Pendiente de Revisión</span>
+                </div>
+                <!-- ELIMINADO: Nivel de Riesgo -->
+                <div class="status-item">
+                    <span class="label">Documentos:</span>
+                    <span class="badge badge-success">Adjuntos</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 4: PRÓXIMOS PASOS -->
+        <section class="card actions-card">
+            <h2>📌 Próximos Pasos</h2>
+            <ul class="steps-list">
+                <li>✅ El equipo de cumplimiento validará los documentos adjuntos.</li>
+                <li>📧 Recibirá un correo electrónico con el estado de su solicitud.</li>
+                <li>📞 Si se requiere diligencia ampliada, será contactado vía telefónica.</li>
+                <li>⏱️ Tiempo estimado de respuesta: <strong>3-5 días hábiles</strong>.</li>
+            </ul>
+            
+            <div class="final-actions">
+                <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir Confirmación</button>
+                <button class="btn btn-primary" onclick="logout()"> Cerrar Sesión</button>
+                <!-- ELIMINADO: Botón Volver al Panel -->
+            </div>
+        </section>
+
+        <!-- SECCIÓN 5: FIRMA Y DECLARACIÓN -->
+        <section class="card signature-card">
+            <h2>✍️ Declaración y Firma</h2>
+            <div class="declaration-text">
+                <p>Bajo gravedad de juramento y de forma voluntaria manifiesto que los datos aquí consignados obedecen a la realidad, por lo que declaro haber leído, entendido y aceptado el presente documento en constancia firmo en la ciudad de <strong id="firmaCiudad">_____________</strong>, a los <strong>____</strong> días del mes de <strong>_____________</strong> de <strong>_______</strong>.</p>
+            </div>
+            
+            <div class="signature-note">
+                <strong>Nota:</strong> Este documento solo será aceptado si está completamente diligenciado. De no contar con la información colocar N/A (no aplica). Debe contar con firma autógrafa y huella dactilar o en su defecto, firma digital certificada que garantice la fiabilidad del documento.
+            </div>
+
+            <div class="signature-section">
+                <div class="signature-title">FIRMA DEL DE LA PERSONAS NATURALES CON ESTABLECIMIENTO DE COMERCIO / REPRESENTANTE LEGAL</div>
+                <div class="signature-fields">
+                    <div class="signature-line">
+                        <label>Nombres y apellidos:</label>
+                        <div class="signature-input" id="firmaNombre">_________________________</div>
+                    </div>
+                    <div class="signature-line">
+                        <label>No. de documento:</label>
+                        <div class="signature-input" id="firmaDocumento">_________________________</div>
+                    </div>
+                    <div class="signature-box">
+                        <div class="signature-placeholder">Firma</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="certifications-section">
+                <h3>7. CERTIFICACIONES SISTEMAS DE GESTIÓN DE CALIDAD RIESGO Y SST</h3>
+                <div class="certification-items">
+                    <div class="cert-item">
+                        <input type="checkbox" id="certCalidad">
+                        <label for="certCalidad">Sistema de Gestión de Calidad</label>
+                    </div>
+                    <div class="cert-item">
+                        <input type="checkbox" id="certRiesgo">
+                        <label for="certRiesgo">Gestión de Riesgos</label>
+                    </div>
+                    <div class="cert-item">
+                        <input type="checkbox" id="certSST">
+                        <label for="certSST">Sistema de Gestión de Seguridad y Salud en el Trabajo</label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MENSAJE DE ÉXITO -->
+        <div class="success-message">
+            <p>✔️ Su solicitud ha sido registrada exitosamente. Guarde sus credenciales para consultar el estado.</p>
+        </div>
+    </main>
+
+    <script src="/pages/customer/dashboard/dashboard.js"></script>
+</body>
+</html>

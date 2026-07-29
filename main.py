@@ -131,32 +131,40 @@ async def get_user_profile(current_user: User = Depends(get_current_user)):
 # RUTAS DE PÁGINAS HTML
 # ============================================
 @app.get("/")
-async def root(): return FileResponse("app/pages/login/login.html")
+async def root(): 
+    return FileResponse("app/pages/login/login.html")
 
 @app.get("/login")
-async def login_page(): return FileResponse("app/pages/login/login.html")
+async def login_page(): 
+    return FileResponse("app/pages/login/login.html")
 
 @app.get("/usuario")
-async def usuario_page(): return FileResponse("app/pages/usuario/usuario.html")
+async def usuario_page(): 
+    return FileResponse("app/pages/usuario/usuario.html")
 
 @app.get("/admin/dashboard")
-async def dashboard(): return FileResponse("app/pages/admin/dashboard/dashboard.html")
-
+async def dashboard():
+    return FileResponse("app/pages/admin/dashboard/dashboard.html")
+    
 @app.get("/admin/formulario")
-async def formulario_page(): return FileResponse("app/pages/Formulario/formulario.html")
+async def formulario_page(): 
+    return FileResponse("app/pages/Formulario/formulario.html")
 
 @app.get("/admin/confirmacion")
-async def confirmacion_page(): return FileResponse("app/pages/admin/confirmation/confirmation.html")
+async def confirmacion_page(): 
+    return FileResponse("app/pages/admin/confirmation/confirmation.html")
 
 @app.get("/admin/validation")
 async def admin_validation(): 
-      return FileResponse("app/pages/admin/validation/validation.html")
+    return FileResponse("app/pages/admin/validation/validation.html")
 
 @app.get("/customer/dashboard")
-async def customer_dashboard(): return FileResponse("app/pages/customer/dashboard.html")
+async def customer_dashboard(): 
+    return FileResponse("app/pages/customer/dashboard/dashboard.html")
 
 @app.get("/admin/menu")
-async def admin_menu_page(): return FileResponse("app/pages/menu-admin/admin_menu.html")
+async def admin_menu_page(): 
+    return FileResponse("app/pages/menu-admin/admin_menu.html")
 
 @app.get("/admin/validacion-documentos")
 async def validacion_documentos_page():

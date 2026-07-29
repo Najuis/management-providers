@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario de Vinculación de Terceros</title>
+    <title>Formulario de Vinculación Cliente</title>
     <link rel="stylesheet" href="/pages/usuario/usuario.css">
 </head>
 <body>
@@ -11,7 +11,7 @@
         <header class="header">
             <div class="header-content">
                 <div>
-                    <h1>Formulario de Vinculación de Terceros</h1>
+                    <h1>Formulario de Vinculación de Cliente</h1>
                     <p class="codigo">Código: LGB-OFC-F-008 | Mayoreo</p>
                 </div>
                 <div class="user-info">
@@ -103,12 +103,12 @@
                                 <option value="TI">Tarjeta de Identidad</option>
                                 <option value="CE">Cédula de Extranjería</option>
                                 <option value="PP">Pasaporte</option>
-                                <option value="PPT">Permiso por Permiso Temporal</option>
+                                <option value="PPT">Permiso por Tiempo Temporal</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Número de Documento *</label>
-                            <input type="text" id="numeroDocNatural">
+                            <input type="text" id="numeroDocNatural" oninput="validarSoloNumeros(this)" inputmode="numeric">
                         </div>
                         <div class="form-group">
                             <label>Fecha de Nacimiento *</label>
@@ -151,7 +151,7 @@
                         </div>
                         <div class="form-group">
                             <label>Teléfono / Celular *</label>
-                            <input type="text" id="telefonoNatural">
+                            <input type="text" id="telefonoNatural" oninput="validarSoloNumeros(this)" inputmode="numeric">
                         </div>
                         <div class="form-group">
                             <label>Razón Social (si aplica)</label>
@@ -159,7 +159,7 @@
                         </div>
                         <div class="form-group">
                             <label>NIT (si aplica)</label>
-                            <input type="text" id="nitNatural">
+                            <input type="text" id="nitNatural" oninput="validarSoloNumeros(this)" inputmode="numeric">
                         </div>
                     </div>
                 </div>
@@ -174,11 +174,11 @@
                         </div>
                         <div class="form-group">
                             <label>NIT *</label>
-                            <input type="text" id="nit">
+                            <input type="text" id="nit" oninput="validarSoloNumeros(this)" inputmode="numeric">
                         </div>
                         <div class="form-group">
                             <label>Dígito de Verificación</label>
-                            <input type="text" id="digitoVerificacion">
+                            <input type="text" id="digitoVerificacion" oninput="validarSoloNumeros(this)" inputmode="numeric">
                         </div>
                         <div class="form-group">
                             <label>Fecha de Constitución *</label>
@@ -188,17 +188,11 @@
                             <label>Tipo de Sociedad *</label>
                             <select id="tipoSociedad" onchange="checkOtroSociedad()">
                                 <option value="">Seleccione...</option>
-                                <option value="Administración Central">Administración Central</option>
-                                <option value="Administración Local">Administración Local</option>
                                 <option value="Empresa Unipersonal">Empresa Unipersonal</option>
                                 <option value="SAS">Sociedad por Acciones Simplificada (SAS)</option>
-                                <option value="Sociedad Comandita Simple">Sociedad Comandita Simple</option>
-                                <option value="Sociedad Extranjera">Sociedad Extranjera</option>
                                 <option value="Sociedad Limitada">Sociedad Limitada</option>
-                                <option value="Entidad sin Ánimo de Lucro">Entidad sin Ánimo de Lucro</option>
                                 <option value="Organización de Economía Solidaria">Organización de Economía Solidaria</option>
                                 <option value="Sociedad Anónima">Sociedad Anónima</option>
-                                <option value="Empresa Asociativa de Trabajo">Empresa Asociativa de Trabajo</option>
                                 <option value="Otro">Otro</option>
                             </select>
                         </div>
@@ -211,27 +205,27 @@
                             <input type="text" id="direccionJuridica">
                         </div>
                         <div class="form-group">
-                            <label>Región *</label>
+                            <label>Ciudad *</label>
                             <select id="regionJuridica">
                                 <option value="">Seleccione...</option>
-                                <option value="Costa">Costa</option>
-                                <option value="Centro">Centro</option>
-                                <option value="Llanos">Llanos</option>
-                                <option value="Eje Cafetero">Eje Cafetero</option>
-                                <option value="Antioquia">Antioquia</option>
+                                <option value="Bogotá">Bogotá</option>
+                                <option value="Medellín">Medellín</option>
+                                <option value="Cali">Cali</option>
+                                <option value="Barranquilla">Barranquilla</option>
+                                <option value="Cartagena">Cartagena</option>
+                                <option value="Otra">Otra</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Tipo de Vinculación *</label>
                             <select id="tipoVinculacionJuridica">
                                 <option value="">Seleccione...</option>
-                                <option value="Proveedor">Proveedor</option>
                                 <option value="Cliente">Cliente</option>
                                 <option value="Aliado">Aliado</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Municipio *</label>
+                            <label>Departamento *</label>
                             <input type="text" id="municipioJuridica">
                         </div>
                         <div class="form-group full-width">
@@ -249,15 +243,18 @@
                         </div>
                         <div class="form-group">
                             <label>Tipo de Documento *</label>
-                            <select id="tipoDocRep">
+                            <select id="tipoDocRep" onchange="validarFormatoDocumentoRep()">
                                 <option value="">Seleccione...</option>
                                 <option value="CC">Cédula de Ciudadanía</option>
+                                <option value="TI">Tarjeta de Identidad</option>
                                 <option value="CE">Cédula de Extranjería</option>
+                                <option value="PP">Pasaporte</option>
+                                <option value="PTP">Permiso por Protección Temporal</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Número de Documento *</label>
-                            <input type="text" id="numeroDocRep">
+                            <input type="text" id="numeroDocRep" oninput="validarSoloNumeros(this)" inputmode="numeric">
                         </div>
 
                         <!-- REPRESENTANTE SUPLENTE -->
@@ -278,12 +275,12 @@
                         </div>
                         <div class="form-group">
                             <label>Número de Documento</label>
-                            <input type="text" id="numeroDocSuplente">
+                            <input type="text" id="numeroDocSuplente" oninput="validarSoloNumeros(this)" inputmode="numeric">
                         </div>
 
-                        <!-- BENEFICIARIO FINAL -->
+                        <!-- BENEFICIARIO (S) FINAL -->
                         <div class="form-group full-width" style="margin-top: 20px; border-top: 2px solid var(--azul-claro); padding-top: 15px;">
-                            <h4 style="color: var(--azul-oscuro); margin: 0 0 10px 0;">Beneficiario Final</h4>
+                            <h4 style="color: var(--azul-oscuro); margin: 0 0 10px 0;">Beneficiario (S) Final</h4>
                         </div>
                         <div class="form-group full-width">
                             <label>Nombre Completo</label>
@@ -291,7 +288,7 @@
                         </div>
                         <div class="form-group">
                             <label>Cédula</label>
-                            <input type="text" id="beneficiarioFinalCedula">
+                            <input type="text" id="beneficiarioFinalCedula" oninput="validarSoloNumeros(this)" inputmode="numeric">
                         </div>
                     </div>
 
@@ -326,9 +323,9 @@
                                             <option value="Pasaporte">Pasaporte</option>
                                         </select>
                                     </td>
-                                    <td><input type="text" id="ca1NumeroDoc" placeholder="Número"></td>
+                                    <td><input type="text" id="ca1NumeroDoc" placeholder="Número" oninput="validarSoloNumeros(this)" inputmode="numeric"></td>
                                     <td><input type="text" id="ca1Direccion" placeholder="Dirección - Ciudad"></td>
-                                    <td><input type="text" id="ca1Telefono" placeholder="Teléfono"></td>
+                                    <td><input type="text" id="ca1Telefono" placeholder="Teléfono" oninput="validarSoloNumeros(this)" inputmode="numeric"></td>
                                 </tr>
                                 <tr>
                                     <td><input type="text" id="ca2Nombre" placeholder="Nombre o Razón Social"></td>
@@ -342,9 +339,9 @@
                                             <option value="Pasaporte">Pasaporte</option>
                                         </select>
                                     </td>
-                                    <td><input type="text" id="ca2NumeroDoc" placeholder="Número"></td>
+                                    <td><input type="text" id="ca2NumeroDoc" placeholder="Número" oninput="validarSoloNumeros(this)" inputmode="numeric"></td>
                                     <td><input type="text" id="ca2Direccion" placeholder="Dirección - Ciudad"></td>
-                                    <td><input type="text" id="ca2Telefono" placeholder="Teléfono"></td>
+                                    <td><input type="text" id="ca2Telefono" placeholder="Teléfono" oninput="validarSoloNumeros(this)" inputmode="numeric"></td>
                                 </tr>
                                 <tr>
                                     <td><input type="text" id="ca3Nombre" placeholder="Nombre o Razón Social"></td>
@@ -358,9 +355,9 @@
                                             <option value="Pasaporte">Pasaporte</option>
                                         </select>
                                     </td>
-                                    <td><input type="text" id="ca3NumeroDoc" placeholder="Número"></td>
+                                    <td><input type="text" id="ca3NumeroDoc" placeholder="Número" oninput="validarSoloNumeros(this)" inputmode="numeric"></td>
                                     <td><input type="text" id="ca3Direccion" placeholder="Dirección - Ciudad"></td>
-                                    <td><input type="text" id="ca3Telefono" placeholder="Teléfono"></td>
+                                    <td><input type="text" id="ca3Telefono" placeholder="Teléfono" oninput="validarSoloNumeros(this)" inputmode="numeric"></td>
                                 </tr>
                                 <tr>
                                     <td><input type="text" id="ca4Nombre" placeholder="Nombre o Razón Social"></td>
@@ -374,9 +371,9 @@
                                             <option value="Pasaporte">Pasaporte</option>
                                         </select>
                                     </td>
-                                    <td><input type="text" id="ca4NumeroDoc" placeholder="Número"></td>
+                                    <td><input type="text" id="ca4NumeroDoc" placeholder="Número" oninput="validarSoloNumeros(this)" inputmode="numeric"></td>
                                     <td><input type="text" id="ca4Direccion" placeholder="Dirección - Ciudad"></td>
-                                    <td><input type="text" id="ca4Telefono" placeholder="Teléfono"></td>
+                                    <td><input type="text" id="ca4Telefono" placeholder="Teléfono" oninput="validarSoloNumeros(this)" inputmode="numeric"></td>
                                 </tr>
                                 <tr>
                                     <td><input type="text" id="ca5Nombre" placeholder="Nombre o Razón Social"></td>
@@ -390,9 +387,9 @@
                                             <option value="Pasaporte">Pasaporte</option>
                                         </select>
                                     </td>
-                                    <td><input type="text" id="ca5NumeroDoc" placeholder="Número"></td>
+                                    <td><input type="text" id="ca5NumeroDoc" placeholder="Número" oninput="validarSoloNumeros(this)" inputmode="numeric"></td>
                                     <td><input type="text" id="ca5Direccion" placeholder="Dirección - Ciudad"></td>
-                                    <td><input type="text" id="ca5Telefono" placeholder="Teléfono"></td>
+                                    <td><input type="text" id="ca5Telefono" placeholder="Teléfono" oninput="validarSoloNumeros(this)" inputmode="numeric"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -446,7 +443,7 @@
                         </div>
                         <div class="form-group">
                             <label>Número de Cuenta *</label>
-                            <input type="text" id="numeroCuenta1" placeholder="Sin puntos ni comas">
+                            <input type="text" id="numeroCuenta1" placeholder="Sin puntos ni comas" oninput="validarSoloNumeros(this)" inputmode="numeric">
                         </div>
                     </div>
                 </div>
@@ -472,7 +469,7 @@
                         </div>
                         <div class="form-group">
                             <label>Número de Cuenta</label>
-                            <input type="text" id="numeroCuenta2" placeholder="Sin puntos ni comas">
+                            <input type="text" id="numeroCuenta2" placeholder="Sin puntos ni comas" oninput="validarSoloNumeros(this)" inputmode="numeric">
                         </div>
                     </div>
                 </div>
@@ -490,7 +487,7 @@
                         </div>
                         <div class="form-group">
                             <label>Teléfono *</label>
-                            <input type="text" id="refCom1Telefono">
+                            <input type="text" id="refCom1Telefono" oninput="validarSoloNumeros(this)" inputmode="numeric">
                         </div>
                         <div class="form-group">
                             <label>Correo Electrónico *</label>
@@ -512,7 +509,7 @@
                         </div>
                         <div class="form-group">
                             <label>Teléfono</label>
-                            <input type="text" id="refCom2Telefono">
+                            <input type="text" id="refCom2Telefono" oninput="validarSoloNumeros(this)" inputmode="numeric">
                         </div>
                         <div class="form-group">
                             <label>Correo Electrónico</label>
@@ -546,19 +543,40 @@
                         </div>
                         <div class="form-group">
                             <label>Total Ingresos</label>
-                            <input type="text" id="totalIngresos" placeholder="Sin puntos ni comas">
+                            <input type="text" id="totalIngresos" placeholder="Ej: 100.000.000" oninput="formatearNumero(this)">
                         </div>
                         <div class="form-group">
                             <label>Total Egresos</label>
-                            <input type="text" id="totalEgresos" placeholder="Sin puntos ni comas">
+                            <input type="text" id="totalEgresos" placeholder="Ej: 60.000.000" oninput="formatearNumero(this)">
                         </div>
                         <div class="form-group">
-                            <label>Total Activos</label>
-                            <input type="text" id="totalActivos" placeholder="Sin puntos ni comas">
+                            <label>Total Activos *</label>
+                            <input type="text" id="totalActivos" placeholder="Ej: 500.000.000" oninput="calcularPatrimonio()" required>
                         </div>
                         <div class="form-group">
-                            <label>Total Patrimonio</label>
-                            <input type="text" id="totalPatrimonio" placeholder="Sin puntos ni comas">
+                            <label>Total Pasivos *</label>
+                            <input type="text" id="totalPasivos" placeholder="Ej: 200.000.000" oninput="calcularPatrimonio()" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Patrimonio Neto (Automático)</label>
+                            <input type="text" id="totalPatrimonio" readonly style="background-color: #e9ecef; font-weight: bold; color: var(--azul-oscuro);">
+                        </div>
+                        
+                        <!-- NUEVOS CAMPOS DE BENEFICIARIOS -->
+                        <div class="form-group full-width" style="margin-top: 20px; border-top: 2px dashed var(--azul-claro); padding-top: 15px;">
+                            <h4 style="color: var(--azul-oscuro);">Beneficiarios Adicionales (Opcional)</h4>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Beneficiario 1 (Nombre y Documento)</label>
+                            <input type="text" id="beneficiario1" placeholder="Nombre completo - No. Documento">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Beneficiario 2 (Nombre y Documento)</label>
+                            <input type="text" id="beneficiario2" placeholder="Nombre completo - No. Documento">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Beneficiario 3 (Nombre y Documento)</label>
+                            <input type="text" id="beneficiario3" placeholder="Nombre completo - No. Documento">
                         </div>
                     </div>
                 </div>
