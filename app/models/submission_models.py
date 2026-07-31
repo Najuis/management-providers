@@ -50,9 +50,9 @@ class Submission(Base):
     
     # Actividad económica
     codigo_ciiu: Mapped[str] = mapped_column(String(20), nullable=False)
-    pais_origen_id: Mapped[int] = mapped_column(Integer, nullable=False)
-    pais_residencia_id: Mapped[int] = mapped_column(Integer, nullable=False)
-    zona: Mapped[str] = mapped_column(String(20), nullable=False)
+    pais_origen_id: Mapped[int] = mapped_column(Integer, nullable=True)
+    pais_residencia_id: Mapped[int] = mapped_column(Integer, nullable=True)
+    zona: Mapped[str] = mapped_column(String(20), nullable=True)
     
     # Información financiera
     regimen_tributario: Mapped[str] = mapped_column(String(50), nullable=False)

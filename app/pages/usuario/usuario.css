@@ -247,6 +247,10 @@ body {
 .form-group input,
 .form-group select,
 .form-group textarea {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
     padding: 12px 15px;
     border: 2px solid var(--gris-medio);
     border-radius: 8px;

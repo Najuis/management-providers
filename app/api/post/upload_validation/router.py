@@ -12,6 +12,7 @@ from app.models.submission_models import Submission, SubmissionDocument, AuditLo
 from app.models.model_user import User
 from app.services.pdf_generator import generate_official_pdf
 from app.middleware.current_user import get_current_user
+from app.schemas.submission import SubmissionCreate
 
 router = APIRouter()
 UPLOAD_DIR = "app/uploads"
@@ -27,6 +28,61 @@ def get_client_ip(request: Request) -> str:
 # ============================================
 # ENDPOINTS
 # ============================================
+
+@router.post("", status_code=status.HTTP_201_CREATED)
+async def create_submission(
+    payload: SubmissionCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Crea una solicitud de vinculación con estado 'pendiente_revision'."""
+    raw = payload.model_dump(exclude_unset=True)
+
+    submission = Submission(
+        user_id=current_user.id_user,
+        fecha=payload.fecha or datetime.utcnow(),
+        tipo_cliente=payload.tipo_cliente,
+        tipo_vinculacion=payload.tipo_vinculacion,
+        ciudad_id=payload.ciudad_id,
+        oficina=payload.oficina,
+        tipo_persona=payload.tipo_persona,
+        nombres=payload.nombres,
+        apellidos=payload.apellidos,
+        razon_social=payload.razon_social,
+        tipo_id=payload.tipo_id,
+        numero_id=payload.numero_id,
+        fecha_expedicion=payload.fecha_expedicion,
+        estructura_juridica=payload.estructura_juridica,
+        codigo_ciiu=payload.codigo_ciiu,
+        pais_origen_id=payload.pais_origen_id,
+        pais_residencia_id=payload.pais_residencia_id,
+        zona=payload.zona,
+        regimen_tributario=payload.regimen_tributario,
+        total_ingresos=payload.total_ingresos,
+        total_egresos=payload.total_egresos,
+        aut_datos=payload.aut_datos,
+        aut_laft=payload.aut_laft,
+        aut_anticorrupcion=payload.aut_anticorrupcion,
+        aut_etica=payload.aut_etica,
+        form_data=json.dumps(raw, ensure_ascii=False, default=str),
+        status=SubmissionStatus.PENDIENTE_REVISION.value,
+        submitted_at=datetime.utcnow(),
+    )
+
+    try:
+        db.add(submission)
+        db.commit()
+        db.refresh(submission)
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Error al crear la solicitud: {str(e)}")
+
+    return {
+        "id": submission.id,
+        "status": submission.status,
+        "message": "Solicitud creada correctamente"
+    }
+
 
 @router.get("", response_model=dict)
 async def list_submissions(
@@ -108,7 +164,8 @@ async def get_submission(
                 "uploaded_at": doc.uploaded_at.isoformat() if doc.uploaded_at else None
             }
             for doc in documents
-        ]
+        ],
+        "form_data": json.loads(submission.form_data) if submission.form_data else {}
     }
 
 
@@ -209,6 +266,63 @@ async def upload_documents(
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Error interno al procesar archivos: {str(e)}")
+
+
+@router.post("/{submission_id}/upload-form", status_code=status.HTTP_201_CREATED)
+async def upload_signed_form(
+    submission_id: int,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    submission = db.query(Submission).filter(Submission.id == submission_id).first()
+    if not submission:
+        raise HTTPException(status_code=404, detail="Solicitud no encontrada")
+
+    if submission.user_id != current_user.id_user and not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="No autorizado")
+
+    ALLOWED_EXTENSIONS = {".pdf", ".jpg", ".jpeg", ".png"}
+    MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
+
+    _, ext = os.path.splitext(file.filename)
+    if ext.lower() not in ALLOWED_EXTENSIONS:
+        raise HTTPException(status_code=400, detail=f"Tipo de archivo no permitido: {ext}")
+
+    file.file.seek(0, os.SEEK_END)
+    if file.file.tell() > MAX_FILE_SIZE:
+        raise HTTPException(status_code=413, detail="El archivo excede el límite de 5MB")
+    file.file.seek(0)
+
+    user_upload_dir = f"{UPLOAD_DIR}/{submission_id}"
+    os.makedirs(user_upload_dir, exist_ok=True)
+    safe_name = f"formulario_firmado{ext.lower()}"
+    file_path = f"{user_upload_dir}/{safe_name}"
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    existing = db.query(SubmissionDocument).filter(
+        SubmissionDocument.submission_id == submission_id,
+        SubmissionDocument.document_type == "formulario_firmado"
+    ).first()
+    if existing:
+        existing.file_path = file_path
+        existing.file_name = safe_name
+        existing.uploaded_at = datetime.utcnow()
+    else:
+        db.add(SubmissionDocument(
+            submission_id=submission_id,
+            document_type="formulario_firmado",
+            file_path=file_path,
+            file_name=safe_name,
+            uploaded_by=current_user.id_user
+        ))
+    db.commit()
+
+    return {
+        "message": "Formulario de vinculación firmado cargado exitosamente",
+        "file_name": safe_name
+    }
 
 
 @router.put("/{submission_id}/validate")

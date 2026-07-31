@@ -126,7 +126,7 @@ async function handleFormSubmission(e) {
         }
 
         const result = await response.json();
-        window.location.href = `/confirmacion?id=${result.submission_id}`;
+        window.location.href = '/customer/dashboard';
     } catch (error) {
         console.error('Error al enviar:', error);
         alert(`Error al procesar la solicitud: ${error.message}`);

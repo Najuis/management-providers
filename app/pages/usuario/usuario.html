@@ -29,7 +29,7 @@
             <button class="tab" onclick="showTab(5)">5. Autorizaciones y Documentos</button>
         </div>
 
-        <form id="vinculacionForm" class="form-container">
+        <form id="vinculacionForm" class="form-container" novalidate>
             <!-- SECCIÓN 1: INFORMACIÓN GENERAL -->
             <div id="section1" class="section active">
                 <h2>1. Información General</h2>
@@ -366,7 +366,7 @@
                             <tbody>
                                 <tr>
                                     <td><input type="text" id="ca1Nombre" placeholder="Nombre o Razón Social"></td>
-                                    <td><input type="number" id="ca1Participacion" placeholder="%" min="0" max="100" step="0.01"></td>
+                                    <td><input type="text" id="ca1Participacion" placeholder="%" inputmode="decimal" style="width: 80px;"></td>
                                     <td>
                                         <select id="ca1TipoDoc">
                                             <option value="">Seleccione...</option>
@@ -382,7 +382,7 @@
                                 </tr>
                                 <tr>
                                     <td><input type="text" id="ca2Nombre" placeholder="Nombre o Razón Social"></td>
-                                    <td><input type="number" id="ca2Participacion" placeholder="%" min="0" max="100" step="0.01"></td>
+                                    <td><input type="text" id="ca2Participacion" placeholder="%" inputmode="decimal" style="width: 80px;"></td>
                                     <td>
                                         <select id="ca2TipoDoc">
                                             <option value="">Seleccione...</option>
@@ -398,7 +398,7 @@
                                 </tr>
                                 <tr>
                                     <td><input type="text" id="ca3Nombre" placeholder="Nombre o Razón Social"></td>
-                                    <td><input type="number" id="ca3Participacion" placeholder="%" min="0" max="100" step="0.01"></td>
+                                    <td><input type="text" id="ca3Participacion" placeholder="%" inputmode="decimal" style="width: 80px;"></td>
                                     <td>
                                         <select id="ca3TipoDoc">
                                             <option value="">Seleccione...</option>
@@ -414,7 +414,7 @@
                                 </tr>
                                 <tr>
                                     <td><input type="text" id="ca4Nombre" placeholder="Nombre o Razón Social"></td>
-                                    <td><input type="number" id="ca4Participacion" placeholder="%" min="0" max="100" step="0.01"></td>
+                                    <td><input type="text" id="ca4Participacion" placeholder="%" inputmode="decimal" style="width: 80px;"></td>
                                     <td>
                                         <select id="ca4TipoDoc">
                                             <option value="">Seleccione...</option>
@@ -430,7 +430,7 @@
                                 </tr>
                                 <tr>
                                     <td><input type="text" id="ca5Nombre" placeholder="Nombre o Razón Social"></td>
-                                    <td><input type="number" id="ca5Participacion" placeholder="%" min="0" max="100" step="0.01"></td>
+                                    <td><input type="text" id="ca5Participacion" placeholder="%" inputmode="decimal" style="width: 80px;"></td>
                                     <td>
                                         <select id="ca5TipoDoc">
                                             <option value="">Seleccione...</option>

@@ -27,6 +27,7 @@ def create_tables():
     from app.models import TaxFiscalInformation, FinancialInformation, References
     from app.models import OccupationalHealthSafetyRequirements, HealthSafetyRequirements
     from app.models import AuthorizationsPolicies, RequiredDocuments
+    from app.models.model_ciiu import CIIU
     from app.models.submission_models import Submission, SubmissionDocument
     
     Base.metadata.create_all(bind=engine)

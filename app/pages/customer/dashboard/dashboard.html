@@ -27,16 +27,17 @@
                 <div class="credential-item">
                     <label>Usuario/Email:</label>
                     <div class="input-wrapper">
-                        <input type="text" id="displayUsername" readonly value="usuario@ejemplo.com">
+                        <input type="text" id="displayUsername" readonly value="Cargando...">
                         <button class="btn-copy" onclick="copyToClipboard('displayUsername')">Copiar</button>
                     </div>
                 </div>
                 <div class="credential-item">
-                    <label>Contraseña Temporal:</label>
+                    <label>Contraseña de Acceso:</label>
                     <div class="input-wrapper">
-                        <input type="password" id="displayPassword" readonly value="Temp123!">
-                        <button class="btn-copy" onclick="copyToClipboard('displayPassword')">Copiar</button>
+                        <input type="password" id="displayPassword" readonly value="••••••••">
+                        <button class="btn-copy" id="copyPasswordBtn" onclick="copyToClipboard('displayPassword')">Copiar</button>
                     </div>
+                    <span class="info-text" id="passwordNote"></span>
                 </div>
             </div>
         </section>
@@ -68,7 +69,7 @@
             <div class="status-grid">
                 <div class="status-item">
                     <span class="label">Estado:</span>
-                    <span class="badge badge-pending">Pendiente de Revisión</span>
+                    <span class="badge badge-pending" id="statusBadge">Cargando...</span>
                 </div>
                 <!-- ELIMINADO: Nivel de Riesgo -->
                 <div class="status-item">
@@ -90,6 +91,7 @@
             
             <div class="final-actions">
                 <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir Confirmación</button>
+                <button class="btn btn-primary" onclick="window.location.href='/usuario'">📝 Volver al Formulario de Vinculación</button>
                 <button class="btn btn-primary" onclick="logout()"> Cerrar Sesión</button>
                 <!-- ELIMINADO: Botón Volver al Panel -->
             </div>
@@ -107,43 +109,42 @@
             </div>
 
             <div class="signature-section">
-                <div class="signature-title">FIRMA DEL DE LA PERSONAS NATURALES CON ESTABLECIMIENTO DE COMERCIO / REPRESENTANTE LEGAL</div>
+                <div class="signature-title" id="signatureTitle">FIRMA PERSONA NATURAL CON ESTABLECIMIENTO DE COMERCIO / REPRESENTANTE LEGAL</div>
                 <div class="signature-fields">
-                    <div class="signature-line">
-                        <label>Nombres y apellidos:</label>
-                        <div class="signature-input" id="firmaNombre">_________________________</div>
+                    <div class="signature-column">
+                        <div class="signature-line">
+                            <label id="signatureFirmaLabel">Firma:</label>
+                            <div class="signature-input" id="firmaAutografa">_________________________</div>
+                        </div>
+                        <div class="signature-line">
+                            <label id="signatureNameLabel">Nombres y apellidos:</label>
+                            <div class="signature-input" id="firmaNombre">_________________________</div>
+                        </div>
                     </div>
                     <div class="signature-line">
-                        <label>No. de documento:</label>
+                        <label id="signatureDocLabel">No. de documento:</label>
                         <div class="signature-input" id="firmaDocumento">_________________________</div>
                     </div>
                     <div class="signature-box">
-                        <div class="signature-placeholder">Firma</div>
+                        <div class="signature-placeholder">Huella</div>
                     </div>
                 </div>
             </div>
 
-            <div class="certifications-section">
-                <h3>7. CERTIFICACIONES SISTEMAS DE GESTIÓN DE CALIDAD RIESGO Y SST</h3>
-                <div class="certification-items">
-                    <div class="cert-item">
-                        <input type="checkbox" id="certCalidad">
-                        <label for="certCalidad">Sistema de Gestión de Calidad</label>
-                    </div>
-                    <div class="cert-item">
-                        <input type="checkbox" id="certRiesgo">
-                        <label for="certRiesgo">Gestión de Riesgos</label>
-                    </div>
-                    <div class="cert-item">
-                        <input type="checkbox" id="certSST">
-                        <label for="certSST">Sistema de Gestión de Seguridad y Salud en el Trabajo</label>
-                    </div>
+            <div class="signature-note print-note">
+                <strong>Instrucciones de firma:</strong> El presente formulario deberá ser impreso y firmado de forma autógrafa por la persona natural con establecimiento de comercio o por el representante legal, según corresponda, estampando además la huella dactilar respectiva. Una vez firmado, deberá ser escaneado y cargado en el sistema a la mayor brevedad, junto con los documentos de soporte exigidos. No se aceptan imágenes.
+            </div>
+
+            <div class="signed-form-upload">
+                <div class="form-group">
+                    <label>Cargar formulario de vinculación firmado *</label>
+                    <input type="file" id="formularioVinculacionFile" accept=".pdf,.jpg,.png" onchange="uploadSignedForm(this)">
                 </div>
             </div>
         </section>
 
         <!-- MENSAJE DE ÉXITO -->
-        <div class="success-message">
+        <div class="success-message" id="uploadSuccessMessage" style="display: none;">
             <p>✔️ Su solicitud ha sido registrada exitosamente. Guarde sus credenciales para consultar el estado.</p>
         </div>
     </main>

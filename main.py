@@ -17,6 +17,7 @@ from app.models import (
     TaxFiscalInformation, Municipality, AuthorizationsPolicies,
     Submission, SubmissionDocument
 )
+from app.models.model_ciiu import CIIU
 from app.database.core import create_tables
 from app.database.get_db import get_db
 from app.middleware.current_user import get_current_user
@@ -109,7 +110,19 @@ async def get_offices(db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Error al obtener oficinas: {str(e)}")
 
 @app.get("/api/ciiu")
-async def get_ciiu():
+async def get_ciiu(db: Session = Depends(get_db)):
+    from app.models.model_ciiu import CIIU
+    try:
+        registros = db.query(CIIU).order_by(CIIU.codigo).all()
+        if registros:
+            return [
+                {"codigo": c.codigo, "descripcion": c.descripcion}
+                for c in registros
+            ]
+    except Exception:
+        pass
+
+    # Respaldo: lista mínima si la tabla está vacía
     return [
         {"codigo": "0111", "descripcion": "Cultivo de cereales (excepto arroz), legumbres y semillas oleaginosas"},
         {"codigo": "0112", "descripcion": "Cultivo de arroz"},
