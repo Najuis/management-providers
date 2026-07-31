@@ -28,6 +28,7 @@ function initializeUserForm() {
     loadOficinas();
     loadCIIU();
     bindFormEvents();
+    onTipoClienteChange();
     
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
@@ -94,6 +95,20 @@ function onTipoClienteChange() {
                 }
             }
         }
+    }
+
+    // 3. Documentos 8, 9 y 10: solo para Persona Jurídica
+    const esJuridica = tipoCliente === 'Juridica';
+    document.querySelectorAll('.documentos-juridica').forEach(group => {
+        group.style.display = esJuridica ? '' : 'none';
+    });
+
+    // 4. Texto del documento 3 según el tipo de cliente
+    const docIdentidadLabel = document.getElementById('docIdentidadLabel');
+    if (docIdentidadLabel) {
+        docIdentidadLabel.textContent = esJuridica
+            ? '3. Copia de documento de identidad del representante legal *'
+            : '3. Copia de documento de identidad *';
     }
 }
 
