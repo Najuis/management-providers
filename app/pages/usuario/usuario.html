@@ -123,28 +123,14 @@
                             <input type="text" id="direccionNatural">
                         </div>
                         <div class="form-group">
+                            <label>Ciudad *</label>
+                            <input type="text" id="ciudadNatural">
+                        </div>
+                        <div class="form-group">
                             <label>Departamento *</label>
-                            <input type="text" id="departamentoNatural">
+                            <input type="text" id="DepartamentoNatural">
                         </div>
-                        <div class="form-group">
-                            <label>Municipio *</label>
-                            <input type="text" id="municipioNatural">
-                        </div>
-                        <div class="form-group">
-                            <label>País de Residencia *</label>
-                            <select id="paisResidenciaNatural">
-                                <option value="">Seleccione...</option>
-                                <option value="CO">Colombia</option>
-                                <option value="OTRO">Otro</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Zona *</label>
-                            <select id="zonaNatural">
-                                <option value="Urbana">Urbana</option>
-                                <option value="Rural">Rural</option>
-                            </select>
-                        </div>
+                    
                         <div class="form-group">
                             <label>Correo Electrónico *</label>
                             <input type="email" id="correoNatural">
@@ -154,7 +140,7 @@
                             <input type="text" id="telefonoNatural" oninput="validarSoloNumeros(this)" inputmode="numeric">
                         </div>
                         <div class="form-group">
-                            <label>Razón Social (si aplica)</label>
+                            <label>Nombre del Establecimiento Comercial (si aplica)</label>
                             <input type="text" id="razonSocialNatural">
                         </div>
                         <div class="form-group">
@@ -217,14 +203,6 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Tipo de Vinculación *</label>
-                            <select id="tipoVinculacionJuridica">
-                                <option value="">Seleccione...</option>
-                                <option value="Cliente">Cliente</option>
-                                <option value="Aliado">Aliado</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
                             <label>Departamento *</label>
                             <input type="text" id="municipioJuridica">
                         </div>
@@ -235,7 +213,7 @@
                         
                         <!-- REPRESENTANTE LEGAL -->
                         <div class="form-group full-width" style="margin-top: 20px; border-top: 2px solid var(--azul-claro); padding-top: 15px;">
-                            <h4 style="color: var(--azul-oscuro); margin: 0 0 10px 0;">Representante Legal *</h4>
+                            <h4 style="color: var(--azul-oscuro); margin: 0 0 10px 0;">Representante Legal - Principal</h4>
                         </div>
                         <div class="form-group full-width">
                             <label>Nombre Completo *</label>
@@ -259,7 +237,7 @@
 
                         <!-- REPRESENTANTE SUPLENTE -->
                         <div class="form-group full-width" style="margin-top: 20px; border-top: 2px solid var(--azul-claro); padding-top: 15px;">
-                            <h4 style="color: var(--azul-oscuro); margin: 0 0 10px 0;">Representante Suplente</h4>
+                            <h4 style="color: var(--azul-oscuro); margin: 0 0 10px 0;">Representante Legal - Suplente</h4>
                         </div>
                         <div class="form-group full-width">
                             <label>Nombre Completo</label>
@@ -270,7 +248,10 @@
                             <select id="tipoDocSuplente">
                                 <option value="">Seleccione...</option>
                                 <option value="CC">Cédula de Ciudadanía</option>
+                                <option value="TI">Tarjeta de Identidad</option>
                                 <option value="CE">Cédula de Extranjería</option>
+                                <option value="PP">Pasaporte</option>
+                                <option value="PTP">Permiso por Protección Temporal</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -278,17 +259,89 @@
                             <input type="text" id="numeroDocSuplente" oninput="validarSoloNumeros(this)" inputmode="numeric">
                         </div>
 
-                        <!-- BENEFICIARIO (S) FINAL -->
-                        <div class="form-group full-width" style="margin-top: 20px; border-top: 2px solid var(--azul-claro); padding-top: 15px;">
-                            <h4 style="color: var(--azul-oscuro); margin: 0 0 10px 0;">Beneficiario (S) Final</h4>
-                        </div>
-                        <div class="form-group full-width">
-                            <label>Nombre Completo</label>
-                            <input type="text" id="beneficiarioFinalNombre">
-                        </div>
-                        <div class="form-group">
-                            <label>Cédula</label>
-                            <input type="text" id="beneficiarioFinalCedula" oninput="validarSoloNumeros(this)" inputmode="numeric">
+                        <!-- BENEFICIARIOS FINALES -->
+                        <div class="form-group full-width" style="margin-top: 30px; border-top: 2px solid var(--azul-claro); padding-top: 20px;">
+                            <h3 style="color: var(--azul-oscuro); margin-bottom: 15px;">Beneficiario(s) Final(es)</h3>
+                            <p class="section-note" style="background: #e0f2fe; padding: 10px; border-left: 4px solid var(--azul-claro); border-radius: 5px; color: #0369a1; font-size: 0.9rem; margin-bottom: 20px;">
+                                <strong>Nota de Cumplimiento:</strong> La información del beneficiario final debe ser precisa y actualizada.</p>
+
+                            <!-- Beneficiario 1 -->
+                            <div class="beneficiario-card" style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px;">
+                                <h4 style="font-size: 1rem; color: var(--text); margin-bottom: 10px;">Beneficiario Final 1 *</h4>
+                                <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 15px;">
+                                    <div class="form-group full-width">
+                                        <label>Nombre Completo *</label>
+                                        <input type="text" id="bf1_nombre">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Tipo de Documento *</label>
+                                        <select id="bf1_tipoDoc">
+                                            <option value="">Seleccione...</option>
+                                            <option value="CC">Cédula de Ciudadanía</option>
+                                            <option value="TI">Tarjeta de Identidad</option>
+                                            <option value="CE">Cédula de Extranjería</option>
+                                            <option value="PP">Pasaporte</option>
+                                            <option value="PPT">Permiso por Protección Temporal</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Número de Documento *</label>
+                                        <input type="text" id="bf1_numeroDoc" oninput="validarSoloNumeros(this)" inputmode="numeric">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Beneficiario 2 -->
+                            <div class="beneficiario-card" style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px;">
+                                <h4 style="font-size: 1rem; color: var(--text); margin-bottom: 10px;">Beneficiario Final 2 (Opcional)</h4>
+                                <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 15px;">
+                                    <div class="form-group full-width">
+                                        <label>Nombre Completo</label>
+                                        <input type="text" id="bf2_nombre">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Tipo de Documento</label>
+                                        <select id="bf2_tipoDoc">
+                                            <option value="">Seleccione...</option>
+                                            <option value="CC">Cédula de Ciudadanía</option>
+                                            <option value="TI">Tarjeta de Identidad</option>
+                                            <option value="CE">Cédula de Extranjería</option>
+                                            <option value="PP">Pasaporte</option>
+                                            <option value="PPT">Permiso por Protección Temporal</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Número de Documento</label>
+                                        <input type="text" id="bf2_numeroDoc" oninput="validarSoloNumeros(this)" inputmode="numeric">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Beneficiario 3 -->
+                            <div class="beneficiario-card" style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px;">
+                                <h4 style="font-size: 1rem; color: var(--text); margin-bottom: 10px;">Beneficiario Final 3 (Opcional)</h4>
+                                <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 15px;">
+                                    <div class="form-group full-width">
+                                        <label>Nombre Completo</label>
+                                        <input type="text" id="bf3_nombre">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Tipo de Documento</label>
+                                        <select id="bf3_tipoDoc">
+                                            <option value="">Seleccione...</option>
+                                            <option value="CC">Cédula de Ciudadanía</option>
+                                            <option value="TI">Tarjeta de Identidad</option>
+                                            <option value="CE">Cédula de Extranjería</option>
+                                            <option value="PP">Pasaporte</option>
+                                            <option value="PPT">Permiso por Protección Temporal</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Número de Documento</label>
+                                        <input type="text" id="bf3_numeroDoc" oninput="validarSoloNumeros(this)" inputmode="numeric">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -561,23 +614,6 @@
                             <label>Patrimonio Neto (Automático)</label>
                             <input type="text" id="totalPatrimonio" readonly style="background-color: #e9ecef; font-weight: bold; color: var(--azul-oscuro);">
                         </div>
-                        
-                        <!-- NUEVOS CAMPOS DE BENEFICIARIOS -->
-                        <div class="form-group full-width" style="margin-top: 20px; border-top: 2px dashed var(--azul-claro); padding-top: 15px;">
-                            <h4 style="color: var(--azul-oscuro);">Beneficiarios Adicionales (Opcional)</h4>
-                        </div>
-                        <div class="form-group full-width">
-                            <label>Beneficiario 1 (Nombre y Documento)</label>
-                            <input type="text" id="beneficiario1" placeholder="Nombre completo - No. Documento">
-                        </div>
-                        <div class="form-group full-width">
-                            <label>Beneficiario 2 (Nombre y Documento)</label>
-                            <input type="text" id="beneficiario2" placeholder="Nombre completo - No. Documento">
-                        </div>
-                        <div class="form-group full-width">
-                            <label>Beneficiario 3 (Nombre y Documento)</label>
-                            <input type="text" id="beneficiario3" placeholder="Nombre completo - No. Documento">
-                        </div>
                     </div>
                 </div>
 
@@ -595,7 +631,11 @@
                         <div class="auth-checkbox"><input type="checkbox" id="authDatos"></div>
                         <div class="auth-content">
                             <strong class="auth-title">AUTORIZACIÓN PARA MANEJO DE LA INFORMACIÓN:</strong>
-                            <p class="auth-text">LAGOBO DISTRIBUCIONES S.A.S y sus terceros prestadores de servicios tienen plena facultad para realizar tratamiento a la información de mis datos y pueden realizar las actividades tales como: recolectar, almacenar, depurar, usar, actualizar, cruzar mi información con sus bases de datos, realizarme envío de información financiera, comercial, estadística, en materia de salud, legal, publicidad, marketing, prospección comercial, realizar actividades de mercadeo de sus productos y servicios, envío de toda otra información que surja como consecuencia de este vínculo comercial y las demás finalidades estrictamente asociadas y necesarias para cumplir los fines de gestión comercial, de cobranza y de mercadeo, contactándome, haciendo uso de los datos de contacto que he suministrado y por medio de los canales de comunicación que autorizo por medio de esta autorización, pudiéndolo realizar por medio de llamada, mensajes, correos electrónicos, aplicativos web u otros medios de comunicación en el horario de 08:00 am a 06:00 pm de lunes a viernes y de 08:00 am a 03:00 pm los sábados, les autorizo realizar la consulta y el reporte a centrales de riesgo. A su vez los tratamientos de mis datos estarán sujetos a la protección establecida en la ley 1581 de 2012, sus decretos reglamentarios y las normas que los modifiquen. En cualquier momento podré ejercer los derechos establecidos en la norma y particularmente revocar la autorización dada o solicitar la supresión de mis datos, siempre y cuando ya no exista una relación contractual con LAGOBO DISTRIBUCIONES S.A.S., para tal efecto utilizaré los canales y medios descritos en la política de tratamiento de la información y protección de datos de LAGOBO DISTRIBUCIONES S.A.S., publicada en la página. También autorizo a LAGOBO DISTRIBUCIONES S.A.S., o a quien represente sus derechos, para que consulte mis datos a las Centrales de Información de Riesgo o cualquier entidad autorizada por la Superintendencia Financiera de Colombia, cualquier información relacionada con mi nombre, comportamiento comercial, hábitos de pago, manejo de crédito y de cuentas, saldo de mis obligaciones crediticias, tiempo de mora en el pago de dichas obligaciones, así mismo autorizo reportar ante cualquier Central de Información de Riesgo mi endeudamiento, la información comercial disponible sobre el cumplimiento y manejo de los compromisos adquiridos.</p>
+                            <p class="auth-text">De manera libre, previa, expresa e informada, autorizo a LAGOBO DISTRIBUCIONES S.A.S., a sus terceros prestadores de servicios, o a quien represente sus derechos, para recolectar, almacenar, depurar, usar, actualizar y cruzar mi información personal con sus bases de datos. Esta autorización se otorga para finalidades estrictamente asociadas a la gestión comercial, cobranza y mercadeo, incluyendo el envío de información comercial, estadística, legal, publicidad, marketing, prospección comercial, actividades de mercadeo de sus productos y servicios, y cualquier otra información que surja como consecuencia de este vínculo comercial.
+                            Autorizo ser contactado a través de los datos que he suministrado (llamadas telefónicas, mensajes de texto, correos electrónicos, aplicativos web de mensajería u otros medios de comunicación autorizados). LAGOBO DISTRIBUCIONES S.A.S. se compromete a realizar estos contactos respetando las disposiciones de la Ley 2300 de 2023, limitando las comunicaciones a un solo canal semanal y estrictamente dentro del siguiente horario: lunes a viernes de 08:00 a.m. a 06:00 p.m., y sábados de 08:00 a.m. a 03:00 p.m. No obstante, de manera voluntaria autorizo su tratamiento exclusivamente para los fines del presente vínculo contractual y comercial.
+                            Autorizo expresa e irrevocablemente a LAGOBO DISTRIBUCIONES S.A.S., o a quien represente sus derechos o detente en el futuro la calidad de acreedor, para que consulte, reporte, procese, solicite y divulgue a las Centrales de Información de Riesgo, o a cualquier entidad autorizada por la Superintendencia Financiera de Colombia, información relacionada con mi nombre, comportamiento comercial, hábitos de pago, manejo de crédito y cuentas, saldos, y tiempo de mora en el pago de mis obligaciones. Así mismo, autorizo el reporte de mi nivel de endeudamiento y la información comercial disponible sobre el cumplimiento y manejo de los compromisos adquiridos.
+                            Entiendo que el tratamiento de mis datos estará sujeto a la Ley 1581 de 2012, sus decretos reglamentarios y las normas que los modifiquen. Se me ha informado que en cualquier momento podré ejercer mis derechos de conocer, actualizar, rectificar y, particularmente, revocar esta autorización o solicitar la supresión de mis datos, siempre y cuando no exista un deber legal o una relación contractual vigente con LAGOBO DISTRIBUCIONES S.A.S. que lo impida. Para tal efecto, utilizaré los canales y medios descritos en la Política de Tratamiento de la Información y Protección de Datos de LAGOBO DISTRIBUCIONES S.A.S., la cual se encuentra publicada en su página web oficial.
+                            </p>
                         </div>
                     </div>
 
@@ -701,15 +741,16 @@
                 <p class="doc-instructions">Expedición no superior a 30 días. Formatos: PDF, JPG, PNG. Máximo 5MB por archivo. Nota: De acuerdo con el resultado del proceso de debida diligencia, la compañía podrá solicitar cualquier documentación adicional que estime necesaria para la aplicación de medidas de debida diligencia intensificada.</p>
                 <div class="form-grid">
                     <div class="form-group"><label>1. RUT actualizado del presente año *</label><input type="file" id="rutFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
-                    <div class="form-group"><label>2. Cámara de Comercio (emisión no máxima a 30 días) *</label><input type="file" id="camaraFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
+                    <div class="form-group"><label>2. Cámara de Comercio (emisión no mayor a 30 días) *</label><input type="file" id="camaraFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
                     <div class="form-group"><label>3. Copia de documento de identidad del representante legal *</label><input type="file" id="docIdentidadFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
-                    <div class="form-group"><label>4. Referencia bancaria (emisión no máxima a 3 meses)</label><input type="file" id="refBancariaFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
-                    <div class="form-group"><label>5. Referencia comercial (emisión no máxima a 3 meses)</label><input type="file" id="refComercialFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
+                    <div class="form-group"><label>4. Referencia bancaria (emisión no mayor a 3 meses)</label><input type="file" id="refBancariaFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
+                    <div class="form-group"><label>5. Referencia comercial (emisión no mayor a 3 meses)</label><input type="file" id="refComercialFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
                     <div class="form-group"><label>6. Declaración de renta del último período</label><input type="file" id="declaracionRentaFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
                     <div class="form-group"><label>7. Estados financieros de los dos últimos años fiscales</label><input type="file" id="estadosFinancierosFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
-                    <div class="form-group"><label>8. Certificado de composición accionaria</label><input type="file" id="composicionFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
-                    <div class="form-group"><label>9. Reporte de Registro Único de Beneficiarios (RUB)</label><input type="file" id="rubFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
-                    <div class="form-group"><label>10. Requisitos de Seguridad y Salud en el Trabajo (SST)</label><input type="file" id="sstFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
+                    <!-- ✅ CAMPOS 8, 9, 10 - Solo para Persona Jurídica -->
+                    <div class="form-group documentos-juridica"><label>8. Certificado de composición accionaria</label><input type="file" id="composicionFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
+                    <div class="form-group documentos-juridica"><label>9. Reporte de Registro Único de Beneficiarios (RUB)</label><input type="file" id="rubFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
+                    <div class="form-group documentos-juridica"><label>10. Requisitos de Seguridad y Salud en el Trabajo (SST)</label><input type="file" id="sstFile" accept=".pdf,.jpg,.png" onchange="checkFileUpload(this)"></div>
                 </div>
 
                 <div class="form-actions">
