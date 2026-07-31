@@ -1,12 +1,23 @@
+import os
+from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
 from fastapi.security import OAuth2PasswordBearer
 
-# Configuración JWT
-SECRET_KEY = "tu_clave_secreta_muy_segura_cambiala_en_produccion"  # ⚠️ Cambia esto en producción
-ALGORITHM = "HS256"
+# Cargar variables de entorno ANTES de leer la clave
+load_dotenv()
+
+# Clave JWT desde el entorno (.env). El servidor NO arranca sin ella.
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
+
+if not SECRET_KEY:
+    raise RuntimeError(
+        "SECRET_KEY no está configurada. Defínela en el archivo .env "
+        "(ver .env.example)."
+    )
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/login")
 

@@ -35,7 +35,11 @@ app.mount("/pages", StaticFiles(directory="app/pages"), name="pages")
 # ============================================
 # CORS
 # ============================================
-origins = ["*"]
+origins = [
+    "http://127.0.1.1:8000",
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
