@@ -63,7 +63,16 @@
             </div>
         </section>
 
-        <!-- SECCIÓN 3: ESTADO (SIN NIVEL DE RIESGO) -->
+        <!-- SECCIÓN 3: FORMULARIO COMPLETO PARA IMPRIMIR -->
+        <section class="card fullform-card">
+            <h2>📄 Formulario de Vinculación (Completo)</h2>
+            <p class="info-text">Datos diligenciados por el usuario. Esta sección se imprime junto con la declaración y firma.</p>
+            <div id="fullFormContent" class="fullform-content">
+                <p class="info-text">Cargando formulario...</p>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 4: ESTADO (SIN NIVEL DE RIESGO) -->
         <section class="card status-card">
             <h2>📊 Estado y Clasificación</h2>
             <div class="status-grid">
@@ -79,7 +88,7 @@
             </div>
         </section>
 
-        <!-- SECCIÓN 4: PRÓXIMOS PASOS -->
+        <!-- SECCIÓN 5: PRÓXIMOS PASOS -->
         <section class="card actions-card">
             <h2>📌 Próximos Pasos</h2>
             <ul class="steps-list">
@@ -97,7 +106,7 @@
             </div>
         </section>
 
-        <!-- SECCIÓN 5: FIRMA Y DECLARACIÓN -->
+        <!-- SECCIÓN 6: FIRMA Y DECLARACIÓN -->
         <section class="card signature-card">
             <h2>✍️ Declaración y Firma</h2>
             <div class="declaration-text">
@@ -109,7 +118,7 @@
             </div>
 
             <div class="signature-section">
-                <div class="signature-title" id="signatureTitle">FIRMA PERSONA NATURAL CON ESTABLECIMIENTO DE COMERCIO / REPRESENTANTE LEGAL</div>
+                <div class="signature-title" id="signatureTitle">FIRMA PERSONA NATURAL CON ESTABLECIMIENTO DE COMERCIO</div>
                 <div class="signature-fields">
                     <div class="signature-column">
                         <div class="signature-line">
@@ -138,7 +147,7 @@
             <div class="signed-form-upload">
                 <div class="form-group">
                     <label>Cargar formulario de vinculación firmado *</label>
-                    <input type="file" id="formularioVinculacionFile" accept=".pdf,.jpg,.png" onchange="uploadSignedForm(this)">
+                    <input type="file" id="formularioVinculacionFile" accept=".pdf" onchange="uploadSignedForm(this)">
                 </div>
             </div>
         </section>

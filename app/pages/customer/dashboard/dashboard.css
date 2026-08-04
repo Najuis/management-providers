@@ -589,6 +589,64 @@ code {
     }
 }
 
+/* FORMULARIO COMPLETO PARA IMPRIMIR */
+.fullform-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.ff-block {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    background: #fbfdfe;
+}
+
+.ff-block h4 {
+    font-size: 1rem;
+    color: var(--azul-primario);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--azul-claro);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ff-block h5 {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin: 1rem 0 0.5rem 0;
+}
+
+.ff-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0.5rem 2rem;
+}
+
+.ff-row {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    padding: 0.35rem 0;
+    border-bottom: 1px dotted var(--border);
+}
+
+.ff-label {
+    color: var(--text-muted);
+    font-weight: 600;
+    min-width: 180px;
+}
+
+.ff-value {
+    color: var(--text);
+    font-weight: 500;
+    word-break: break-word;
+}
+
 /* PRINT STYLES - INCLUIR FIRMA */
 @media print {
     .confirm-header, .final-actions {
@@ -611,5 +669,18 @@ code {
     
     .signature-box {
         border: 2px solid #000;
+    }
+
+    .fullform-card {
+        break-inside: auto;
+    }
+
+    .ff-block {
+        break-inside: avoid;
+        border: 1px solid #bbb;
+    }
+
+    .ff-grid {
+        grid-template-columns: 1fr;
     }
 }

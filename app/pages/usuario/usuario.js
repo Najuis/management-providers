@@ -134,6 +134,14 @@ function checkOtroSociedad() {
 // ============================================
 function checkFileUpload(input) {
     if (input.files && input.files.length > 0) {
+        const file = input.files[0];
+        const esPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+        if (!esPdf) {
+            alert('Solo se permiten archivos en formato PDF. El archivo "' + file.name + '" no es válido.');
+            input.value = '';
+            input.classList.remove('uploaded');
+            return;
+        }
         input.classList.add('uploaded');
     } else {
         input.classList.remove('uploaded');
@@ -844,10 +852,47 @@ function validateRequiredFields(tipoCliente) {
 function buildSubmissionPayload(tipoCliente, totalActivos, totalPasivos, totalPatrimonio) {
     const get = id => document.getElementById(id);
     const esJuridica = tipoCliente === 'Juridica';
+    const val = el => (el && el.value ? el.value.trim() : null);
+    const radioVal = name => {
+        const r = document.querySelector(`input[name="${name}"]:checked`);
+        return r ? r.value : null;
+    };
+    const optText = select => {
+        if (!select || !select.value) return null;
+        return select.options[select.selectedIndex]?.text || select.value;
+    };
 
     const ciudadSelect = get('ciudad');
     const sucursalSelect = get('sucursal');
     const regimenSelect = get('regimenTributario');
+
+    const accionistas = [];
+    for (let i = 1; i <= 5; i++) {
+        const nombre = val(get(`ca${i}Nombre`));
+        if (nombre) {
+            accionistas.push({
+                numero: i,
+                nombre,
+                participacion: val(get(`ca${i}Participacion`)),
+                tipo_doc: optText(get(`ca${i}TipoDoc`)),
+                numero_doc: val(get(`ca${i}NumeroDoc`)),
+                direccion: val(get(`ca${i}Direccion`)),
+                telefono: val(get(`ca${i}Telefono`))
+            });
+        }
+    }
+
+    const beneficiarios = [];
+    for (let i = 1; i <= 3; i++) {
+        const nombre = val(get(`bf${i}_nombre`));
+        if (nombre) {
+            beneficiarios.push({
+                nombre,
+                tipo_doc: optText(get(`bf${i}_tipoDoc`)),
+                numero_doc: val(get(`bf${i}_numeroDoc`))
+            });
+        }
+    }
 
     return {
         fecha: get('fecha').value || null,
@@ -856,9 +901,9 @@ function buildSubmissionPayload(tipoCliente, totalActivos, totalPasivos, totalPa
         ciudad_id: parseInt(ciudadSelect.value) || null,
         oficina: sucursalSelect.options[sucursalSelect.selectedIndex]?.text || sucursalSelect.value || null,
         tipo_persona: esJuridica ? 'juridica' : 'natural',
+        // Persona natural
         nombres: get('nombres')?.value || null,
         apellidos: get('apellidos')?.value || null,
-        razon_social: esJuridica ? get('razonSocial').value : null,
         tipo_id: esJuridica ? 'NIT' : (get('tipoDocNatural').value || null),
         numero_id: esJuridica ? get('nit').value : get('numeroDocNatural').value,
         fecha_expedicion: esJuridica
@@ -867,21 +912,88 @@ function buildSubmissionPayload(tipoCliente, totalActivos, totalPasivos, totalPa
         estructura_juridica: esJuridica
             ? (get('tipoSociedad').value === 'Otro' ? get('otroSociedad').value : (get('tipoSociedad').value || null))
             : null,
+        tipo_doc_natural: optText(get('tipoDocNatural')),
+        numero_doc_natural: get('numeroDocNatural')?.value || null,
+        fecha_nacimiento: get('fechaNacimiento')?.value || null,
+        fecha_exp_natural: get('fechaExpNatural')?.value || null,
+        direccion_natural: get('direccionNatural')?.value || null,
+        ciudad_natural: get('ciudadNatural')?.value || null,
+        departamento_natural: get('DepartamentoNatural')?.value || null,
+        correo_natural: get('correoNatural')?.value || '',
+        telefono_natural: get('telefonoNatural')?.value || null,
+        nombre_establecimiento: get('razonSocialNatural')?.value || null,
+        nit_establecimiento: get('nitNatural')?.value || null,
+        // Persona jurídica
+        razon_social: esJuridica ? get('razonSocial').value : null,
+        nit: esJuridica ? get('nit').value : null,
+        digito_verificacion: get('digitoVerificacion')?.value || null,
+        fecha_constitucion: get('fechaConstitucion')?.value || null,
+        tipo_sociedad: optText(get('tipoSociedad')),
+        otro_tipo_sociedad: get('tipoSociedad')?.value === 'Otro' ? get('otroSociedad')?.value : null,
+        direccion_juridica: get('direccionJuridica')?.value || null,
+        ciudad_juridica: optText(get('regionJuridica')),
+        departamento_juridica: get('municipioJuridica')?.value || null,
+        pagina_web: get('paginaWeb')?.value || null,
+        // Representante legal
+        representante_legal: get('representanteLegal')?.value || null,
+        tipo_doc_rep: optText(get('tipoDocRep')),
+        numero_doc_rep: get('numeroDocRep')?.value || null,
+        representante_suplente: get('representanteSuplente')?.value || null,
+        tipo_doc_suplente: optText(get('tipoDocSuplente')),
+        numero_doc_suplente: get('numeroDocSuplente')?.value || null,
+        // Beneficiarios finales y composición accionaria
+        beneficiarios: beneficiarios,
+        accionistas: accionistas,
+        // Actividad económica
         codigo_ciiu: get('codigoCIIU').value || null,
+        actividad_economica: get('actividadEconomica').value || '',
+        // Referencias bancarias
+        banco1_nombre: get('nombreBanco1')?.value || null,
+        banco1_titular: get('nombreTitular1')?.value || null,
+        banco1_tipo_cuenta: optText(get('tipoCuenta1')),
+        banco1_numero: get('numeroCuenta1')?.value || null,
+        banco2_nombre: get('nombreBanco2')?.value || null,
+        banco2_titular: get('nombreTitular2')?.value || null,
+        banco2_tipo_cuenta: optText(get('tipoCuenta2')),
+        banco2_numero: get('numeroCuenta2')?.value || null,
+        // Referencias comerciales
+        refcom1_empresa: get('refCom1Empresa')?.value || null,
+        refcom1_contacto: get('refCom1Contacto')?.value || null,
+        refcom1_telefono: get('refCom1Telefono')?.value || null,
+        refcom1_correo: get('refCom1Correo')?.value || null,
+        refcom2_empresa: get('refCom2Empresa')?.value || null,
+        refcom2_contacto: get('refCom2Contacto')?.value || null,
+        refcom2_telefono: get('refCom2Telefono')?.value || null,
+        refcom2_correo: get('refCom2Correo')?.value || null,
+        // Actividad económica, régimen y montos
         regimen_tributario: regimenSelect.value || null,
         total_ingresos: parsearNumero(get('totalIngresos').value) || null,
         total_egresos: parsearNumero(get('totalEgresos').value) || null,
+        total_activos: totalActivos,
+        total_pasivos: totalPasivos,
+        total_patrimonio: totalPatrimonio,
+        // PEP
+        maneja_recursos_publicos: radioVal('manejaRecursosPublicos'),
+        ejerce_poder_publico: radioVal('ejercePoderPublico'),
+        reconocimiento_publico: radioVal('reconocimientoPublico'),
+        vinculo_pep: radioVal('vinculoPEP'),
+        cargo_pep: get('cargoPEP')?.value || null,
+        entidad_pep: get('entidadPEP')?.value || null,
+        fecha_pep: get('fechaPEP')?.value || null,
+        // Autorizaciones
         aut_datos: get('authDatos').checked,
         aut_laft: get('authLAFT').checked,
         aut_anticorrupcion: get('authAnticorrupcion').checked,
+        aut_conflicto_interes: get('authConflictoInteres').checked,
+        aut_transparencia: get('authTransparencia').checked,
+        aut_origen_recursos: get('authOrigenRecursos').checked,
+        aut_listas_restrictivas: get('authListasRestrictivas').checked,
+        aut_aceptacion: get('authAceptacionFinal').checked,
         aut_etica: get('authTransparencia').checked,
         // Datos extra para el resumen del dashboard
         email: get('correoNatural').value || '',
         ciudad_nombre: ciudadSelect.options[ciudadSelect.selectedIndex]?.text || '',
-        actividad_economica: get('actividadEconomica').value || '',
-        total_activos: totalActivos,
-        total_pasivos: totalPasivos,
-        total_patrimonio: totalPatrimonio
+        actividad_economica: get('actividadEconomica').value || ''
     };
 }
 

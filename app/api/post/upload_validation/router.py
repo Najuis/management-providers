@@ -25,6 +25,50 @@ def get_client_ip(request: Request) -> str:
     return request.client.host if request.client else "unknown"
 
 
+def serialize_submission(submission: Submission, documents: Optional[list] = None) -> dict:
+    """Convierte una Submission de SQLAlchemy en un dict JSON serializable."""
+    return {
+        "id": submission.id,
+        "user_id": submission.user_id,
+        "fecha": submission.fecha.isoformat() if submission.fecha else None,
+        "tipo_cliente": submission.tipo_cliente,
+        "tipo_vinculacion": submission.tipo_vinculacion,
+        "ciudad_id": submission.ciudad_id,
+        "oficina": submission.oficina,
+        "tipo_persona": submission.tipo_persona,
+        "nombres": submission.nombres,
+        "apellidos": submission.apellidos,
+        "razon_social": submission.razon_social,
+        "nombre": submission.nombres if submission.tipo_persona != "juridica" else submission.razon_social,
+        "tipo_cliente_display": "Persona Jurídica" if submission.tipo_persona == "juridica" else "Persona Natural",
+        "tipo_id": submission.tipo_id,
+        "numero_id": submission.numero_id,
+        "fecha_expedicion": submission.fecha_expedicion.isoformat() if submission.fecha_expedicion else None,
+        "estructura_juridica": submission.estructura_juridica,
+        "codigo_ciiu": submission.codigo_ciiu,
+        "pais_origen_id": submission.pais_origen_id,
+        "pais_residencia_id": submission.pais_residencia_id,
+        "zona": submission.zona,
+        "regimen_tributario": submission.regimen_tributario,
+        "total_ingresos": submission.total_ingresos,
+        "total_egresos": submission.total_egresos,
+        "aut_datos": submission.aut_datos,
+        "aut_laft": submission.aut_laft,
+        "aut_anticorrupcion": submission.aut_anticorrupcion,
+        "aut_etica": submission.aut_etica,
+        "status": submission.status,
+        "risk_level": submission.risk_level,
+        "observations": submission.observations,
+        "validation_notes": submission.validation_notes,
+        "created_at": submission.created_at.isoformat() if submission.created_at else None,
+        "updated_at": submission.updated_at.isoformat() if submission.updated_at else None,
+        "submitted_at": submission.submitted_at.isoformat() if submission.submitted_at else None,
+        "validated_at": submission.validated_at.isoformat() if submission.validated_at else None,
+        "documents": (documents or []),
+        "form_data": json.loads(submission.form_data) if submission.form_data else {}
+    }
+
+
 # ============================================
 # ENDPOINTS
 # ============================================
@@ -101,8 +145,10 @@ async def list_submissions(
     
     submissions = query.order_by(Submission.created_at.desc()).offset(skip).limit(limit).all()
     total = query.count()
-    
-    return {"submissions": submissions, "total": total, "skip": skip, "limit": limit}
+
+    serialized = [serialize_submission(s) for s in submissions]
+
+    return {"submissions": serialized, "total": total, "skip": skip, "limit": limit}
 
 
 @router.get("/{submission_id}")
@@ -224,7 +270,7 @@ async def upload_documents(
     user_upload_dir = f"{UPLOAD_DIR}/{submission_id}"
     os.makedirs(user_upload_dir, exist_ok=True)
     
-    ALLOWED_EXTENSIONS = {".pdf", ".jpg", ".jpeg", ".png"}
+    ALLOWED_EXTENSIONS = {".pdf"}
     MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
 
     try:
@@ -282,7 +328,7 @@ async def upload_signed_form(
     if submission.user_id != current_user.id_user and not current_user.is_admin:
         raise HTTPException(status_code=403, detail="No autorizado")
 
-    ALLOWED_EXTENSIONS = {".pdf", ".jpg", ".jpeg", ".png"}
+    ALLOWED_EXTENSIONS = {".pdf"}
     MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
 
     _, ext = os.path.splitext(file.filename)
