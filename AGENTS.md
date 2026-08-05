@@ -9,6 +9,7 @@ FastAPI + SQLAlchemy supplier-management app (Lagobo Distribuciones S.A.S.). Spa
 - Seed/user scripts (run from repo root):
   - `python crear_admin.py` — creates `admin@lagobo.com` / `Admin123!`
   - `python inicializar_datos_base.py` — seeds TypeUser 1-4
+  - `python cargar_paises.py` — seeds Latin-American countries into `lmp_country`
   - `python gestionar_usuarios.py listar|crear <email> <pass> <tipo>|reset <email> <pass>` — user management CLI
 
 ## Database

@@ -123,14 +123,6 @@ function renderFullForm(submission) {
 
     let html = '';
 
-    // 1. Información general
-    html += block('1. Información General',
-        espe('fecha', 'Fecha', v => v.split('T')[0]) +
-        espe('tipo_cliente', 'Tipo de cliente', v => v === 'Juridica' ? 'Persona Jurídica' : 'Persona Natural') +
-        espe('tipo_vinculacion', 'Tipo de vinculación') +
-        espe('ciudad_nombre', 'Ciudad') +
-        espe('oficina', 'Oficina/Sucursal'));
-
     // 2. Identificación
     if (esJuridica) {
         html += block('2. Información de Identificación (Persona Jurídica)',
@@ -264,17 +256,12 @@ function renderStatus(status) {
 // COMPLETAR CAMPOS DE FIRMA AUTOMÁTICAMENTE
 // ============================================
 function populateSignatureFields(submission) {
-    const today = new Date();
-    const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-                    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-
     const cityEl = document.getElementById('summaryCity');
     const nameEl = document.getElementById('summaryName');
     const docEl = document.getElementById('summaryDoc');
 
-    document.getElementById('firmaCiudad').textContent = cityEl ? (cityEl.textContent || '_____________') : '_____________';
-    document.getElementById('firmaNombre').textContent = nameEl ? (nameEl.textContent || '_________________________') : '_________________________';
-    document.getElementById('firmaDocumento').textContent = docEl ? (docEl.textContent || '_________________________') : '_________________________';
+    document.getElementById('firmaNombre').textContent = nameEl ? (nameEl.textContent || '') : '';
+    document.getElementById('firmaDocumento').textContent = docEl ? (docEl.textContent || '') : '';
 
     // Separar la firma según el tipo de cliente: Natural o Representante Legal
     const esJuridica = submission && submission.tipo_persona === 'juridica';

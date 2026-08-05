@@ -6,6 +6,21 @@ let ciiuData = [];
 let ciudadesData = [];
 
 // ============================================
+// ORDENAMIENTO ALFABÉTICO DE LISTAS DESPLEGABLES
+// ============================================
+function sortSelectOptions(select) {
+    if (!select) return;
+    const seleccionado = select.value;
+    const options = Array.from(select.options);
+    const placeholder = options.length && options[0].value === '' ? options.shift() : null;
+    options.sort((a, b) => a.textContent.localeCompare(b.textContent, 'es', { sensitivity: 'base' }));
+    select.innerHTML = '';
+    if (placeholder) select.appendChild(placeholder);
+    options.forEach(opt => select.appendChild(opt));
+    if (seleccionado) select.value = seleccionado;
+}
+
+// ============================================
 // INICIALIZACIÓN
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -29,6 +44,9 @@ function initializeUserForm() {
     loadCIIU();
     bindFormEvents();
     onTipoClienteChange();
+    
+    // Ordenar alfabéticamente las listas desplegables estáticas del formulario
+    document.querySelectorAll('select').forEach(sortSelectOptions);
     
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
@@ -593,6 +611,7 @@ async function loadReferenceData() {
                 option.textContent = c.name || c.nombre_municipio || c.ciudad;
                 ciudadSelect.appendChild(option);
             });
+            sortSelectOptions(ciudadSelect);
         }
     } catch (error) {
         console.error('💥 Error cargando directorios:', error);
@@ -637,6 +656,7 @@ async function loadCIIU() {
                     option.dataset.descripcion = descripcion;
                     ciiuSelect.appendChild(option);
                 });
+                sortSelectOptions(ciiuSelect);
                 ciiuSelect.addEventListener('change', onCIIUChange);
             }
         }
@@ -667,6 +687,7 @@ function onCiudadChange() {
         option.textContent = o.nombre || o.office_name || o.NOMBRE;
         sucursalSelect.appendChild(option);
     });
+    sortSelectOptions(sucursalSelect);
 }
 
 function onCIIUChange() {

@@ -353,22 +353,6 @@ code {
     }
 }
 
-/* PRINT STYLES */
-@media print {
-    .confirm-header, .final-actions {
-        display: none;
-    }
-    
-    body {
-        background: white;
-    }
-    
-    .card {
-        break-inside: avoid;
-        box-shadow: none;
-        border: 1px solid #ddd;
-    }
-}
 /* SECCIÓN DE FIRMA */
 .signature-card {
     background: rgba(255, 255, 255, 0.95);
@@ -410,7 +394,7 @@ code {
 }
 
 .signature-section {
-    margin: 2rem 0;
+    margin: 1.5rem 0;
     padding: 2rem;
     background: var(--bg);
     border-radius: 8px;
@@ -430,14 +414,20 @@ code {
 
 .signature-fields {
     display: grid;
-    grid-template-columns: 1fr 1fr auto;
+    grid-template-columns: 1fr 220px;
     gap: 2rem;
-    align-items: flex-end;
+    align-items: stretch;
 }
 
-.signature-column {
+.signature-main {
     display: flex;
     flex-direction: column;
+    gap: 2rem;
+}
+
+.signature-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 2rem;
 }
 
@@ -454,21 +444,26 @@ code {
 }
 
 .signature-input {
-    padding: 0.75rem;
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 6px;
+    padding: 0.5rem 0.25rem;
+    background: transparent;
+    border: none;
+    border-bottom: 1.5px solid var(--text);
+    border-radius: 0;
     font-family: 'Courier New', monospace;
-    font-size: 0.9rem;
-    min-height: 40px;
+    font-size: 0.95rem;
+    min-height: 28px;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .signature-box {
-    width: 200px;
-    height: 150px;
-    border: 2px dashed var(--azul-claro);
+    width: 100%;
+    min-height: 180px;
+    border: 2px solid var(--azul-claro);
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -578,9 +573,14 @@ code {
         gap: 1.5rem;
     }
     
+    .signature-two-col {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
     .signature-box {
         width: 100%;
-        height: 120px;
+        min-height: 120px;
     }
     
     .cert-item {
@@ -589,7 +589,12 @@ code {
     }
 }
 
-/* FORMULARIO COMPLETO PARA IMPRIMIR */
+/* FORMULARIO COMPLETO PARA IMPRIMIR
+   Oculto en pantalla: solo se muestra al imprimir */
+.fullform-card {
+    display: none;
+}
+
 .fullform-content {
     display: flex;
     flex-direction: column;
@@ -649,7 +654,9 @@ code {
 
 /* PRINT STYLES - INCLUIR FIRMA */
 @media print {
-    .confirm-header, .final-actions {
+    .confirm-header, .final-actions,
+    .credentials-card, .summary-card,
+    .status-card, .actions-card {
         display: none;
     }
     
@@ -665,22 +672,134 @@ code {
     
     .signature-card {
         border: 2px solid #000;
+        break-inside: avoid;
+        padding: 1rem;
+        margin-top: 0.5rem;
+    }
+    
+    .signature-card h2 {
+        font-size: 1.1rem;
+        text-align: center;
+        border-bottom: 2px solid #000;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.5rem;
+    }
+    
+    .signature-section {
+        border: 2px solid #000;
+        background: white;
+        margin: 0.5rem 0;
+        padding: 0.75rem 1rem;
+    }
+    
+    .signature-title {
+        font-size: 0.8rem;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.4rem;
+    }
+    
+    .signature-fields {
+        grid-template-columns: 1fr 160px;
+        gap: 1rem;
+    }
+    
+    .signature-main {
+        gap: 0.75rem;
+    }
+    
+    .signature-two-col {
+        gap: 1rem;
+    }
+    
+    .signature-line {
+        gap: 0.25rem;
+    }
+    
+    .signature-line label {
+        font-size: 0.7rem;
+    }
+    
+    .signature-input {
+        font-size: 0.75rem;
+        min-height: 20px;
+        padding: 0.25rem 0;
     }
     
     .signature-box {
+        width: 100%;
+        min-height: 90px;
         border: 2px solid #000;
     }
+    
+    .signature-placeholder {
+        font-size: 0.75rem;
+    }
+    
+    .signature-note.print-note,
+    .signed-form-upload {
+        display: none;
+    }
 
+    /* Formulario compacto: se muestra solo al imprimir, desde su título */
     .fullform-card {
+        display: block;
         break-inside: auto;
+        padding: 1rem;
+    }
+
+    .fullform-card h2 {
+        font-size: 1.1rem;
+        text-align: center;
+        border-bottom: 2px solid #000;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .fullform-card .info-text {
+        display: none;
+    }
+
+    .fullform-content {
+        gap: 0.5rem;
     }
 
     .ff-block {
         break-inside: avoid;
         border: 1px solid #bbb;
+        padding: 0.5rem 0.75rem;
+        margin-bottom: 0.4rem;
+        border-radius: 4px;
+    }
+
+    .ff-block h4 {
+        font-size: 0.8rem;
+        margin-bottom: 0.4rem;
+        padding-bottom: 0.25rem;
+    }
+
+    .ff-block h5 {
+        font-size: 0.75rem;
+        margin: 0.5rem 0 0.2rem 0;
     }
 
     .ff-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.15rem 1.5rem;
+    }
+
+    .ff-row {
+        font-size: 0.7rem;
+        padding: 0.15rem 0;
+        border-bottom: none;
+        gap: 0.25rem;
+    }
+
+    .ff-label {
+        min-width: 120px;
+        font-size: 0.68rem;
+    }
+
+    .ff-value {
+        font-size: 0.7rem;
     }
 }

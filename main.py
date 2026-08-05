@@ -58,6 +58,11 @@ from app.api.post.post_form_supplier import routes as form_supplier
 from app.api.post.upload_validation.router import router as submissions_router
 
 # ============================================
+# ROUTERS - PUT
+# ============================================
+from app.api.put.put_user import router as user_manager
+
+# ============================================
 # ROUTERS - GET
 # ============================================
 from app.api.get.get_users import router as users
@@ -78,6 +83,7 @@ app.include_router(city, prefix="/api")
 app.include_router(country, prefix="/api")
 app.include_router(office, prefix="/api")
 app.include_router(userbyid, prefix="/api/admin")
+app.include_router(user_manager, prefix="/api/admin")
 
 # ============================================
 # ENDPOINTS ADICIONALES

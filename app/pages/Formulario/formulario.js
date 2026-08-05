@@ -7,6 +7,7 @@ function initializeForm() {
     setupToggleLogic();
     setupRiskMonitoring();
     document.getElementById('vinculacionForm').addEventListener('submit', handleFormSubmission);
+    document.querySelectorAll('select').forEach(sortSelectOptions);
 }
 
 async function loadReferenceData() {
@@ -41,12 +42,29 @@ async function loadReferenceData() {
 function populateSelect(elementId, options) {
     const select = document.getElementById(elementId);
     if (!select) return;
+    select.innerHTML = '<option value="">Seleccione...</option>';
     options.forEach(opt => {
         const option = document.createElement('option');
         option.value = opt.value;
         option.textContent = opt.text;
         select.appendChild(option);
     });
+    sortSelectOptions(select);
+}
+
+// ============================================
+// ORDENAMIENTO ALFABÉTICO DE LISTAS DESPLEGABLES
+// ============================================
+function sortSelectOptions(select) {
+    if (!select) return;
+    const seleccionado = select.value;
+    const options = Array.from(select.options);
+    const placeholder = options.length && options[0].value === '' ? options.shift() : null;
+    options.sort((a, b) => a.textContent.localeCompare(b.textContent, 'es', { sensitivity: 'base' }));
+    select.innerHTML = '';
+    if (placeholder) select.appendChild(placeholder);
+    options.forEach(opt => select.appendChild(opt));
+    if (seleccionado) select.value = seleccionado;
 }
 
 function setupToggleLogic() {
