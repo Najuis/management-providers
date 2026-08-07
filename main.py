@@ -40,6 +40,7 @@ origins = [
     "http://127.0.1.1:8000",
     "http://127.0.0.1:8000",
     "http://localhost:8000",
+    "http://172.24.0.138:8000",
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -70,6 +71,7 @@ from app.api.get.get_city import router as city
 from app.api.get.get_country import router as country
 from app.api.get.get_office import router as office
 from app.api.get.get_user_id import router as userbyid
+from app.api.get.get_admins import router as admins
 
 # ============================================
 # INCLUIR ROUTERS
@@ -84,6 +86,7 @@ app.include_router(country, prefix="/api")
 app.include_router(office, prefix="/api")
 app.include_router(userbyid, prefix="/api/admin")
 app.include_router(user_manager, prefix="/api/admin")
+app.include_router(admins, prefix="/api/admin")
 
 # ============================================
 # ENDPOINTS ADICIONALES
@@ -190,6 +193,10 @@ async def customer_dashboard():
 @app.get("/admin/menu")
 async def admin_menu_page(): 
     return FileResponse("app/pages/menu-admin/admin_menu.html")
+
+@app.get("/admin/roles")
+async def admin_roles_page(): 
+    return FileResponse("app/pages/admin/roles/roles.html")
 
 @app.get("/admin/validacion-documentos")
 async def validacion_documentos_page():

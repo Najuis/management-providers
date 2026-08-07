@@ -17,6 +17,11 @@ class UserPasswordUpdate(BaseModel):
     password: str
 
 
+class UserPermissionsUpdate(BaseModel):
+    type_user_id: int
+    is_admin: bool
+
+
 @router.put("/user/{user_id}/state")
 async def update_user_state(
     user_id: int,
@@ -69,3 +74,35 @@ async def reset_user_password(
     user.password = hasher(password)
     db.commit()
     return {"message": "Contraseña actualizada exitosamente", "id_user": user_id}
+
+
+@router.put("/user/{user_id}/permissions")
+async def update_user_permissions(
+    user_id: int,
+    body: UserPermissionsUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    if not current_user.is_admin and current_user.type_user_id != 1:
+        raise HTTPException(status_code=403, detail="Se requieren permisos de administrador")
+
+    user = db.query(User).filter(User.id_user == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    if body.type_user_id not in (1, 2, 3, 4):
+        raise HTTPException(status_code=400, detail="El tipo de usuario debe ser 1, 2, 3 o 4")
+
+    # No permitir dejar el sistema sin administradores activos
+    if not body.is_admin and user.type_user_id != 1 and user.is_admin:
+        admins_activos = db.query(User).filter(
+            User.is_admin == True,
+            User.is_active == True
+        ).count()
+        if admins_activos <= 1:
+            raise HTTPException(status_code=400, detail="No se puede quitar el permiso al último administrador activo")
+
+    user.type_user_id = body.type_user_id
+    user.is_admin = body.is_admin
+    db.commit()
+    return {"message": "Permisos actualizados exitosamente", "id_user": user_id}

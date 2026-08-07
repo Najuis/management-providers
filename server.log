@@ -1,0 +1,76 @@
+✅ Database create or update - SQLITE
+INFO:     172.24.0.138:63918 - "GET /admin/menu HTTP/1.1" 200 OK
+INFO:     172.24.0.138:63918 - "GET /pages/menu-admin/admin_menu.css HTTP/1.1" 200 OK
+INFO:     172.24.0.138:63918 - "GET /admin/menu HTTP/1.1" 200 OK
+INFO:     172.24.0.138:63918 - "GET /pages/menu-admin/admin_menu.css HTTP/1.1" 200 OK
+INFO:     172.24.0.138:63918 - "GET /admin/roles HTTP/1.1" 200 OK
+INFO:     172.24.0.138:63918 - "GET /pages/admin/roles/roles.css HTTP/1.1" 200 OK
+INFO:     172.24.0.138:56280 - "GET /pages/admin/roles/roles.js HTTP/1.1" 200 OK
+INFO:     172.24.0.138:56280 - "GET /api/admin/admins HTTP/1.1" 401 Unauthorized
+INFO:     172.24.0.138:50601 - "POST /api/login HTTP/1.1" 401 Unauthorized
+INFO:     172.24.0.138:50727 - "POST /api/login HTTP/1.1" 401 Unauthorized
+INFO:     172.24.0.138:60194 - "POST /api/login HTTP/1.1" 401 Unauthorized
+INFO:     172.24.0.138:54428 - "POST /api/login HTTP/1.1" 401 Unauthorized
+INFO:     172.24.0.138:54428 - "POST /api/login HTTP/1.1" 401 Unauthorized
+INFO:     172.24.0.138:54428 - "POST /api/login HTTP/1.1" 401 Unauthorized
+INFO:     172.24.0.138:54428 - "POST /api/login HTTP/1.1" 401 Unauthorized
+INFO:     172.24.0.138:54428 - "POST /api/login HTTP/1.1" 401 Unauthorized
+INFO:     172.24.0.138:54428 - "POST /api/login HTTP/1.1" 401 Unauthorized
+INFO:     172.24.0.138:60037 - "GET /login HTTP/1.1" 200 OK
+INFO:     172.24.0.138:60892 - "POST /api/login HTTP/1.1" 401 Unauthorized
+INFO:     172.24.0.138:49678 - "POST /api/login HTTP/1.1" 401 Unauthorized
+INFO:     172.24.0.138:61139 - "POST /api/login HTTP/1.1" 401 Unauthorized
+INFO:     172.24.0.138:52480 - "POST /api/login HTTP/1.1" 200 OK
+INFO:     172.24.0.138:52480 - "GET /usuario HTTP/1.1" 200 OK
+INFO:     172.24.0.138:52480 - "GET /api/user/profile HTTP/1.1" 200 OK
+INFO:     172.24.0.138:51493 - "GET /api/cities HTTP/1.1" 200 OK
+INFO:     172.24.0.138:55038 - "GET /api/offices HTTP/1.1" 200 OK
+INFO:     172.24.0.138:55311 - "GET /api/ciiu HTTP/1.1" 200 OK
+INFO:     172.24.0.138:54106 - "POST /api/login HTTP/1.1" 401 Unauthorized
+INFO:     172.24.0.138:61404 - "POST /api/login HTTP/1.1" 401 Unauthorized
+INFO:     172.24.0.138:65470 - "POST /api/login HTTP/1.1" 401 Unauthorized
+INFO:     172.24.0.138:54681 - "POST /api/login HTTP/1.1" 200 OK
+INFO:     172.24.0.138:54681 - "GET /api/admin/users HTTP/1.1" 200 OK
+INFO:     172.24.0.138:54681 - "GET /api/submissions HTTP/1.1" 200 OK
+INFO:     172.24.0.138:52994 - "GET /admin/roles HTTP/1.1" 200 OK
+INFO:     172.24.0.138:52994 - "GET /pages/admin/roles/roles.css HTTP/1.1" 304 Not Modified
+INFO:     172.24.0.138:55896 - "GET /pages/admin/roles/roles.js HTTP/1.1" 304 Not Modified
+INFO:     172.24.0.138:55896 - "GET /api/admin/admins HTTP/1.1" 200 OK
+INFO:     172.24.0.138:58780 - "GET /api/admin/admins HTTP/1.1" 200 OK
+INFO:     172.24.0.138:64985 - "GET /api/admin/users HTTP/1.1" 200 OK
+INFO:     172.24.0.138:64985 - "GET /api/submissions HTTP/1.1" 200 OK
+INFO:     172.24.0.138:64985 - "GET /api/admin/users HTTP/1.1" 200 OK
+INFO:     172.24.0.138:56171 - "GET /api/submissions HTTP/1.1" 200 OK
+INFO:     172.24.0.138:54649 - "GET /admin/roles HTTP/1.1" 200 OK
+INFO:     172.24.0.138:54649 - "GET /pages/admin/roles/roles.css HTTP/1.1" 304 Not Modified
+INFO:     172.24.0.138:52808 - "GET /pages/admin/roles/roles.js HTTP/1.1" 304 Not Modified
+INFO:     172.24.0.138:52808 - "GET /api/admin/admins HTTP/1.1" 200 OK
+INFO:     172.24.0.138:55168 - "POST /api/login HTTP/1.1" 401 Unauthorized
+INFO:     172.24.0.138:51288 - "POST /api/login HTTP/1.1" 401 Unauthorized
+INFO:     172.24.0.138:55685 - "POST /api/login HTTP/1.1" 200 OK
+INFO:     172.24.0.138:55685 - "GET /api/admin/users HTTP/1.1" 200 OK
+INFO:     172.24.0.138:55685 - "GET /api/submissions HTTP/1.1" 200 OK
+INFO:     172.24.0.138:49677 - "GET /api/submissions HTTP/1.1" 200 OK
+INFO:     172.24.0.138:49677 - "GET /api/submissions/9 HTTP/1.1" 200 OK
+INFO:     172.24.0.138:58488 - "GET /api/admin/users HTTP/1.1" 200 OK
+INFO:     172.24.0.138:58488 - "GET /api/submissions HTTP/1.1" 200 OK
+INFO:     172.24.0.138:50384 - "POST /api/admin/user HTTP/1.1" 200 OK
+INFO:     172.24.0.138:52905 - "GET /api/admin/users HTTP/1.1" 200 OK
+INFO:     172.24.0.138:54644 - "GET /api/submissions HTTP/1.1" 200 OK
+INFO:     172.24.0.138:54644 - "GET /api/user/profile HTTP/1.1" 200 OK
+INFO:     172.24.0.138:56836 - "GET /api/cities HTTP/1.1" 200 OK
+INFO:     172.24.0.138:54733 - "GET /api/offices HTTP/1.1" 200 OK
+INFO:     172.24.0.138:57609 - "GET /api/ciiu HTTP/1.1" 200 OK
+INFO:     172.24.0.138:59081 - "POST /api/login HTTP/1.1" 200 OK
+INFO:     172.24.0.138:59081 - "GET /api/admin/users HTTP/1.1" 200 OK
+INFO:     172.24.0.138:59081 - "GET /api/submissions HTTP/1.1" 200 OK
+INFO:     172.24.0.138:64021 - "GET /admin/roles HTTP/1.1" 200 OK
+INFO:     172.24.0.138:64021 - "GET /pages/admin/roles/roles.css HTTP/1.1" 304 Not Modified
+INFO:     172.24.0.138:57518 - "GET /pages/admin/roles/roles.js HTTP/1.1" 304 Not Modified
+INFO:     172.24.0.138:57518 - "GET /api/admin/admins HTTP/1.1" 200 OK
+INFO:     172.24.0.138:64606 - "GET /api/admin/users HTTP/1.1" 200 OK
+INFO:     172.24.0.138:64606 - "GET /api/admin/users HTTP/1.1" 200 OK
+INFO:     172.24.0.138:64606 - "GET /api/submissions HTTP/1.1" 200 OK
+INFO:     172.24.0.138:64808 - "GET /api/submissions HTTP/1.1" 200 OK
+INFO:     172.24.0.138:60245 - "GET /api/admin/users HTTP/1.1" 200 OK
+INFO:     172.24.0.138:60245 - "GET /api/submissions HTTP/1.1" 200 OK

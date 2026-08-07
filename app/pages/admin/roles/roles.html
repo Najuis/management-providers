@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roles y Permisos - LAGOBO</title>
+    <link rel="stylesheet" href="/pages/admin/roles/roles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header class="admin-header">
+        <div class="header-inner">
+            <div>
+                <h1>Roles y Permisos</h1>
+                <p>Gestión de roles y permisos de las cuentas administradoras.</p>
+            </div>
+            <a href="/admin/menu" class="btn btn-back">← Volver al Menú</a>
+        </div>
+    </header>
+
+    <main class="list-container">
+        <section class="card">
+            <div class="list-head">
+                <h2>🔐 Administradores</h2>
+                <span class="count-badge" id="adminCount">0</span>
+            </div>
+            <p class="section-note">Roles disponibles: <strong>1</strong> Admin, <strong>2</strong> Normal, <strong>3</strong> Proveedor, <strong>4</strong> Cliente.</p>
+            <div class="admin-list" id="adminList">
+                <p class="loading">Cargando administradores...</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="/pages/admin/roles/roles.js"></script>
+</body>
+
+</html>
